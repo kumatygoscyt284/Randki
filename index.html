@@ -1,1 +1,503 @@
-bvdf
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog: Budowlańcy i Kucharze</title>
+
+    <style>
+        /* ==========================================================================
+           1. GLOBALNE STYLE I RESET
+           ========================================================================== */
+        :root {
+            --background-color: #121212;
+            --surface-color: #1E1E1E;
+            --primary-text-color: #E0E0E0;
+            --secondary-text-color: #A0A0A0;
+            --accent-color: #FFD700;
+            --border-color: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-text-color);
+            line-height: 1.2;
+        }
+
+        p {
+            color: var(--secondary-text-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* ==========================================================================
+           2. STRUKTURA SPA (POKAZYWANIE/UKRYWANIE SEKCJI)
+           ========================================================================== */
+        .page-section {
+            display: none; /* Wszystkie sekcje domyślnie ukryte */
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .page-section.active {
+            display: flex; /* Aktywna sekcja widoczna */
+        }
+        
+        /* ==========================================================================
+           3. STYLE PRZYCISKÓW I ELEMENTÓW INTERAKTYWNYCH
+           ========================================================================== */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: #000000;
+        }
+
+        .btn-accent:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-secondary {
+            background-color: var(--surface-color);
+            color: var(--primary-text-color);
+            border: 1px solid var(--accent-color);
+        }
+        .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: #000;
+        }
+
+        /* ==========================================================================
+           4. STYLE SEKCJI - #page1-landing
+           ========================================================================== */
+        #page1-landing h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 0.5rem;
+        }
+
+        #page1-landing h2 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--secondary-text-color);
+            margin-bottom: 2.5rem;
+            font-weight: normal;
+        }
+        
+        /* ==========================================================================
+           5. STYLE SEKCJI - #page2-selection
+           ========================================================================== */
+        #page2-selection {
+            justify-content: flex-start;
+            padding-top: 4rem;
+        }
+
+        #page2-selection h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 3rem;
+        }
+
+        .category-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .category-tile {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-left: 5px solid var(--border-color);
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .category-tile:hover {
+            transform: translateX(10px);
+            border-left-color: var(--accent-color);
+        }
+
+        .category-tile h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        /* ==========================================================================
+           6. STYLE SEKCJI - #page3-list
+           ========================================================================== */
+        #page3-list {
+            justify-content: flex-start;
+        }
+
+        .list-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .list-header h2 {
+            font-size: 1.5rem;
+ vicenda_pl_2_1
+        }
+        
+        #profile-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Mobile-first: 1 kolumna */
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .profile-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .profile-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+        
+        .profile-image-placeholder {
+            width: 100%;
+            aspect-ratio: 4 / 3; /* Utrzymuje proporcje */
+            background-color: #2c2c2c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Zdjęcie wypełnia kontener bez zniekształceń */
+        }
+        
+        .profile-content {
+            padding: 1rem;
+        }
+
+        .profile-content h3 {
+            font-size: 1.3rem;
+ màu
+        }
+        .profile-content h3 .ksywka {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .profile-meta {
+            font-size: 0.9rem;
+            color: var(--secondary-text-color);
+            margin-bottom: 1rem;
+        }
+
+        .profile-opis {
+            font-style: italic;
+            color: var(--primary-text-color);
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        .profile-biogram {
+            font-size: 0.95rem;
+        }
+
+        /* ==========================================================================
+           7. RESPONSIVE DESIGN (Desktop)
+           ========================================================================== */
+        
+        /* Dla tabletów i większych urządzeń */
+        @media (min-width: 768px) {
+            .category-container {
+                flex-direction: row;
+                max-width: 1200px;
+            }
+            .category-tile {
+                flex: 1;
+            }
+            #profile-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 kolumny */
+            }
+        }
+
+        /* Dla dużych ekranów desktopowych */
+        @media (min-width: 1200px) {
+            #profile-grid {
+                grid-template-columns: repeat(3, 1fr); /* 3 kolumny */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ======================================================================= -->
+    <!--                       STRUKTURA APLIKACJI HTML                          -->
+    <!-- ======================================================================= -->
+    
+    <main>
+        <!-- SEKCJA 1: STRONA POWITALNA -->
+        <section id="page1-landing" class="page-section">
+            <div class="container">
+                <!-- EASY-EDIT-1: Napisy na stronie głównej (tytuły) -->
+                <h1>Artur Kudlik przedstawia:</h1>
+                <h2>najznakomitszą szukajkę budowlańców i kucharzy</h2>
+                <!-- KONIEC EASY-EDIT-1 -->
+
+                <button id="cta-button" class="btn btn-accent">COXDDD?</button>
+            </div>
+        </section>
+
+        <!-- SEKCJA 2: WYBÓR KATEGORII -->
+        <section id="page2-selection" class="page-section">
+            <div class="container">
+                <h2>Wybierz typ mężczyzny</h2>
+                <div class="category-container">
+                    <!-- Kafelki generowane dynamicznie przez JS na podstawie danych EASY-EDIT-2 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKCJA 3: WIDOK LISTY PROFILI -->
+        <section id="page3-list" class="page-section">
+            <div class="container">
+                <div class="list-header">
+                    <h2 id="list-title">Lista Profili</h2>
+                    <button id="back-to-selection-button" class="btn btn-secondary">Powrót</button>
+                </div>
+                <div id="profile-grid">
+                    <!-- Profile generowane dynamicznie przez JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // =======================================================================
+            //                SEKCJE ŁATWEJ EDYCJI (EASY-EDIT)
+            // =======================================================================
+
+            /**
+             * EASY-EDIT-2: Opisy kafelków wyboru.
+             * Zmień 'title' i 'description', aby dostosować tekst na kafelkach wyboru.
+             * 'category' ('A', 'B', 'C') łączy kafelek z danymi z bazy poniżej.
+             */
+            const categoryData = [
+                {
+                    category: 'A',
+                    title: 'Pracowici i Drodzy',
+                    description: 'Jakość premium ma swoją cenę. Fachowcy, którzy znają swoją wartość i dostarczają wyniki na czas. Idealni do projektów, gdzie liczy się perfekcja.'
+                },
+                {
+                    category: 'B',
+                    title: 'Tani i Ospali',
+                    description: 'Opcja budżetowa dla cierpliwych. Praca zostanie wykonana... w swoim czasie. Doskonały wybór, jeśli nigdzie Ci się nie spieszy i cenisz sobie spokój ducha.'
+                },
+                {
+                    category: 'C',
+                    title: 'Pośredni',
+                    description: 'Złoty środek. Rozsądny kompromis między ceną, jakością a czasem realizacji. Solidni rzemieślnicy na codzienne potrzeby, bez zbędnych fajerwerków.'
+                }
+];
+
+            /**
+             * EASY-EDIT-3: Baza danych profili.
+             * Poniżej znajduje się kod, który automatycznie generuje 90 profili.
+             * Możesz zmodyfikować listy `firstNames`, `lastNames`, `nicknames`, `descriptions`, `bios`
+             * aby wpłynąć na generowane dane.
+             */
+            const database = [];
+            const firstNames = ["Janusz", "Mirek", "Andrzej", "Stefan", "Zbigniew", "Krzysztof", "Roman", "Eugeniusz", "Waldemar", "Ryszard"];
+            const lastNames = ["Kowalski", "Nowak", "Wiśniewski", "Wójcik", "Kowalczyk", "Zieliński", "Szymański", "Woźniak", "Kozłowski", "Jankowski"];
+            const nicknames = ["'Złota Rączka'", "'Betoniarz'", "'Fucha'", "'Majster'", "'Szpachla'", "'Patelnia'", "'Chochla'", "'Młotek'", "'Gulasz'", "'Dynamit'"];
+            const descriptions = [
+                "Robota pali mi się w rękach!",
+                "Tanio, dobrze, kiedyś.",
+                "Szef Wszystkich Szefów.",
+                "Gdzie kucharek sześć...",
+                "Faktury? A co to takiego?",
+                "Specjalista od zadań niemożliwych.",
+                "Do tańca i do różańca (i do gładzi).",
+                "Gotuję lepiej niż Twoja mama."
+            ];
+            const bios = [
+                "Od lat w branży. Zaczynałem od noszenia cegieł, a dziś sam je stawiam. W wolnych chwilach wędkuję i oglądam mecze. Konkretny i słowny, ale lubię, jak się mnie nie pogania.",
+                "Pasjonat gotowania z powołania. Każde danie to dla mnie dzieło sztuki. Uważam, że sekret tkwi w świeżych składnikach i odrobinie serca. Nie toleruję profanacji w postaci ketchupu na pizzy.",
+                "Znam się na robocie jak mało kto. Moje motto to 'pomaluśku, a bydzie dobzie'. Po co się spieszyć? Dobra robota wymaga czasu, a ja mam go pod dostatkiem. Preferuję płatność gotówką.",
+                "Budownictwo to moja pasja od dziecka. Pamiętam, jak budowałem zamki z piasku - dziś buduję z betonu. Dokładność i precyzja to moje drugie imię. Po pracy lubię majsterkować w garażu."
+            ];
+
+            const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+            const getRandomAge = () => Math.floor(Math.random() * (54 - 32 + 1)) + 32;
+
+            for (let i = 0; i < 90; i++) {
+                let category;
+                if (i < 30) {
+                    category = 'A';
+                } else if (i < 60) {
+                    category = 'B';
+                } else {
+                    category = 'C';
+                }
+
+                database.push({
+                    id: i + 1,
+                    imie: getRandomItem(firstNames),
+                    nazwisko: getRandomItem(lastNames),
+                    ksywka: getRandomItem(nicknames),
+                    wiek: getRandomAge(),
+                    opis: getRandomItem(descriptions),
+                    biogram: getRandomItem(bios),
+                    kategoria: category
+                });
+            }
+            // =======================================================================
+            //                        KONIEC SEKCJI EASY-EDIT
+            // =======================================================================
+
+
+            // --- LOGIKA APLIKACJI ---
+
+            // Selektory DOM
+            const pageSections = document.querySelectorAll('.page-section');
+            const ctaButton = document.getElementById('cta-button');
+            const backButton = document.getElementById('back-to-selection-button');
+            const categoryContainer = document.querySelector('.category-container');
+            const profileGrid = document.getElementById('profile-grid');
+            const listTitle = document.getElementById('list-title');
+
+            // Funkcja do przełączania stron
+            const showPage = (pageId) => {
+                pageSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.add('active');
+                }
+                window.scrollTo(0, 0); // Przewiń na górę strony
+            };
+
+            // Funkcja do renderowania kafelków kategorii
+            const renderCategories = () => {
+                categoryContainer.innerHTML = '';
+                categoryData.forEach(cat => {
+                    const tile = document.createElement('div');
+                    tile.className = 'category-tile';
+                    tile.dataset.category = cat.category;
+                    tile.innerHTML = `
+                        <h3>${cat.title}</h3>
+                        <p>${cat.description}</p>
+                    `;
+                    categoryContainer.appendChild(tile);
+                });
+            };
+
+            // Funkcja do renderowania profili
+            const renderProfiles = (category) => {
+                profileGrid.innerHTML = '';
+                const filteredProfiles = database.filter(p => p.kategoria === category);
+                
+                // Ustawienie tytułu listy
+                const categoryInfo = categoryData.find(cat => cat.category === category);
+                listTitle.textContent = categoryInfo ? categoryInfo.title : "Lista Profili";
+
+                filteredProfiles.forEach((profile, index) => {
+                    // Pętla po zdjęciach man1-man60
+                    const photoId = (profile.id - 1) % 60 + 1;
+                    const imagePath = `foty/man${photoId}.jpg`;
+
+                    const card = document.createElement('div');
+                    card.className = 'profile-card';
+                    card.innerHTML = `
+                        <div class="profile-image-placeholder">
+                            <img src="${imagePath}" alt="Zdjęcie: ${profile.imie} ${profile.nazwisko}" onerror="this.style.display='none'">
+                        </div>
+                        <div class="profile-content">
+                            <h3>${profile.imie} ${profile.nazwisko} <span class="ksywka">${profile.ksywka}</span></h3>
+                            <p class="profile-meta">Wiek: ${profile.wiek} lat | Kategoria: ${profile.kategoria}</p>
+                            <p class="profile-opis">"${profile.opis}"</p>
+                            <p class="profile-biogram">${profile.biogram}</p>
+                        </div>
+                    `;
+                    profileGrid.appendChild(card);
+                });
+            };
+
+            // --- Event Listeners ---
+
+            // Przycisk "COXDDD?" -> Pokaż wybór kategorii
+            ctaButton.addEventListener('click', () => {
+                showPage('page2-selection');
+            });
+
+            // Kliknięcie na kafelek kategorii -> Pokaż listę profili
+            categoryContainer.addEventListener('click', (e) => {
+                const tile = e.target.closest('.category-tile');
+                if (tile) {
+                    const category = tile.dataset.category;
+                    renderProfiles(category);
+                    showPage('page3-list');
+                }
+            });
+
+            // Przycisk "Powrót" -> Pokaż wybór kategorii
+            backButton.addEventListener('click', () => {
+                showPage('page2-selection');
+            });
+
+            // --- Inicjalizacja Aplikacji ---
+            renderCategories(); // Przygotuj kafelki wyboru
+            showPage('page1-landing'); // Pokaż stronę powitalną na starcie
+        });
+    </script>
+
+</body>
+</html>
