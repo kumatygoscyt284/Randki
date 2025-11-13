@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog: Budowlańcy i Kucharze</title>
+
+    <style>
+        :root {
+            --background-color: #f4f4f9;
+            --surface-color: #ffffff;
+            --primary-text-color: #1c1c1e;
+            --secondary-text-color: #6a6a6f;
+            --accent-color: #FFD700;
+            --border-color: #e0e0e0;
+            --success-color: #4CAF50;
+            --danger-color: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-text-color);
+            line-height: 1.2;
+        }
+
+        p {
+            color: var(--secondary-text-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .page-section, .modal-overlay {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .page-section.active {
+            display: flex;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            border-top: 4px solid var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .modal-content h2 {
+            color: #000;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-content .btn-group {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: #000000;
+        }
+
+        .btn-accent:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background-color: var(--surface-color);
+            color: var(--primary-text-color);
+            border: 1px solid var(--primary-text-color);
+        }
+        .btn-secondary:hover {
+            background-color: var(--primary-text-color);
+            color: #fff;
+        }
+        
+        #page1-landing h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.5rem; }
+        #page1-landing h2 { font-size: clamp(1.2rem, 3vw, 1.5rem); color: var(--secondary-text-color); margin-bottom: 2.5rem; font-weight: normal; }
+        #page2-selection, #page3-list { justify-content: flex-start; padding-top: 4rem; }
+        #page2-selection h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 3rem; }
+        .category-container { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 600px; }
+        .category-tile { background-color: var(--surface-color); padding: 1.5rem; border-left: 5px solid var(--border-color); text-align: left; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+        .category-tile:hover { transform: translateX(10px); border-left-color: var(--accent-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .category-tile h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #000; font-weight: 600; }
+        .list-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .list-header h2 { font-size: 1.5rem; text-align: left; }
+        #profile-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; width: 100%; }
+        .profile-card { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; text-align: left; }
+        .profile-card:hover { border-color: var(--accent-color); transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .profile-image-placeholder { width: 100%; aspect-ratio: 4 / 3; background-color: #e9e9ed; display: flex; justify-content: center; align-items: center; }
+        .profile-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-content { padding: 1rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .profile-content h3 { font-size: 1.3rem; }
+        .profile-content h3 .ksywka { color: #b89d00; font-weight: bold; }
+        .profile-meta { font-size: 0.9rem; color: var(--secondary-text-color); margin-bottom: 1rem; }
+        .profile-education { font-size: 0.95rem; flex-grow: 1; margin-bottom: 1.5rem; }
+        .profile-education strong { color: var(--primary-text-color); font-weight: 600; }
+        .profile-btn { width: 100%; }
+
+        #incoming-call-screen { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), var(--background-color); padding: 2rem; color: #fff; }
+        .call-content { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        .call-avatar { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; position: relative; box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        .call-avatar::before { content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 2px solid var(--accent-color); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 70% { transform: scale(1.2); opacity: 0; } 100% { transform: scale(1); opacity: 0; } }
+        .call-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        #call-info h2 { font-size: 2rem; color: var(--accent-color); }
+        #call-info p { font-size: 1.1rem; max-width: 400px; color: #E0E0E0; margin-top: 0.5rem; font-style: italic; }
+        .call-actions { margin-top: 3rem; display: flex; gap: 4rem; }
+        .call-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease; }
+        .call-btn:hover { transform: scale(1.1); }
+        .call-btn.accept { background-color: var(--success-color); }
+        .call-btn.reject { background-color: var(--danger-color); }
+        .call-btn svg { width: 35px; height: 35px; fill: white; }
+        
+        #sobering-up-room .modal-content { background-color: #1E1E1E; color: #fff; border-top-color: var(--danger-color); }
+        #sobering-up-room h2 { color: var(--danger-color); }
+        #sobering-up-room p { color: #E0E0E0; }
+        #sobering-up-room .btn-secondary { border-color: #fff; color: #fff; background-color: transparent;}
+        #sobering-up-room .btn-secondary:hover { background-color: #fff; color: #000; }
+        
+        @media (min-width: 768px) {
+            .category-container { flex-direction: row; max-width: 1200px; }
+            .category-tile { flex: 1; }
+            #profile-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1200px) {
+            #profile-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <section id="page1-landing" class="page-section active">
+            <div class="container">
+                <h1>Artur Kudlik przedstawia:</h1>
+                <h2>najznakomitszą szukajkę budowlańców i kucharzy</h2>
+                <button id="cta-button" class="btn btn-accent">COXDDD?</button>
+            </div>
+        </section>
+
+        <section id="page2-selection" class="page-section">
+            <div class="container">
+                <h2>Wybierz typ mężczyzny</h2>
+                <div class="category-container"></div>
+            </div>
+        </section>
+
+        <section id="page3-list" class="page-section">
+            <div class="container">
+                <div class="list-header">
+                    <h2 id="list-title">Lista Profili</h2>
+                    <button id="back-to-selection-button" class="btn btn-secondary">Powrót</button>
+                </div>
+                <div id="profile-grid"></div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="selection-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="confirm-modal-title"></h2>
+            <p>Najpierw położy kafelki, a potem położy kres szkolnej propagandzie.</p>
+            <div class="btn-group">
+                <button id="confirm-modal-continue-btn" class="btn btn-accent">Idę dalej</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="incoming-call-screen" class="modal-overlay">
+        <div class="call-content">
+            <div class="call-avatar">
+                <img id="call-avatar-img" src="" alt="Avatar dzwoniącego">
+            </div>
+            <div id="call-info">
+                <h2 id="call-name"></h2>
+                <p id="call-bio"></p>
+            </div>
+            <div class="call-actions">
+                <button id="reject-call-btn" class="call-btn reject" aria-label="Odrzuć połączenie">
+                    <svg viewBox="0 0 24 24"><path d="M12.96,16.24C12.13,16.24 11.33,16.09 10.59,15.82C9.84,15.54 9.14,15.17 8.5,14.69C7.86,14.21 7.3,13.65 6.81,13C6.33,12.36 5.96,11.66 5.69,10.91C5.41,10.17 5.27,9.37 5.27,8.54C5.27,7.74 5.41,6.96 5.68,6.22C5.95,5.47 6.32,4.78 6.8,4.14L7.93,5.27C7.57,5.75 7.29,6.29 7.1,6.88C6.9,7.48 6.8,8.09 6.8,8.72C6.8,9.43 6.93,10.11 7.2,10.76C7.47,11.41 7.82,12 8.25,12.5C8.68,13 9.19,13.43 9.79,13.7C10.4,13.97 11,14.11 11.63,14.11C11.91,14.11 12.18,14.08 12.45,14.01C12.91,13.9 13.35,13.73 13.77,13.53L14.9,14.66C14.25,15.17 13.56,15.58 12.83,15.89C12.2,16.13 11.56,16.24 10.92,16.24M18.86,13.19L17.73,12.06C17.93,11.64 18.1,11.2 18.2,10.75C18.28,10.47 18.31,10.2 18.31,9.92C18.31,9.29 18.21,8.68 18.02,8.09C17.82,7.49 17.55,6.95 17.18,6.47L18.31,5.34C18.8,5.99 19.17,6.68 19.44,7.43C19.72,8.17 19.86,8.96 19.86,9.76C19.86,10.6 19.72,11.4 19.45,12.14C19.18,12.89 18.8,13.58 18.27,14.22L17.14,13.09C17.62,12.61 18.09,12.05 18.57,11.41C19.05,10.77 19.43,10.07 19.69,9.32C19.96,8.58 20.1,7.78 20.1,6.95C20.1,6.15 19.96,5.37 19.69,4.63C19.42,3.88 19.05,3.19 18.57,2.55L17.44,3.68C17.07,3.19 16.63,2.83 16.14,2.55C15.65,2.28 15.12,2.1 14.58,2.02L14.36,0.5H12.16L12.38,2.02C11.83,2.1 11.31,2.28 10.82,2.55C10.33,2.83 9.89,3.19 9.52,3.68L2,11.2L3.25,12.45L21.05,2.9L22.3,1.65L9.52,14.43C9.15,14.91 8.87,15.45 8.67,16.05C8.47,16.65 8.37,17.26 8.37,17.89C8.37,18.17 8.4,18.44 8.47,18.71C8.58,19.17 8.75,19.61 8.95,20.03L10.08,18.9C9.9,18.5 9.77,18.1 9.7,17.68C9.64,17.4 9.61,17.13 9.61,16.85C9.61,16.22 9.71,15.61 9.9,15.02C10.1,14.42 10.37,13.88 10.74,13.4L18.86,13.19Z" /></svg>
+                </button>
+                <button id="accept-call-btn" class="call-btn accept" aria-label="Odbierz połączenie">
+                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="sobering-up-room" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Chwila oddechu...</h2>
+            <p>Jesteś pewien, że chcesz zrezygnować? Taki fachowiec może się nie powtórzyć. Daj mu jeszcze jedną szansę.</p>
+            <div class="btn-group">
+                <button id="retry-call-btn" class="btn btn-accent">Zadzwoń jeszcze raz</button>
+                <button id="go-home-btn" class="btn btn-secondary">Powrót na sam początek</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryData = [ { category: 'A', title: 'Pracowici i Drodzy', description: 'Jakość premium ma swoją cenę. Fachowcy, którzy znają swoją wartość i dostarczają wyniki na czas. Idealni do projektów, gdzie liczy się perfekcja.' }, { category: 'B', title: 'Tani i Ospali', description: 'Opcja budżetowa dla cierpliwych. Praca zostanie wykonana... w swoim czasie. Doskonały wybór, jeśli nigdzie Ci się nie spieszy i cenisz sobie spokój ducha.' }, { category 'C', title: 'Pośredni', description: 'Złoty środek. Rozsądny kompromis między ceną, jakością a czasem realizacji. Solidni rzemieślnicy na codzienne potrzeby, bez zbędnych fajerwerków.' } ];
+            const firstNames = ['Jan', 'Piotr', 'Krzysztof', 'Andrzej', 'Paweł', 'Tomasz', 'Marek', 'Grzegorz', 'Józef', 'Marcin', 'Stanisław', 'Adam', 'Łukasz', 'Dariusz', 'Zbigniew', 'Jerzy', 'Tadeusz', 'Mateusz', 'Ryszard', 'Wojciech', 'Mariusz', 'Kazimierz', 'Robert', 'Michał', 'Henryk', 'Rafał', 'Jacek', 'Kamil', 'Czesław', 'Sławomir', 'Artur', 'Zdzisław', 'Eugeniusz', 'Waldemar', 'Stefan'];
+            const lastNames = ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kowalczyk', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski', 'Kozłowski', 'Jankowski', 'Mazur', 'Wojciechowski', 'Kwiatkowski', 'Krawczyk', 'Kaczmarek', 'Piotrowski', 'Grabowski', 'Zając', 'Król', 'Pawłowski', 'Michalski', 'Wróbel', 'Jabłoński', 'Nowakowski', 'Majewski', 'Olszewski', 'Stępień', 'Malinowski', 'Górski', 'Adamczyk', 'Pawlak', 'Sikora'];
+            const nicknames = ["'Złota Rączka'", "'Betoniarz'", "'Fucha'", "'Majster'", "'Szpachla'", "'Patelnia'", "'Chochla'", "'Młotek'", "'Gulasz'", "'Dynamit'", "'Profesor'", "'Wirtuoz'", "'Cichy'", "'Szybki'", "'Fachura'"];
+            const wyksztalcenia = [ "Technik budownictwa", "Technik architektury krajobrazu", "Technik elektryk", "Ślusarz (szkoła branżowa 'Cosinus')", "Doktor filologii polskiej", "Licencjat filozofii", "Tylko podstawówka", "Ukończone dwie klasy podstawówki", "Mimo podeszłego wieku, wciąż w podstawówce", "Nie dostał się do podstawówki", "Nie ukończył nawet zawodówki", "Magister inżynier budownictwa lądowego", "Absolwent Akademii Sztuk Pięknych", "Samouk z certyfikatem YouTube", "Doktorat z fizyki kwantowej", "Uniwersytet życia", "Zawód: Syn" ];
+            
+            const database = [];
+            let currentSelectedProfile = null;
+
+            const shuffleArray = (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; };
+            const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+            
+            const generateUniqueProfiles = (count, category, namePool, nicknamePool, eduPool) => {
+                const shuffledNames = shuffleArray([...namePool.imiona]);
+                const shuffledLastNames = shuffleArray([...namePool.nazwiska]);
+                const shuffledNicknames = shuffleArray([...nicknamePool]);
+                
+                for (let i = 0; i < count; i++) {
+                    database.push({
+                        id: database.length + 1,
+                        imie: shuffledNames.pop() || 'Jan',
+                        nazwisko: shuffledLastNames.pop() || 'Kowalski',
+                        ksywka: getRandomItem(shuffledNicknames),
+                        wiek: Math.floor(Math.random() * (54 - 32 + 1)) + 32,
+                        wyksztalcenie: getRandomItem(eduPool),
+                        kategoria: category
+                    });
+                }
+            };
+            
+            const nameSource = { imiona: firstNames, nazwiska: lastNames };
+            generateUniqueProfiles(15, 'A', nameSource, nicknames, wyksztalcenia);
+            generateUniqueProfiles(15, 'B', nameSource, nicknames, wyksztalcenia);
+            generateUniqueProfiles(15, 'C', nameSource, nicknames, wyksztalcenia);
+
+            const pageSections = document.querySelectorAll('.page-section');
+            const modalOverlays = document.querySelectorAll('.modal-overlay');
+            const ctaButton = document.getElementById('cta-button');
+            const backButton = document.getElementById('back-to-selection-button');
+            const categoryContainer = document.querySelector('.category-container');
+            const profileGrid = document.getElementById('profile-grid');
+            const listTitle = document.getElementById('list-title');
+            const confirmModal = document.getElementById('selection-confirm-modal');
+            const confirmModalTitle = document.getElementById('confirm-modal-title');
+            const confirmContinueBtn = document.getElementById('confirm-modal-continue-btn');
+            const callScreen = document.getElementById('incoming-call-screen');
+            const callAvatar = document.getElementById('call-avatar-img');
+            const callName = document.getElementById('call-name');
+            const callBio = document.getElementById('call-bio');
+            const acceptCallBtn = document.getElementById('accept-call-btn');
+            const rejectCallBtn = document.getElementById('reject-call-btn');
+            const soberingRoom = document.getElementById('sobering-up-room');
+            const retryCallBtn = document.getElementById('retry-call-btn');
+            const goHomeBtn = document.getElementById('go-home-btn');
+
+            const showPage = (pageId) => {
+                pageSections.forEach(section => section.classList.remove('active'));
+                const activePage = document.getElementById(pageId);
+                if (activePage) activePage.classList.add('active');
+                window.scrollTo(0, 0);
+            };
+            
+            const showOverlay = (overlayId) => {
+                const overlay = document.getElementById(overlayId);
+                if (overlay) overlay.classList.add('active');
+            };
+
+            const hideAllOverlays = () => {
+                modalOverlays.forEach(overlay => overlay.classList.remove('active'));
+            };
+
+            const renderCategories = () => {
+                categoryContainer.innerHTML = '';
+                categoryData.forEach(cat => {
+                    const tile = document.createElement('div');
+                    tile.className = 'category-tile';
+                    tile.dataset.category = cat.category;
+                    tile.innerHTML = `<h3>${cat.title}</h3><p>${cat.description}</p>`;
+                    categoryContainer.appendChild(tile);
+                });
+            };
+
+            const renderProfiles = (category) => {
+                profileGrid.innerHTML = '';
+                const filteredProfiles = database.filter(p => p.kategoria === category);
+                const categoryInfo = categoryData.find(cat => cat.category === category);
+                listTitle.textContent = categoryInfo ? categoryInfo.title : "Lista Profili";
+
+                filteredProfiles.forEach(profile => {
+                    const photoId = (profile.id - 1) % 60 + 1;
+                    const imagePath = `foty/man${photoId}.jpg`;
+                    const card = document.createElement('div');
+                    card.className = 'profile-card';
+                    card.innerHTML = `
+                        <div class="profile-image-placeholder">
+                            <img src="${imagePath}" alt="Zdjęcie: ${profile.imie}" onerror="this.style.display='none'">
+                        </div>
+                        <div class="profile-content">
+                            <h3>${profile.imie} ${profile.nazwisko} <span class="ksywka">${profile.ksywka}</span></h3>
+                            <p class="profile-meta">Wiek: ${profile.wiek} lat</p>
+                            <p class="profile-education">Wykształcenie: <strong>${profile.wyksztalcenie}</strong></p>
+                            <button class="btn btn-accent profile-btn" data-id="${profile.id}">Wybieram ${profile.imie} na budowę</button>
+                        </div>
+                    `;
+                    profileGrid.appendChild(card);
+                });
+            };
+
+            ctaButton.addEventListener('click', () => showPage('page2-selection'));
+            backButton.addEventListener('click', () => showPage('page2-selection'));
+
+            categoryContainer.addEventListener('click', (e) => {
+                const tile = e.target.closest('.category-tile');
+                if (tile) {
+                    renderProfiles(tile.dataset.category);
+                    showPage('page3-list');
+                }
+            });
+
+            profileGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('profile-btn')) {
+                    const profileId = parseInt(e.target.dataset.id, 10);
+                    currentSelectedProfile = database.find(p => p.id === profileId);
+                    if (currentSelectedProfile) {
+                        confirmModalTitle.textContent = `${currentSelectedProfile.imie} to świetny wybór!`;
+                        showOverlay('selection-confirm-modal');
+                    }
+                }
+            });
+
+            confirmContinueBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                if (currentSelectedProfile) {
+                    const photoId = (currentSelectedProfile.id - 1) % 60 + 1;
+                    callAvatar.src = `foty/man${photoId}.jpg`;
+                    callName.textContent = `${currentSelectedProfile.imie} ${currentSelectedProfile.ksywka}`;
+                    callBio.textContent = currentSelectedProfile.wyksztalcenie;
+                    showOverlay('incoming-call-screen');
+                }
+            });
+
+            acceptCallBtn.addEventListener('click', () => {
+                window.location.href = 'https://youtu.be/E4xIqwZgPT8?si=ycyHt1X3QxPwl9k8';
+            });
+            
+            rejectCallBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                showOverlay('sobering-up-room');
+            });
+            
+            retryCallBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                if (currentSelectedProfile) {
+                    showOverlay('incoming-call-screen');
+                }
+            });
+            
+            goHomeBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                showPage('page1-landing');
+            });
+
+            renderCategories();
+        });
+    </script>
+
+</body>
+</html>
