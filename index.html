@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budowlańcy & Kucharze</title>
+    <title>Budowlańcy & randki</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -43,16 +43,16 @@
             right: 0;
             pointer-events: none;
             z-index: 100;
+            height: 100vh;
             overflow: hidden;
-            height: 100px;
         }
 
         .heart {
             position: absolute;
             color: var(--accent);
             font-size: 1.5rem;
-            animation: float 6s linear infinite;
-            opacity: 0;
+            animation: float 10s linear forwards;
+            opacity: 1;
             display: none;
         }
 
@@ -61,8 +61,11 @@
                 transform: translateY(0) rotate(0deg);
                 opacity: 1;
             }
+            80% {
+                opacity: 1;
+            }
             100% {
-                transform: translateY(-100vh) rotate(360deg);
+                transform: translateY(-120vh) rotate(720deg);
                 opacity: 0;
             }
         }
@@ -113,9 +116,18 @@
         .landing-subtitle {
             font-size: 2.5rem;
             font-weight: bold;
-            margin-bottom: 3rem;
+            margin-bottom: 0.5rem;
             line-height: 1.2;
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .landing-subtitle-small {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 3rem;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .cta-button {
@@ -666,6 +678,8 @@
         .hangover-screen {
             text-align: center;
             padding: 2rem;
+            max-width: 800px;
+            width: 90%;
         }
 
         .hangover-title {
@@ -698,14 +712,37 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            max-width: 300px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
         @media (min-width: 480px) {
             .hangover-buttons {
                 flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
             }
+        }
+
+        .video-container {
+            margin: 2rem auto;
+            width: 100%;
+            max-width: 560px;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 2px solid var(--accent);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* Footer */
@@ -764,7 +801,8 @@
         <div class="container">
             <div class="landing-content">
                 <h1 class="landing-title">Artur Kudlik przedstawia</h1>
-                <h2 class="landing-subtitle">najznakomitszą szukajkę fachowców</h2>
+                <h2 class="landing-subtitle">Portal Randka z rówieśnikiem</h2>
+                <p class="landing-subtitle-small">dzięki tej stronie nastolatkowie i nastolatki będą bliżej swojej drugiej połówki</p>
                 <button class="cta-button" onclick="navigateTo('page2-selection')">
                     <span>SZUKAM</span>
                     <i class="fas fa-search"></i>
@@ -776,11 +814,11 @@
     <!-- Page 2: Selection -->
     <div id="page2-selection" class="page">
         <div class="container">
-            <h1 class="selection-title">Jaki fachowiec Ci w duszy gra?</h1>
+            <h1 class="selection-title">jaka miłość Ci w duszy gra?</h1>
             <div class="selection-grid">
                 <div class="selection-card" onclick="selectCategory('budowlańcy')" id="category-budowlańcy">
-                    <h3>Solidni i doświadczeni</h3>
-                    <p>Mężczyźni, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami.</p>
+                    <h3>Solidni i rozkochani</h3>
+                    <p>chłopaki, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami.</p>
                 </div>
                 <div class="selection-card" onclick="selectCategory('kucharze')" id="category-kucharze">
                     <h3>Kreatywni i smaczni</h3>
@@ -788,7 +826,7 @@
                 </div>
                 <div class="selection-card" onclick="selectCategory('pośredni')" id="category-pośredni">
                     <h3>Wszechstronni i elastyczni</h3>
-                    <p>Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy lubią mieć wszystko w jednym.</p>
+                    <p>Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy chcą Karola Kocembę ale wstydzą się podbić.</p>
                 </div>
             </div>
         </div>
@@ -817,7 +855,7 @@
             <h2 class="popup-title" id="popup-title">Świetny wybór!</h2>
             <p class="popup-text" id="popup-text">Ten fachowiec to prawdziwy skarb. Nie tylko wykona pracę, ale też rozkocha Cię w swoim profesjonalizmie.</p>
             <div class="popup-buttons">
-                <button class="popup-button primary" onclick="proceedToConnection()">POŁĄcz SIĘ</button>
+                <button class="popup-button primary" onclick="proceedToConnection()">POŁĄCZ SIĘ</button>
             </div>
         </div>
     </div>
@@ -851,13 +889,17 @@
             <div class="hangover-buttons">
                 <button class="popup-button primary" onclick="tryAgain()">SPRÓBUJ JESZCZE RAZ</button>
                 <button class="popup-button secondary" onclick="navigateTo('page1-landing')">WRÓĆ NA POCZĄTEK</button>
+                <button class="popup-button secondary" onclick="showPresidentialSpeech()">PREZYDENCKIE PRZEMÓWIENIE</button>
+            </div>
+            <div class="video-container" id="video-container" style="display: none;">
+                <iframe src="https://www.youtube.com/embed/yHAhqiyauhE?si=DIKrw-GZs21w9Jl6" title="Przemówienie Prezydenta Karola Nawrockiego" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        <p>Starrrannie zrobione z <span class="footer-heart">❤️</span> przez Artura Kudlika <span class="footer-heart">❤️</span> listopad 2025 (pozdro dla Karola, Krzysia, Szymona S)</p>
+        <p>Made with <span class="footer-heart">❤️</span> by Artur Kudlik <span class="footer-heart">❤️</span> 2023</p>
     </div>
 
     <script>
@@ -881,7 +923,9 @@
             "Czasem trzeba poczekać, żeby znaleźć tego jedynego... fachowca. Spróbuj jeszcze raz!",
             "Nie trać nadziei! Każde 'nie' przybliża Cię do tego jednego wielkiego 'TAK' od idealnego specjalisty.",
             "Fachowcy też mają uczucia. Daj im jeszcze jedną szansę, a może tym razem będzie to miłość od pierwszego wezwania?",
-            "Czasem trzeba pocałować kilka żab, zanim znajdzie się księcia... z narzędziami. Albo z patelnią."
+            "Czasem trzeba pocałować kilka żab, zanim znajdzie się księcia... z narzędziami. Albo z patelnią.",
+            "Nie poddawaj się! Za którymś razem na pewno trafisz na fachowca, który spełni wszystkie Twoje oczekiwania.",
+            "Pamiętaj - każdy fachowiec ma swoje wady, ale każdy też ma swoje zalety. Może warto dać im jeszcze jedną szansę?"
         ];
 
         // EASY-EDIT-3: Dane osobowe (profil 1-15: budowlańcy, 16-30: kucharze, 31-45: pośredni)
@@ -1297,6 +1341,7 @@
         const connectionBio = document.getElementById('connection-bio');
         const hangoverOverlay = document.getElementById('hangover-overlay');
         const hangoverText = document.getElementById('hangover-text');
+        const videoContainer = document.getElementById('video-container');
         const heartsContainer = document.getElementById('hearts-container');
 
         // Navigation functions
@@ -1413,6 +1458,7 @@
 
         function closeConnection() {
             connectionOverlay.classList.remove('active');
+            videoContainer.style.display = 'none';
         }
 
         function acceptCall() {
@@ -1435,11 +1481,18 @@
 
         function closeHangover() {
             hangoverOverlay.classList.remove('active');
+            videoContainer.style.display = 'none';
         }
 
         function tryAgain() {
             closeHangover();
             showConnectionScreen();
+        }
+
+        function showPresidentialSpeech() {
+            videoContainer.style.display = 'block';
+            const randomIndex = Math.floor(Math.random() * hangoverTexts.length);
+            hangoverText.textContent = "Obejrzyj przemówienie naszego kochanego Prezydenta Karola Nawrockiego z okazji Święta Niepodległości. Może Ci to doda otuchy w poszukiwaniu idealnego fachowca!";
         }
 
         // Close popups when clicking outside
@@ -1472,14 +1525,14 @@
                     heart.className = 'heart';
                     heart.innerHTML = '❤️';
                     heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
                     heart.style.display = 'block';
                     heartsContainer.appendChild(heart);
 
                     // Remove heart after animation
                     setTimeout(() => {
                         heart.remove();
-                    }, 6000);
+                    }, 12000);
                 }, i * 100);
             }
         }
@@ -1493,13 +1546,13 @@
                     heart.className = 'heart';
                     heart.innerHTML = '❤️';
                     heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
                     heart.style.display = 'block';
                     heartsContainer.appendChild(heart);
 
                     setTimeout(() => {
                         heart.remove();
-                    }, 6000);
+                    }, 12000);
                 }, i * 1500);
             }
         });
