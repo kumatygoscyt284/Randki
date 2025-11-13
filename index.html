@@ -16,6 +16,8 @@
             --secondary-text-color: #A0A0A0;
             --accent-color: #FFD700;
             --border-color: #333333;
+            --success-color: #4CAF50;
+            --danger-color: #F44336;
         }
 
         * {
@@ -52,10 +54,10 @@
         }
 
         /* ==========================================================================
-           2. STRUKTURA SPA (POKAZYWANIE/UKRYWANIE SEKCJI)
+           2. STRUKTURA SPA (SEKCJE + MODALE)
            ========================================================================== */
-        .page-section {
-            display: none; /* Wszystkie sekcje domyślnie ukryte */
+        .page-section, .modal-overlay {
+            display: none;
             min-height: 100vh;
             flex-direction: column;
             justify-content: center;
@@ -65,11 +67,52 @@
         }
 
         .page-section.active {
-            display: flex; /* Aktywna sekcja widoczna */
+            display: flex;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            border-top: 4px solid var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .modal-content .btn-group {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
         }
         
         /* ==========================================================================
-           3. STYLE PRZYCISKÓW I ELEMENTÓW INTERAKTYWNYCH
+           3. STYLE PRZYCISKÓW
            ========================================================================== */
         .btn {
             display: inline-block;
@@ -80,7 +123,8 @@
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            text-align: center;
         }
 
         .btn-accent {
@@ -102,193 +146,152 @@
             background-color: var(--accent-color);
             color: #000;
         }
-
-        /* ==========================================================================
-           4. STYLE SEKCJI - #page1-landing
-           ========================================================================== */
-        #page1-landing h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 0.5rem;
-        }
-
-        #page1-landing h2 {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: var(--secondary-text-color);
-            margin-bottom: 2.5rem;
-            font-weight: normal;
-        }
         
         /* ==========================================================================
-           5. STYLE SEKCJI - #page2-selection
+           4. STYLE SEKCJI - LANDING, SELECTION, LIST
            ========================================================================== */
-        #page2-selection {
-            justify-content: flex-start;
-            padding-top: 4rem;
+        #page1-landing h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.5rem; }
+        #page1-landing h2 { font-size: clamp(1.2rem, 3vw, 1.5rem); color: var(--secondary-text-color); margin-bottom: 2.5rem; font-weight: normal; }
+        #page2-selection, #page3-list { justify-content: flex-start; padding-top: 4rem; }
+        #page2-selection h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 3rem; }
+        .category-container { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 600px; }
+        .category-tile { background-color: var(--surface-color); padding: 1.5rem; border-left: 5px solid var(--border-color); text-align: left; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; }
+        .category-tile:hover { transform: translateX(10px); border-left-color: var(--accent-color); }
+        .category-tile h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-color); }
+        .list-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .list-header h2 { font-size: 1.5rem; text-align: left; }
+        #profile-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; width: 100%; }
+        .profile-card { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s ease, transform 0.2s ease; text-align: left; }
+        .profile-card:hover { border-color: var(--accent-color); transform: translateY(-5px); }
+        .profile-image-placeholder { width: 100%; aspect-ratio: 4 / 3; background-color: #2c2c2c; display: flex; justify-content: center; align-items: center; }
+        .profile-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-content { padding: 1rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .profile-content h3 { font-size: 1.3rem; }
+        .profile-content h3 .ksywka { color: var(--accent-color); font-weight: bold; }
+        .profile-meta { font-size: 0.9rem; color: var(--secondary-text-color); margin-bottom: 1rem; }
+        .profile-opis { font-style: italic; color: var(--primary-text-color); margin-bottom: 1rem; border-left: 3px solid var(--accent-color); padding-left: 10px; }
+        .profile-biogram { font-size: 0.95rem; flex-grow: 1; margin-bottom: 1.5rem; }
+        .profile-btn { width: 100%; }
+
+        /* ==========================================================================
+           5. NOWE STYLE - EKRAN POŁĄCZENIA I POKÓJ WYTRZEŹWIEŃ
+           ========================================================================== */
+        #incoming-call-screen {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), var(--background-color);
+            padding: 2rem;
         }
 
-        #page2-selection h2 {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            margin-bottom: 3rem;
-        }
-
-        .category-container {
+        .call-content {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .call-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--primary-text-color);
+            position: relative;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+
+        .call-avatar::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            70% { transform: scale(1.2); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .call-avatar img {
             width: 100%;
-            max-width: 600px;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .category-tile {
-            background-color: var(--surface-color);
-            padding: 1.5rem;
-            border-left: 5px solid var(--border-color);
-            text-align: left;
-            cursor: pointer;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .category-tile:hover {
-            transform: translateX(10px);
-            border-left-color: var(--accent-color);
-        }
-
-        .category-tile h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+        #call-info h2 {
+            font-size: 2rem;
             color: var(--accent-color);
         }
 
-        /* ==========================================================================
-           6. STYLE SEKCJI - #page3-list
-           ========================================================================== */
-        #page3-list {
-            justify-content: flex-start;
-        }
-
-        .list-header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .list-header h2 {
-            font-size: 1.5rem;
- vicenda_pl_2_1
+        #call-info p {
+            font-size: 1rem;
+            max-width: 400px;
+            color: var(--secondary-text-color);
+            margin-top: 0.5rem;
         }
         
-        #profile-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Mobile-first: 1 kolumna */
-            gap: 1.5rem;
-            width: 100%;
-        }
-
-        .profile-card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
+        .call-actions {
+            margin-top: 3rem;
             display: flex;
-            flex-direction: column;
-            transition: border-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .profile-card:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-5px);
+            gap: 4rem;
         }
         
-        .profile-image-placeholder {
-            width: 100%;
-            aspect-ratio: 4 / 3; /* Utrzymuje proporcje */
-            background-color: #2c2c2c;
+        .call-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: transform 0.2s ease;
         }
 
-        .profile-image-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Zdjęcie wypełnia kontener bez zniekształceń */
+        .call-btn:hover {
+            transform: scale(1.1);
         }
         
-        .profile-content {
-            padding: 1rem;
-        }
+        .call-btn.accept { background-color: var(--success-color); }
+        .call-btn.reject { background-color: var(--danger-color); }
 
-        .profile-content h3 {
-            font-size: 1.3rem;
- màu
+        .call-btn svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
         }
-        .profile-content h3 .ksywka {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .profile-meta {
-            font-size: 0.9rem;
-            color: var(--secondary-text-color);
-            margin-bottom: 1rem;
-        }
-
-        .profile-opis {
-            font-style: italic;
-            color: var(--primary-text-color);
-            margin-bottom: 1rem;
-            border-left: 3px solid var(--accent-color);
-            padding-left: 10px;
-        }
-
-        .profile-biogram {
-            font-size: 0.95rem;
+        
+        #sobering-up-room p {
+            margin: 1rem 0;
         }
 
         /* ==========================================================================
-           7. RESPONSIVE DESIGN (Desktop)
+           6. RESPONSIVE DESIGN (Desktop)
            ========================================================================== */
-        
-        /* Dla tabletów i większych urządzeń */
         @media (min-width: 768px) {
-            .category-container {
-                flex-direction: row;
-                max-width: 1200px;
-            }
-            .category-tile {
-                flex: 1;
-            }
-            #profile-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 kolumny */
-            }
+            .category-container { flex-direction: row; max-width: 1200px; }
+            .category-tile { flex: 1; }
+            #profile-grid { grid-template-columns: repeat(2, 1fr); }
         }
-
-        /* Dla dużych ekranów desktopowych */
         @media (min-width: 1200px) {
-            #profile-grid {
-                grid-template-columns: repeat(3, 1fr); /* 3 kolumny */
-            }
+            #profile-grid { grid-template-columns: repeat(3, 1fr); }
         }
-
     </style>
 </head>
 <body>
 
-    <!-- ======================================================================= -->
-    <!--                       STRUKTURA APLIKACJI HTML                          -->
-    <!-- ======================================================================= -->
-    
     <main>
         <!-- SEKCJA 1: STRONA POWITALNA -->
-        <section id="page1-landing" class="page-section">
+        <section id="page1-landing" class="page-section active">
             <div class="container">
                 <!-- EASY-EDIT-1: Napisy na stronie głównej (tytuły) -->
                 <h1>Artur Kudlik przedstawia:</h1>
                 <h2>najznakomitszą szukajkę budowlańców i kucharzy</h2>
                 <!-- KONIEC EASY-EDIT-1 -->
-
                 <button id="cta-button" class="btn btn-accent">COXDDD?</button>
             </div>
         </section>
@@ -297,9 +300,7 @@
         <section id="page2-selection" class="page-section">
             <div class="container">
                 <h2>Wybierz typ mężczyzny</h2>
-                <div class="category-container">
-                    <!-- Kafelki generowane dynamicznie przez JS na podstawie danych EASY-EDIT-2 -->
-                </div>
+                <div class="category-container"></div>
             </div>
         </section>
 
@@ -310,12 +311,58 @@
                     <h2 id="list-title">Lista Profili</h2>
                     <button id="back-to-selection-button" class="btn btn-secondary">Powrót</button>
                 </div>
-                <div id="profile-grid">
-                    <!-- Profile generowane dynamicznie przez JS -->
-                </div>
+                <div id="profile-grid"></div>
             </div>
         </section>
     </main>
+    
+    <!-- ======================================================================= -->
+    <!--                       MODALE I EKRANY DODATKOWE                       -->
+    <!-- ======================================================================= -->
+
+    <!-- MODAL 1: Potwierdzenie wyboru -->
+    <div id="selection-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="confirm-modal-title"></h2>
+            <p>Najpierw położy kafelki, a potem położy kres szkolnej propagandzie.</p>
+            <div class="btn-group">
+                <button id="confirm-modal-continue-btn" class="btn btn-accent">Idę dalej</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EKRAN 2: Połączenie przychodzące -->
+    <div id="incoming-call-screen" class="modal-overlay">
+        <div class="call-content">
+            <div class="call-avatar">
+                <img id="call-avatar-img" src="" alt="Avatar dzwoniącego">
+            </div>
+            <div id="call-info">
+                <h2 id="call-name"></h2>
+                <p id="call-bio"></p>
+            </div>
+            <div class="call-actions">
+                <button id="reject-call-btn" class="call-btn reject" aria-label="Odrzuć połączenie">
+                    <svg viewBox="0 0 24 24"><path d="M12.96,16.24C12.13,16.24 11.33,16.09 10.59,15.82C9.84,15.54 9.14,15.17 8.5,14.69C7.86,14.21 7.3,13.65 6.81,13C6.33,12.36 5.96,11.66 5.69,10.91C5.41,10.17 5.27,9.37 5.27,8.54C5.27,7.74 5.41,6.96 5.68,6.22C5.95,5.47 6.32,4.78 6.8,4.14L7.93,5.27C7.57,5.75 7.29,6.29 7.1,6.88C6.9,7.48 6.8,8.09 6.8,8.72C6.8,9.43 6.93,10.11 7.2,10.76C7.47,11.41 7.82,12 8.25,12.5C8.68,13 9.19,13.43 9.79,13.7C10.4,13.97 11,14.11 11.63,14.11C11.91,14.11 12.18,14.08 12.45,14.01C12.91,13.9 13.35,13.73 13.77,13.53L14.9,14.66C14.25,15.17 13.56,15.58 12.83,15.89C12.2,16.13 11.56,16.24 10.92,16.24M18.86,13.19L17.73,12.06C17.93,11.64 18.1,11.2 18.2,10.75C18.28,10.47 18.31,10.2 18.31,9.92C18.31,9.29 18.21,8.68 18.02,8.09C17.82,7.49 17.55,6.95 17.18,6.47L18.31,5.34C18.8,5.99 19.17,6.68 19.44,7.43C19.72,8.17 19.86,8.96 19.86,9.76C19.86,10.6 19.72,11.4 19.45,12.14C19.18,12.89 18.8,13.58 18.27,14.22L17.14,13.09C17.62,12.61 18.09,12.05 18.57,11.41C19.05,10.77 19.43,10.07 19.69,9.32C19.96,8.58 20.1,7.78 20.1,6.95C20.1,6.15 19.96,5.37 19.69,4.63C19.42,3.88 19.05,3.19 18.57,2.55L17.44,3.68C17.07,3.19 16.63,2.83 16.14,2.55C15.65,2.28 15.12,2.1 14.58,2.02L14.36,0.5H12.16L12.38,2.02C11.83,2.1 11.31,2.28 10.82,2.55C10.33,2.83 9.89,3.19 9.52,3.68L2,11.2L3.25,12.45L21.05,2.9L22.3,1.65L9.52,14.43C9.15,14.91 8.87,15.45 8.67,16.05C8.47,16.65 8.37,17.26 8.37,17.89C8.37,18.17 8.4,18.44 8.47,18.71C8.58,19.17 8.75,19.61 8.95,20.03L10.08,18.9C9.9,18.5 9.77,18.1 9.7,17.68C9.64,17.4 9.61,17.13 9.61,16.85C9.61,16.22 9.71,15.61 9.9,15.02C10.1,14.42 10.37,13.88 10.74,13.4L18.86,13.19Z" /></svg>
+                </button>
+                <button id="accept-call-btn" class="call-btn accept" aria-label="Odbierz połączenie">
+                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- EKRAN 3: Pokój wytrzeźwień -->
+    <div id="sobering-up-room" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Chwila oddechu...</h2>
+            <p>Jesteś pewien, że chcesz zrezygnować? Taki fachowiec może się nie powtórzyć. Daj mu jeszcze jedną szansę.</p>
+            <div class="btn-group">
+                <button id="retry-call-btn" class="btn btn-accent">Zadzwoń jeszcze raz</button>
+                <button id="go-home-btn" class="btn btn-secondary">Powrót na sam początek</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -323,87 +370,31 @@
             // =======================================================================
             //                SEKCJE ŁATWEJ EDYCJI (EASY-EDIT)
             // =======================================================================
-
-            /**
-             * EASY-EDIT-2: Opisy kafelków wyboru.
-             * Zmień 'title' i 'description', aby dostosować tekst na kafelkach wyboru.
-             * 'category' ('A', 'B', 'C') łączy kafelek z danymi z bazy poniżej.
-             */
-            const categoryData = [
-                {
-                    category: 'A',
-                    title: 'Pracowici i Drodzy',
-                    description: 'Jakość premium ma swoją cenę. Fachowcy, którzy znają swoją wartość i dostarczają wyniki na czas. Idealni do projektów, gdzie liczy się perfekcja.'
-                },
-                {
-                    category: 'B',
-                    title: 'Tani i Ospali',
-                    description: 'Opcja budżetowa dla cierpliwych. Praca zostanie wykonana... w swoim czasie. Doskonały wybór, jeśli nigdzie Ci się nie spieszy i cenisz sobie spokój ducha.'
-                },
-                {
-                    category: 'C',
-                    title: 'Pośredni',
-                    description: 'Złoty środek. Rozsądny kompromis między ceną, jakością a czasem realizacji. Solidni rzemieślnicy na codzienne potrzeby, bez zbędnych fajerwerków.'
-                }
-];
-
-            /**
-             * EASY-EDIT-3: Baza danych profili.
-             * Poniżej znajduje się kod, który automatycznie generuje 90 profili.
-             * Możesz zmodyfikować listy `firstNames`, `lastNames`, `nicknames`, `descriptions`, `bios`
-             * aby wpłynąć na generowane dane.
-             */
+            const categoryData = [ { category: 'A', title: 'Pracowici i Drodzy', description: 'Jakość premium ma swoją cenę. Fachowcy, którzy znają swoją wartość i dostarczają wyniki na czas. Idealni do projektów, gdzie liczy się perfekcja.' }, { category: 'B', title: 'Tani i Ospali', description: 'Opcja budżetowa dla cierpliwych. Praca zostanie wykonana... w swoim czasie. Doskonały wybór, jeśli nigdzie Ci się nie spieszy i cenisz sobie spokój ducha.' }, { category: 'C', title: 'Pośredni', description: 'Złoty środek. Rozsądny kompromis między ceną, jakością a czasem realizacji. Solidni rzemieślnicy na codzienne potrzeby, bez zbędnych fajerwerków.' } ];
+            const firstNames = ['Jan', 'Piotr', 'Krzysztof', 'Andrzej', 'Paweł', 'Tomasz', 'Marek', 'Grzegorz', 'Józef', 'Marcin', 'Stanisław', 'Adam', 'Łukasz', 'Dariusz', 'Zbigniew', 'Jerzy', 'Tadeusz', 'Mateusz', 'Ryszard', 'Wojciech', 'Mariusz', 'Kazimierz', 'Robert', 'Michał', 'Henryk', 'Rafał', 'Jacek', 'Kamil', 'Czesław', 'Sławomir', 'Artur', 'Zdzisław', 'Eugeniusz', 'Waldemar', 'Stefan', 'Roman', 'Mirosław', 'Damian', 'Sebastian', 'Patryk', 'Edward', 'Leszek', 'Bogdan', 'Janusz', 'Wiesław', 'Daniel', 'Adrian', 'Marian', 'Ireneusz', 'Arkadiusz'];
+            const lastNames = ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kowalczyk', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski', 'Kozłowski', 'Jankowski', 'Mazur', 'Wojciechowski', 'Kwiatkowski', 'Krawczyk', 'Kaczmarek', 'Piotrowski', 'Grabowski', 'Zając', 'Król', 'Pawłowski', 'Michalski', 'Wróbel', 'Jabłoński', 'Nowakowski', 'Majewski', 'Olszewski', 'Stępień', 'Malinowski', 'Górski', 'Adamczyk', 'Pawlak', 'Sikora', 'Walczak', 'Witkowski', 'Baran', 'Rutkowski', 'Michalak', 'Szewczyk', 'Ostrowski', 'Tomaszewski', 'Pietrzak', 'Zalewski', 'Wróblewski', 'Jasiński', 'Marciniak', 'Bąk', 'Sadowski'];
+            const nicknames = ["'Złota Rączka'", "'Betoniarz'", "'Fucha'", "'Majster'", "'Szpachla'", "'Patelnia'", "'Chochla'", "'Młotek'", "'Gulasz'", "'Dynamit'", "'Profesor'", "'Wirtuoz'", "'Cichy'", "'Szybki'", "'Fachura'", "'Terminator'", "'Harnaś'", "'Prezes'", "'Szefuńcio'", "'Artysta'", "'Wąsacz'", "'Cyklop'", "'Bosman'", "'Hefajstos'", "'Wulkan'", "'Sieka'", "'Tytan'", "'Maszyna'", "'Demon'", "'Walec'", "'Niszczyciel'", "'Grom'", "'Piorun'", "'Laser'", "'Cegła'", "'Kielnia'", "'Poziomica'", "'Wiertara'", "'Kat'", "'Bestia'"];
+            const styleA_opisy = ["Nie tylko ściany potrafię postawić na nogi.", "Moje fugi są tak gładkie jak moje komplementy.", "Zbuduję Ci dom, a potem skradnę serce.", "U mnie wszystko stoi w pionie.", "Specjalista od gorących tematów... i podgrzewanych podłóg.", "Potrafię rozpalić ogień... w kominku i nie tylko.", "Gwarantuję solidne fundamenty. W każdej dziedzinie życia.", "Moje narzędzia nie są jedyną rzeczą, która robi wrażenie.", "Ze mną remont to czysta przyjemność.", "Zamontuję Ci półkę, a potem skradnę buziaka.", "Znam się na dobrych proporcjach.", "Kładę kafelki z precyzją chirurga, a gotuję z pasją kochanka.", "U mnie każda śruba jest dokręcona na maksa.", "Zostawiam po sobie porządek i dobre wrażenie.", "Praca ze mną to inwestycja, która zawsze się zwraca.", "Potrafię naprawić wszystko, łącznie ze złym humorem.", "Moje usługi są premium, tak jak ja.", "W kuchni i na budowie - zawsze daję z siebie 110%.", "Perfekcja w każdym calu, od fundamentów po dach.", "Nie uznaję kompromisów, jeśli chodzi o jakość.", "Zbuduję dla Ciebie pałac, królowo.", "Ufam swojej poziomicy i intuicji.", "Każdy detal ma znaczenie. Dokładnie tak jak Ty.", "Moje menu degustacyjne powala na kolana.", "Mistrz patelni i kielni.", "Twój dom zasługuje na najlepsze. Ty też.", "Znam sekret idealnego betonu i udanej randki.", "Po mojej wizycie wszystko będzie lśnić.", "Ze mną każdy projekt kończy się happy endem.", "Gotowy na remont życia?"];
+            const styleA_biogramy = ["Jestem jak dobrze zaprojektowany budynek: solidny, niezawodny i miło na mnie popatrzeć. W pracy cenię precyzję, a po godzinach lubię dobre wino i inteligentną rozmowę. Moja specjalność to wykończenia, które zapierają dech w piersiach. Daj mi szansę, a udowodnię, że remont może być ekscytujący.", "Mówią, że jestem artystą w swoim fachu. Niezależnie czy trzymam w ręku kielnię, czy nóż szefa kuchni, tworzę coś wyjątkowego. Lubię wyzwania, skomplikowane projekty i kobiety z charakterem. Jeśli szukasz kogoś, kto wniesie do Twojego życia jakość i odrobinę pikanterii, to właśnie go znalazłaś.", "Fachowiec z klasą. Nie interesują mnie półśrodki. Wszystko, co robię, musi być zapięte na ostatni guzik. Po pracy zrzucam robocze ciuchy, by oddać się drugiej pasji - tańcom latynoamerykańskim. Pozwól mi poprowadzić się na parkiecie... i podczas remontu.", "Uważam, że praca powinna być pasją. Moja to tworzenie pięknych i funkcjonalnych przestrzeni. Każde zlecenie traktuję indywidualnie, bo wierzę, że każdy dom ma duszę. Prywatnie jestem miłośnikiem górskich wędrówek i wieczorów przy kominku. Może następny spędzimy razem?", "Jestem konkretny i zdecydowany. Wiem, czego chcę, zarówno na budowie, jak i w życiu. Cenię sobie szczerość, lojalność i poczucie humoru. Moja kuchnia fusion zaskoczyła już niejednego smakosza. Pozwól, że zaskoczę i Ciebie.", ...Array(25).fill("To profesjonalista, który podchodzi do życia z pasją. Niezależnie od zadania, wkłada w nie całe serce. Ceni sobie estetykę, porządek i dobrą organizację. Poza pracą rozwija swoje zainteresowania, bo wie, że wszechstronność jest klucem do sukcesu. To partner, na którym można polegać.")];
+            const styleB_opisy = ["A za moich czasów to się robiło, a nie narzekało!", "Panie, kto to panu tak... A, nieważne, poprawi się.", "Daj mi pięć minut. Albo pięćdziesiąt.", "Szefie, polej, bo schnie!", "Zdrówko! A teraz do roboty. Kiedyś.", "Poczekaj, muszę zebrać myśli.", "To się zrobi. Ale najpierw kawusia.", "Spokojnie, bez nerwów, wszystko w swoim czasie.", "Kiedyś to były budowy... A teraz? Szkoda gadać.", "Ta ściana? Ona tak ma. Taki styl.", "A pamiętasz, Ryśku, jak... A, nie, ty nie Rysiek.", "Najważniejsze to dobre podejście. I drzemka po obiedzie.", "Ja tu tylko na chwilę... od tygodnia.", "Zrobię tak, że będzie pan zadowolony. Może nie od razu.", "Jeszcze po jednym i lecimy z tematem.", "Grunt to rodzina! I żeby spoina wyschła.", "Co się odwlecze, to nie uciecze.", "To jest robota na spokojnie, na medytację.", "Taniej już się nie da. Wolniej też.", "A zatańczymy? Po robocie, oczywiście.", "Priorytetem jest spokój ducha. Reszta poczeka.", "Jutro. Jutro to jest magiczne słowo.", "Mam takie powiedzenie: co masz zrobić dziś, zrób pojutrze.", "Daj pan spokój, poniedziałek jest.", "Zaraz, zaraz, muszę to przemyśleć.", "Ta robota sama się nie zrobi. Ale sama też nie ucieknie.", "Wszystko pod kontrolą. Moją, powolną kontrolą.", "To się nazywa 'slow building'. Teraz to modne.", "Bez pośpiechu, bo się człowiek spoci.", "Pomalutku, a do celu. Kiedyś."];
+            const styleB_biogramy = ["Człowiek z zasadami. Pierwsza zasada: nigdy się nie spieszyć. Druga: patrz zasada pierwsza. Mam swoje tempo, ale jak już coś zrobię, to jest zrobione. W życiu widziałem wszystko, więc nic mnie już nie zdziwi. Lubię wspominać stare, dobre czasy i prawić morały młodzieży. Daj mi spokój, a ja dam Ci niską cenę.", "Filozof kielni i betoniarki. Uważam, że pośpiech jest wrogiem jakości i dobrego samopoczucia. Pracuję w rytmie natury, czyli powoli, ale systematycznie. Po pracy lubię usiąść, popatrzeć w dal i pomyśleć o niebieskich migdałach. Ze mną nerwy Ci przejdą, bo i tak nic nie przyspieszysz.", "Doświadczenie nauczyło mnie jednego: cierpliwości. Zarówno do materiałów, jak i do klientów. Moje usługi są dla tych, którzy rozumieją, że na dobre rzeczy trzeba poczekać. Czasami trochę dłużej. W wolnych chwilach rozwiązuję krzyżówki i słucham radia. Bez nerwowej atmosfery, proszę.", "Jestem jak stary, poczciwy diesel. Długo się rozgrzewam, ale jak już ruszę, to jadę. Może nie za szybko, ale do przodu. Cenię sobie tradycyjne metody pracy i tradycyjny odpoczynek po niej. Ze mną nie ma co się denerwować, lepiej usiąść i pogadać o życiu.", "Mistrz prokrastynacji i niskich stawek. Robota? Zrobi się. Kiedy? Jak przyjdzie wena. A wena to kapryśna pani. Najlepiej czuję się z kubkiem kawy w ręku, planując kolejne ruchy. Planowanie to podstawa, wykonanie to już szczegół. Jeśli masz czas, ja mam cenę.", ...Array(25).fill("To człowiek starej daty. Wierzy, że pośpiech jest złym doradcą. Wszystko robi w swoim, sprawdzonym od lat tempie. Ma swoje rytuały, których nic nie jest w stanie zaburzyć. Ceni sobie spokój, tradycję i proste przyjemności. Idealny dla tych, którzy nigdzie się nie spieszą.")];
+            const styleC_opisy = ["Jasne, 'mała poprawka'. Znamy te 'małe poprawki'.", "A kto tu przede mną był?!", "Projekt? A po co komu projekt?", "Tego się tak nie da. No po prostu się nie da.", "Panie, to trzeba było myśleć wcześniej.", "Za takie pieniądze to cudów nie będzie.", "Znowu krzywe ściany... jak ja to kocham.", "Czy ja wyglądam na czarodzieja?", "No i fajnie. Cały dzień w plecy.", "A mówiłem, żeby kupić droższe...", "No comment. Po prostu no comment.", "Dobra, dobra, już robię.", "Czemu to zawsze ja muszę po kimś poprawiać?", "Wszystko na wczoraj, a płatność 'kiedyś'. Standard.", "Ten materiał to chyba z plasteliny jest.", "Da się zrobić. Ale będzie pan narzekał.", "Kolejny poniedziałek, kolejny dramat na budowie.", "Ja już nic nie mówię.", "Będzie trzymać. Chyba.", "No i kto za to zapłaci?", "Znowu geniusz architektury wymyślił.", "A gdzie tu jest pion?", "Sufit podwieszany? A może od razu latający dywan?", "Niech mi pan da święty spokój na pięć minut.", "Robię, co mogę. Z tym, co mam.", "To prowizorka. Ale będzie trzymać dłużej niż oryginał.", "Tak, tak, oczywiście. 'Tylko przesunąć gniazdko'.", "Mam tego dość. Ale czynsz sam się nie zapłaci.", "Będzie pan zadowolony. Albo i nie.", "Zrobione. Następny."];
+            const styleC_biogramy = ["Realista. Twardo stąpam po ziemi, która najczęściej jest krzywym wylewkami poprzedniej ekipy. Robię swoje, bez zbędnego gadania. Nie obiecuję gruszek na wierzbie, tylko solidną robotę za rozsądną cenę. Denerwują mnie 'złote rady' i klienci, którzy 'wiedzą lepiej'. Daj mi jasne wytyczne i zostaw w spokoju, a robota będzie zrobiona.", "Mam alergię na trzy rzeczy: kurz, głupotę i poprawianie po partaczach. Niestety, na budowie spotykam wszystkie trzy codziennie. Staram się zachować zen, ale czasem kielnia sama rwie się do rzucania. Mimo wszystko, lubię swoją pracę. Zwłaszcza w dniu wypłaty. Zrobię, co trzeba, ale nie pytaj, czy jestem szczęśliwy.", "Weteran tysiąca remontów i stu tysięcy 'małych poprawek'. Widziałem już tyle, że nic mnie nie zdziwi. Moja twarz może i wygląda na zmęczoną życiem, ale ręce wciąż wiedzą, co robić. Znam się na robocie, ale nie mam już siły na dyskusje o kolorze fugi. Wybierz, zapłać, a ja to zrobię.", "Balansuję na cienkiej linie między 'jakoś to będzie' a 'zrobię to perfekcyjnie'. Efekt końcowy zależy od mojego nastroju, pogody i jakości dostarczonych materiałów. Jestem solidnym rzemieślnikiem, ale nie oczekuj uśmiechu gratis. Uśmiecham się po dobrze wykonanej pracy i terminowej zapłacie.", "Motto życiowe: 'Zrób swoje i idź do domu'. Nie szukam w pracy głębszego sensu, tylko sposobu na opłacenie rachunków. Ale jak już coś robię, to robię to porządnie, żeby nie musieć wracać i poprawiać. To by była strata czasu, a czas to pieniądz. Konkretnie, zwięźle i na temat - taki jestem.", ...Array(25).fill("To pragmatyk, który widział już wszystko. Nie szuka problemów, ale potrafi je rozwiązywać. Jego cynizm maskuje solidne umiejętności i lata doświadczenia. Chce po prostu zrobić swoją robotę dobrze i mieć święty spokój. Zapewni dobry stosunek jakości do ceny, ale niekoniecznie miłą pogawędkę.")];
+            
             const database = [];
-            const firstNames = ["Janusz", "Mirek", "Andrzej", "Stefan", "Zbigniew", "Krzysztof", "Roman", "Eugeniusz", "Waldemar", "Ryszard"];
-            const lastNames = ["Kowalski", "Nowak", "Wiśniewski", "Wójcik", "Kowalczyk", "Zieliński", "Szymański", "Woźniak", "Kozłowski", "Jankowski"];
-            const nicknames = ["'Złota Rączka'", "'Betoniarz'", "'Fucha'", "'Majster'", "'Szpachla'", "'Patelnia'", "'Chochla'", "'Młotek'", "'Gulasz'", "'Dynamit'"];
-            const descriptions = [
-                "Robota pali mi się w rękach!",
-                "Tanio, dobrze, kiedyś.",
-                "Szef Wszystkich Szefów.",
-                "Gdzie kucharek sześć...",
-                "Faktury? A co to takiego?",
-                "Specjalista od zadań niemożliwych.",
-                "Do tańca i do różańca (i do gładzi).",
-                "Gotuję lepiej niż Twoja mama."
-            ];
-            const bios = [
-                "Od lat w branży. Zaczynałem od noszenia cegieł, a dziś sam je stawiam. W wolnych chwilach wędkuję i oglądam mecze. Konkretny i słowny, ale lubię, jak się mnie nie pogania.",
-                "Pasjonat gotowania z powołania. Każde danie to dla mnie dzieło sztuki. Uważam, że sekret tkwi w świeżych składnikach i odrobinie serca. Nie toleruję profanacji w postaci ketchupu na pizzy.",
-                "Znam się na robocie jak mało kto. Moje motto to 'pomaluśku, a bydzie dobzie'. Po co się spieszyć? Dobra robota wymaga czasu, a ja mam go pod dostatkiem. Preferuję płatność gotówką.",
-                "Budownictwo to moja pasja od dziecka. Pamiętam, jak budowałem zamki z piasku - dziś buduję z betonu. Dokładność i precyzja to moje drugie imię. Po pracy lubię majsterkować w garażu."
-            ];
-
-            const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-            const getRandomAge = () => Math.floor(Math.random() * (54 - 32 + 1)) + 32;
-
-            for (let i = 0; i < 90; i++) {
-                let category;
-                if (i < 30) {
-                    category = 'A';
-                } else if (i < 60) {
-                    category = 'B';
-                } else {
-                    category = 'C';
-                }
-
-                database.push({
-                    id: i + 1,
-                    imie: getRandomItem(firstNames),
-                    nazwisko: getRandomItem(lastNames),
-                    ksywka: getRandomItem(nicknames),
-                    wiek: getRandomAge(),
-                    opis: getRandomItem(descriptions),
-                    biogram: getRandomItem(bios),
-                    kategoria: category
-                });
-            }
+            const shuffleArray = (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; };
+            const generateUniqueProfiles = (count, category, namePool, nicknamePool, descPool, bioPool) => { const shuffledNames = shuffleArray([...namePool.imiona]); const shuffledLastNames = shuffleArray([...namePool.nazwiska]); const shuffledNicknames = shuffleArray([...nicknamePool]); const shuffledDescs = shuffleArray([...descPool]); const shuffledBios = shuffleArray([...bioPool]); for (let i = 0; i < count; i++) { database.push({ id: database.length + 1, imie: shuffledNames.pop() || 'Brak Imienia', nazwisko: shuffledLastNames.pop() || 'Brak Nazwiska', ksywka: shuffledNicknames.pop() || 'Brak Ksywki', wiek: Math.floor(Math.random() * (54 - 32 + 1)) + 32, opis: shuffledDescs.pop() || 'Brak opisu.', biogram: shuffledBios.pop() || 'Brak biogramu.', kategoria: category }); } };
+            const nameSource = { imiona: firstNames, nazwiska: lastNames };
+            generateUniqueProfiles(30, 'A', nameSource, nicknames, styleA_opisy, styleA_biogramy);
+            generateUniqueProfiles(30, 'B', nameSource, nicknames, styleB_opisy, styleB_biogramy);
+            generateUniqueProfiles(30, 'C', nameSource, nicknames, styleC_opisy, styleC_biogramy);
             // =======================================================================
             //                        KONIEC SEKCJI EASY-EDIT
             // =======================================================================
 
 
             // --- LOGIKA APLIKACJI ---
+            let currentSelectedProfile = null;
 
             // Selektory DOM
             const pageSections = document.querySelectorAll('.page-section');
@@ -413,89 +404,144 @@
             const profileGrid = document.getElementById('profile-grid');
             const listTitle = document.getElementById('list-title');
 
-            // Funkcja do przełączania stron
+            // Selektory Modali
+            const modalOverlays = document.querySelectorAll('.modal-overlay');
+            const confirmModal = document.getElementById('selection-confirm-modal');
+            const confirmModalTitle = document.getElementById('confirm-modal-title');
+            const confirmContinueBtn = document.getElementById('confirm-modal-continue-btn');
+
+            const callScreen = document.getElementById('incoming-call-screen');
+            const callAvatar = document.getElementById('call-avatar-img');
+            const callName = document.getElementById('call-name');
+            const callBio = document.getElementById('call-bio');
+            const acceptCallBtn = document.getElementById('accept-call-btn');
+            const rejectCallBtn = document.getElementById('reject-call-btn');
+            
+            const soberingRoom = document.getElementById('sobering-up-room');
+            const retryCallBtn = document.getElementById('retry-call-btn');
+            const goHomeBtn = document.getElementById('go-home-btn');
+
+
+            // Funkcje pomocnicze
             const showPage = (pageId) => {
-                pageSections.forEach(section => {
-                    section.classList.remove('active');
-                });
+                pageSections.forEach(section => section.classList.remove('active'));
                 const activePage = document.getElementById(pageId);
-                if (activePage) {
-                    activePage.classList.add('active');
-                }
-                window.scrollTo(0, 0); // Przewiń na górę strony
+                if (activePage) activePage.classList.add('active');
+                window.scrollTo(0, 0);
+            };
+            
+            const showOverlay = (overlayId) => {
+                const overlay = document.getElementById(overlayId);
+                if (overlay) overlay.classList.add('active');
             };
 
-            // Funkcja do renderowania kafelków kategorii
+            const hideAllOverlays = () => {
+                modalOverlays.forEach(overlay => overlay.classList.remove('active'));
+            };
+
             const renderCategories = () => {
                 categoryContainer.innerHTML = '';
                 categoryData.forEach(cat => {
                     const tile = document.createElement('div');
                     tile.className = 'category-tile';
                     tile.dataset.category = cat.category;
-                    tile.innerHTML = `
-                        <h3>${cat.title}</h3>
-                        <p>${cat.description}</p>
-                    `;
+                    tile.innerHTML = `<h3>${cat.title}</h3><p>${cat.description}</p>`;
                     categoryContainer.appendChild(tile);
                 });
             };
 
-            // Funkcja do renderowania profili
             const renderProfiles = (category) => {
                 profileGrid.innerHTML = '';
                 const filteredProfiles = database.filter(p => p.kategoria === category);
-                
-                // Ustawienie tytułu listy
                 const categoryInfo = categoryData.find(cat => cat.category === category);
                 listTitle.textContent = categoryInfo ? categoryInfo.title : "Lista Profili";
 
-                filteredProfiles.forEach((profile, index) => {
-                    // Pętla po zdjęciach man1-man60
+                filteredProfiles.forEach(profile => {
                     const photoId = (profile.id - 1) % 60 + 1;
                     const imagePath = `foty/man${photoId}.jpg`;
-
                     const card = document.createElement('div');
                     card.className = 'profile-card';
                     card.innerHTML = `
                         <div class="profile-image-placeholder">
-                            <img src="${imagePath}" alt="Zdjęcie: ${profile.imie} ${profile.nazwisko}" onerror="this.style.display='none'">
+                            <img src="${imagePath}" alt="Zdjęcie: ${profile.imie}" onerror="this.style.display='none'">
                         </div>
                         <div class="profile-content">
                             <h3>${profile.imie} ${profile.nazwisko} <span class="ksywka">${profile.ksywka}</span></h3>
-                            <p class="profile-meta">Wiek: ${profile.wiek} lat | Kategoria: ${profile.kategoria}</p>
+                            <p class="profile-meta">Wiek: ${profile.wiek} lat</p>
                             <p class="profile-opis">"${profile.opis}"</p>
                             <p class="profile-biogram">${profile.biogram}</p>
+                            <button class="btn btn-accent profile-btn" data-id="${profile.id}">Wybieram ${profile.imie} na budowę</button>
                         </div>
                     `;
                     profileGrid.appendChild(card);
                 });
             };
 
-            // --- Event Listeners ---
+            // --- Event Listeners Głównej Aplikacji ---
+            ctaButton.addEventListener('click', () => showPage('page2-selection'));
+            backButton.addEventListener('click', () => showPage('page2-selection'));
 
-            // Przycisk "COXDDD?" -> Pokaż wybór kategorii
-            ctaButton.addEventListener('click', () => {
-                showPage('page2-selection');
-            });
-
-            // Kliknięcie na kafelek kategorii -> Pokaż listę profili
             categoryContainer.addEventListener('click', (e) => {
                 const tile = e.target.closest('.category-tile');
                 if (tile) {
-                    const category = tile.dataset.category;
-                    renderProfiles(category);
+                    renderProfiles(tile.dataset.category);
                     showPage('page3-list');
                 }
             });
 
-            // Przycisk "Powrót" -> Pokaż wybór kategorii
-            backButton.addEventListener('click', () => {
-                showPage('page2-selection');
+            // --- Event Listeners dla nowego flow (modale) ---
+            profileGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('profile-btn')) {
+                    const profileId = parseInt(e.target.dataset.id, 10);
+                    currentSelectedProfile = database.find(p => p.id === profileId);
+                    if (currentSelectedProfile) {
+                        // Krok 1: Pokaż modal potwierdzenia
+                        confirmModalTitle.textContent = `${currentSelectedProfile.imie} to świetny wybór!`;
+                        showOverlay('selection-confirm-modal');
+                    }
+                }
+            });
+
+            confirmContinueBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                if (currentSelectedProfile) {
+                    // Krok 2: Pokaż ekran połączenia
+                    const photoId = (currentSelectedProfile.id - 1) % 60 + 1;
+                    callAvatar.src = `foty/man${photoId}.jpg`;
+                    callName.textContent = `${currentSelectedProfile.imie} ${currentSelectedProfile.ksywka}`;
+                    callBio.textContent = `Dzwoni... ${currentSelectedProfile.biogram.substring(0, 100)}...`;
+                    showOverlay('incoming-call-screen');
+                }
+            });
+
+            acceptCallBtn.addEventListener('click', () => {
+                // Przekierowanie na YouTube
+                window.location.href = 'https://youtu.be/E4xIqwZgPT8?si=ycyHt1X3QxPwl9k8';
+            });
+            
+            rejectCallBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                // Krok 3: Pokaż pokój wytrzeźwień
+                showOverlay('sobering-up-room');
+            });
+            
+            retryCallBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                // Powrót do kroku 2 (ekran połączenia)
+                if (currentSelectedProfile) {
+                    showOverlay('incoming-call-screen');
+                }
+            });
+            
+            goHomeBtn.addEventListener('click', () => {
+                hideAllOverlays();
+                // Powrót na sam początek
+                showPage('page1-landing');
             });
 
             // --- Inicjalizacja Aplikacji ---
-            renderCategories(); // Przygotuj kafelki wyboru
-            showPage('page1-landing'); // Pokaż stronę powitalną na starcie
+            renderCategories();
+            // Pokaż stronę powitalną na starcie (już jest ustawiona w HTML)
         });
     </script>
 
