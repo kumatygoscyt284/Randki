@@ -3,547 +3,1506 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog: Budowlańcy i Kucharze</title>
-
+    <title>Budowlańcy & Kucharze</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ==========================================================================
-           1. GLOBALNE STYLE I RESET
-           ========================================================================== */
         :root {
-            --background-color: #121212;
-            --surface-color: #1E1E1E;
-            --primary-text-color: #E0E0E0;
-            --secondary-text-color: #A0A0A0;
-            --accent-color: #FFD700;
-            --border-color: #333333;
-            --success-color: #4CAF50;
-            --danger-color: #F44336;
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent: #FFD700;
+            --accent-hover: #e6c200;
+            --border-color: #333;
+            --card-bg: #252525;
+            --success: #4CAF50;
+            --danger: #F44336;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--background-color);
-            color: var(--primary-text-color);
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
-        h1, h2, h3 {
-            color: var(--primary-text-color);
-            line-height: 1.2;
+        .hearts-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+            height: 100px;
         }
 
-        p {
-            color: var(--secondary-text-color);
+        .heart {
+            position: absolute;
+            color: var(--accent);
+            font-size: 1.5rem;
+            animation: float 6s linear infinite;
+            opacity: 0;
+            display: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .page {
+            display: none;
+            flex: 1;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
-        /* ==========================================================================
-           2. STRUKTURA SPA (SEKCJE + MODALE)
-           ========================================================================== */
-        .page-section, .modal-overlay {
-            display: none;
-            min-height: 100vh;
+        /* Page 1 - Landing */
+        .landing-content {
+            text-align: center;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-
-        .page-section.active {
-            display: flex;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background-color: var(--surface-color);
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%;
-            border-top: 4px solid var(--accent-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .modal-content h2 {
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-        
-        .modal-content .btn-group {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-        
-        /* ==========================================================================
-           3. STYLE PRZYCISKÓW
-           ========================================================================== */
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-            text-align: center;
-        }
-
-        .btn-accent {
-            background-color: var(--accent-color);
-            color: #000000;
-        }
-
-        .btn-accent:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
-
-        .btn-secondary {
-            background-color: var(--surface-color);
-            color: var(--primary-text-color);
-            border: 1px solid var(--accent-color);
-        }
-        .btn-secondary:hover {
-            background-color: var(--accent-color);
-            color: #000;
-        }
-        
-        /* ==========================================================================
-           4. STYLE SEKCJI - LANDING, SELECTION, LIST
-           ========================================================================== */
-        #page1-landing h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.5rem; }
-        #page1-landing h2 { font-size: clamp(1.2rem, 3vw, 1.5rem); color: var(--secondary-text-color); margin-bottom: 2.5rem; font-weight: normal; }
-        #page2-selection, #page3-list { justify-content: flex-start; padding-top: 4rem; }
-        #page2-selection h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 3rem; }
-        .category-container { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 600px; }
-        .category-tile { background-color: var(--surface-color); padding: 1.5rem; border-left: 5px solid var(--border-color); text-align: left; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; }
-        .category-tile:hover { transform: translateX(10px); border-left-color: var(--accent-color); }
-        .category-tile h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-color); }
-        .list-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .list-header h2 { font-size: 1.5rem; text-align: left; }
-        #profile-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; width: 100%; }
-        .profile-card { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s ease, transform 0.2s ease; text-align: left; }
-        .profile-card:hover { border-color: var(--accent-color); transform: translateY(-5px); }
-        .profile-image-placeholder { width: 100%; aspect-ratio: 4 / 3; background-color: #2c2c2c; display: flex; justify-content: center; align-items: center; }
-        .profile-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-content { padding: 1rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .profile-content h3 { font-size: 1.3rem; }
-        .profile-content h3 .ksywka { color: var(--accent-color); font-weight: bold; }
-        .profile-meta { font-size: 0.9rem; color: var(--secondary-text-color); margin-bottom: 1rem; }
-        .profile-opis { font-style: italic; color: var(--primary-text-color); margin-bottom: 1rem; border-left: 3px solid var(--accent-color); padding-left: 10px; }
-        .profile-biogram { font-size: 0.95rem; flex-grow: 1; margin-bottom: 1.5rem; }
-        .profile-btn { width: 100%; }
-
-        /* ==========================================================================
-           5. NOWE STYLE - EKRAN POŁĄCZENIA I POKÓJ WYTRZEŹWIEŃ
-           ========================================================================== */
-        #incoming-call-screen {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), var(--background-color);
-            padding: 2rem;
-        }
-
-        .call-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .call-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid var(--primary-text-color);
+            height: 80vh;
             position: relative;
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
         }
 
-        .call-avatar::before {
-            content: '';
+        .landing-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .landing-title::after {
+            content: "❤️";
+            margin-left: 0.5rem;
+            color: var(--accent);
+        }
+
+        .landing-subtitle {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 3rem;
+            line-height: 1.2;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .cta-button {
+            background-color: var(--accent);
+            color: var(--primary-bg);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .cta-button:active {
+            transform: translateY(1px);
+        }
+
+        /* Page 2 - Selection */
+        .selection-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .selection-title::after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--accent);
+            margin: 0.5rem auto 0;
+        }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .selection-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .selection-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .selection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .selection-card.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent);
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+
+        .selection-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .selection-card h3::after {
+            content: "";
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 2px solid var(--accent-color);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            70% { transform: scale(1.2); opacity: 0; }
-            100% { transform: scale(1); opacity: 0; }
+        .selection-card p {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            flex-grow: 1;
         }
 
-        .call-avatar img {
+        /* Page 3 - List */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .list-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 0.3rem;
+        }
+
+        .list-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .back-button {
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .profiles-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .profile-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .profile-image-container {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        #call-info h2 {
-            font-size: 2rem;
-            color: var(--accent-color);
+        .profile-card:hover .profile-image {
+            transform: scale(1.05);
         }
 
-        #call-info p {
-            font-size: 1rem;
-            max-width: 400px;
-            color: var(--secondary-text-color);
-            margin-top: 0.5rem;
-        }
-        
-        .call-actions {
-            margin-top: 3rem;
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #333;
             display: flex;
-            gap: 4rem;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
         }
-        
-        .call-btn {
-            width: 70px;
-            height: 70px;
+
+        .profile-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 0.3rem;
+        }
+
+        .profile-name::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .profile-nickname {
+            color: var(--accent);
+            font-style: italic;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .profile-age {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .profile-age::before {
+            content: "🎂";
+        }
+
+        .profile-education {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .profile-education::before {
+            content: "🎓";
+        }
+
+        .profile-bio {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            font-style: italic;
+        }
+
+        .select-button {
+            width: 100%;
+            background-color: var(--accent);
+            color: var(--primary-bg);
+            border: none;
+            padding: 0.8rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .select-button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .select-button::after {
+            content: "👷‍♂️";
+        }
+
+        /* No more profiles */
+        .no-profiles {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+
+        .no-profiles-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .popup {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .popup-close:hover {
+            color: var(--text-primary);
+        }
+
+        .popup-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .popup-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .popup-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .popup-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (min-width: 480px) {
+            .popup-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .popup-button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+        }
+
+        .popup-button.primary {
+            background-color: var(--accent);
+            color: var(--primary-bg);
+        }
+
+        .popup-button.primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .popup-button.secondary {
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .popup-button.secondary:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        /* Connection Screen */
+        .connection-screen {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .calling-animation {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.2);
+            border: 3px solid var(--accent);
+            animation: pulse 1.5s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        .connection-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            display: block;
+            border: 4px solid var(--accent);
+            position: relative;
+        }
+
+        .connection-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: var(--text-primary);
+        }
+
+        .connection-nickname {
+            color: var(--accent);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .connection-bio {
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            font-style: italic;
+        }
+
+        .call-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .call-button {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.2s ease;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
         }
 
-        .call-btn:hover {
-            transform: scale(1.1);
-        }
-        
-        .call-btn.accept { background-color: var(--success-color); }
-        .call-btn.reject { background-color: var(--danger-color); }
-
-        .call-btn svg {
-            width: 35px;
-            height: 35px;
-            fill: white;
-        }
-        
-        #sobering-up-room p {
-            margin: 1rem 0;
+        .call-button.accept {
+            background-color: var(--success);
+            color: white;
         }
 
-        /* ==========================================================================
-           6. RESPONSIVE DESIGN (Desktop)
-           ========================================================================== */
-        @media (min-width: 768px) {
-            .category-container { flex-direction: row; max-width: 1200px; }
-            .category-tile { flex: 1; }
-            #profile-grid { grid-template-columns: repeat(2, 1fr); }
+        .call-button.accept:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
         }
-        @media (min-width: 1200px) {
-            #profile-grid { grid-template-columns: repeat(3, 1fr); }
+
+        .call-button.reject {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .call-button.reject:hover {
+            background-color: #d32f2f;
+            transform: scale(1.05);
+        }
+
+        /* Hangover Room */
+        .hangover-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hangover-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .hangover-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .hangover-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .hangover-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 480px) {
+            .hangover-buttons {
+                flex-direction: row;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .footer-heart {
+            color: var(--accent);
+            margin: 0 0.3rem;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .landing-subtitle {
+                font-size: 1.8rem;
+            }
+
+            .selection-title {
+                font-size: 1.5rem;
+            }
+
+            .list-title {
+                font-size: 1.3rem;
+            }
+
+            .profile-name {
+                font-size: 1.1rem;
+            }
+
+            .call-buttons {
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Hearts container -->
+    <div class="hearts-container" id="hearts-container"></div>
 
-    <main>
-        <!-- SEKCJA 1: STRONA POWITALNA -->
-        <section id="page1-landing" class="page-section active">
-            <div class="container">
-                <!-- EASY-EDIT-1: Napisy na stronie głównej (tytuły) -->
-                <h1>Artur Kudlik przedstawia:</h1>
-                <h2>najznakomitszą szukajkę budowlańców i kucharzy</h2>
-                <!-- KONIEC EASY-EDIT-1 -->
-                <button id="cta-button" class="btn btn-accent">COXDDD?</button>
+    <!-- Page 1: Landing -->
+    <div id="page1-landing" class="page active">
+        <div class="container">
+            <div class="landing-content">
+                <h1 class="landing-title">Artur Kudlik przedstawia</h1>
+                <h2 class="landing-subtitle">najznakomitszą szukajkę fachowców</h2>
+                <button class="cta-button" onclick="navigateTo('page2-selection')">
+                    <span>SZUKAM</span>
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- SEKCJA 2: WYBÓR KATEGORII -->
-        <section id="page2-selection" class="page-section">
-            <div class="container">
-                <h2>Wybierz typ mężczyzny</h2>
-                <div class="category-container"></div>
-            </div>
-        </section>
-
-        <!-- SEKCJA 3: WIDOK LISTY PROFILI -->
-        <section id="page3-list" class="page-section">
-            <div class="container">
-                <div class="list-header">
-                    <h2 id="list-title">Lista Profili</h2>
-                    <button id="back-to-selection-button" class="btn btn-secondary">Powrót</button>
+    <!-- Page 2: Selection -->
+    <div id="page2-selection" class="page">
+        <div class="container">
+            <h1 class="selection-title">Jaki fachowiec Ci w duszy gra?</h1>
+            <div class="selection-grid">
+                <div class="selection-card" onclick="selectCategory('budowlańcy')" id="category-budowlańcy">
+                    <h3>Solidni i doświadczeni</h3>
+                    <p>Mężczyźni, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami.</p>
                 </div>
-                <div id="profile-grid"></div>
-            </div>
-        </section>
-    </main>
-    
-    <!-- ======================================================================= -->
-    <!--                       MODALE I EKRANY DODATKOWE                       -->
-    <!-- ======================================================================= -->
-
-    <!-- MODAL 1: Potwierdzenie wyboru -->
-    <div id="selection-confirm-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h2 id="confirm-modal-title"></h2>
-            <p>Najpierw położy kafelki, a potem położy kres szkolnej propagandzie.</p>
-            <div class="btn-group">
-                <button id="confirm-modal-continue-btn" class="btn btn-accent">Idę dalej</button>
+                <div class="selection-card" onclick="selectCategory('kucharze')" id="category-kucharze">
+                    <h3>Kreatywni i smaczni</h3>
+                    <p>Artyści kuchni, którzy potrafią rozkochać Cię w jedzeniu. Ich dania smakują jak miłość od pierwszego kęsa.</p>
+                </div>
+                <div class="selection-card" onclick="selectCategory('pośredni')" id="category-pośredni">
+                    <h3>Wszechstronni i elastyczni</h3>
+                    <p>Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy lubią mieć wszystko w jednym.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- EKRAN 2: Połączenie przychodzące -->
-    <div id="incoming-call-screen" class="modal-overlay">
-        <div class="call-content">
-            <div class="call-avatar">
-                <img id="call-avatar-img" src="" alt="Avatar dzwoniącego">
-            </div>
-            <div id="call-info">
-                <h2 id="call-name"></h2>
-                <p id="call-bio"></p>
-            </div>
-            <div class="call-actions">
-                <button id="reject-call-btn" class="call-btn reject" aria-label="Odrzuć połączenie">
-                    <svg viewBox="0 0 24 24"><path d="M12.96,16.24C12.13,16.24 11.33,16.09 10.59,15.82C9.84,15.54 9.14,15.17 8.5,14.69C7.86,14.21 7.3,13.65 6.81,13C6.33,12.36 5.96,11.66 5.69,10.91C5.41,10.17 5.27,9.37 5.27,8.54C5.27,7.74 5.41,6.96 5.68,6.22C5.95,5.47 6.32,4.78 6.8,4.14L7.93,5.27C7.57,5.75 7.29,6.29 7.1,6.88C6.9,7.48 6.8,8.09 6.8,8.72C6.8,9.43 6.93,10.11 7.2,10.76C7.47,11.41 7.82,12 8.25,12.5C8.68,13 9.19,13.43 9.79,13.7C10.4,13.97 11,14.11 11.63,14.11C11.91,14.11 12.18,14.08 12.45,14.01C12.91,13.9 13.35,13.73 13.77,13.53L14.9,14.66C14.25,15.17 13.56,15.58 12.83,15.89C12.2,16.13 11.56,16.24 10.92,16.24M18.86,13.19L17.73,12.06C17.93,11.64 18.1,11.2 18.2,10.75C18.28,10.47 18.31,10.2 18.31,9.92C18.31,9.29 18.21,8.68 18.02,8.09C17.82,7.49 17.55,6.95 17.18,6.47L18.31,5.34C18.8,5.99 19.17,6.68 19.44,7.43C19.72,8.17 19.86,8.96 19.86,9.76C19.86,10.6 19.72,11.4 19.45,12.14C19.18,12.89 18.8,13.58 18.27,14.22L17.14,13.09C17.62,12.61 18.09,12.05 18.57,11.41C19.05,10.77 19.43,10.07 19.69,9.32C19.96,8.58 20.1,7.78 20.1,6.95C20.1,6.15 19.96,5.37 19.69,4.63C19.42,3.88 19.05,3.19 18.57,2.55L17.44,3.68C17.07,3.19 16.63,2.83 16.14,2.55C15.65,2.28 15.12,2.1 14.58,2.02L14.36,0.5H12.16L12.38,2.02C11.83,2.1 11.31,2.28 10.82,2.55C10.33,2.83 9.89,3.19 9.52,3.68L2,11.2L3.25,12.45L21.05,2.9L22.3,1.65L9.52,14.43C9.15,14.91 8.87,15.45 8.67,16.05C8.47,16.65 8.37,17.26 8.37,17.89C8.37,18.17 8.4,18.44 8.47,18.71C8.58,19.17 8.75,19.61 8.95,20.03L10.08,18.9C9.9,18.5 9.77,18.1 9.7,17.68C9.64,17.4 9.61,17.13 9.61,16.85C9.61,16.22 9.71,15.61 9.9,15.02C10.1,14.42 10.37,13.88 10.74,13.4L18.86,13.19Z" /></svg>
+    <!-- Page 3: List -->
+    <div id="page3-list" class="page">
+        <div class="container">
+            <div class="list-header">
+                <h1 class="list-title" id="list-title">Nasi fachowcy</h1>
+                <button class="back-button" onclick="navigateTo('page2-selection')">
+                    <i class="fas fa-arrow-left"></i>
+                    WRÓĆ
                 </button>
-                <button id="accept-call-btn" class="call-btn accept" aria-label="Odbierz połączenie">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z" /></svg>
+            </div>
+            <div class="profiles-grid" id="profiles-container">
+                <!-- Profiles will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup">
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+            <h2 class="popup-title" id="popup-title">Świetny wybór!</h2>
+            <p class="popup-text" id="popup-text">Ten fachowiec to prawdziwy skarb. Nie tylko wykona pracę, ale też rozkocha Cię w swoim profesjonalizmie.</p>
+            <div class="popup-buttons">
+                <button class="popup-button primary" onclick="proceedToConnection()">POŁĄcz SIĘ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connection Screen -->
+    <div class="popup-overlay" id="connection-overlay">
+        <div class="popup connection-screen">
+            <div class="calling-animation"></div>
+            <button class="popup-close" onclick="closeConnection()">&times;</button>
+            <img class="connection-image" id="connection-image" src="" alt="Zdjęcie profilowe">
+            <h2 class="connection-name" id="connection-name">Jan Kowalski</h2>
+            <p class="connection-nickname" id="connection-nickname">"Pablo"</p>
+            <p class="connection-bio" id="connection-bio">Cześć, jestem Pablo. Nie tylko położę Twoje kafelki, ale też sprawię, że będziesz się czuła jak królewna we własnym domu.</p>
+            <div class="call-buttons">
+                <button class="call-button accept" onclick="acceptCall()">
+                    <i class="fas fa-phone"></i>
+                </button>
+                <button class="call-button reject" onclick="rejectCall()">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
     </div>
-    
-    <!-- EKRAN 3: Pokój wytrzeźwień -->
-    <div id="sobering-up-room" class="modal-overlay">
-        <div class="modal-content">
-            <h2>Chwila oddechu...</h2>
-            <p>Jesteś pewien, że chcesz zrezygnować? Taki fachowiec może się nie powtórzyć. Daj mu jeszcze jedną szansę.</p>
-            <div class="btn-group">
-                <button id="retry-call-btn" class="btn btn-accent">Zadzwoń jeszcze raz</button>
-                <button id="go-home-btn" class="btn btn-secondary">Powrót na sam początek</button>
+
+    <!-- Hangover Room -->
+    <div class="popup-overlay" id="hangover-overlay">
+        <div class="popup hangover-screen">
+            <button class="popup-close" onclick="closeHangover()">&times;</button>
+            <h2 class="hangover-title">Pokój rozczarowań</h2>
+            <p class="hangover-text" id="hangover-text">Może jednak nie był to najlepszy wybór? Ale nie martw się - prawdziwa miłość do fachowca czeka tuż za rogiem!</p>
+            <div class="hangover-buttons">
+                <button class="popup-button primary" onclick="tryAgain()">SPRÓBUJ JESZCZE RAZ</button>
+                <button class="popup-button secondary" onclick="navigateTo('page1-landing')">WRÓĆ NA POCZĄTEK</button>
             </div>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Made with <span class="footer-heart">❤️</span> by Artur Kudlik <span class="footer-heart">❤️</span> 2023</p>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // EASY-EDIT-1: Nagłówki
+        const pageTitles = {
+            'budowlańcy': 'Nasi budowlańcy',
+            'kucharze': 'Nasi kucharze',
+            'pośredni': 'Nasi wszechstronni'
+        };
 
-            // =======================================================================
-            //                SEKCJE ŁATWEJ EDYCJI (EASY-EDIT)
-            // =======================================================================
-            const categoryData = [ { category: 'A', title: 'Pracowici i Drodzy', description: 'Jakość premium ma swoją cenę. Fachowcy, którzy znają swoją wartość i dostarczają wyniki na czas. Idealni do projektów, gdzie liczy się perfekcja.' }, { category: 'B', title: 'Tani i Ospali', description: 'Opcja budżetowa dla cierpliwych. Praca zostanie wykonana... w swoim czasie. Doskonały wybór, jeśli nigdzie Ci się nie spieszy i cenisz sobie spokój ducha.' }, { category: 'C', title: 'Pośredni', description: 'Złoty środek. Rozsądny kompromis między ceną, jakością a czasem realizacji. Solidni rzemieślnicy na codzienne potrzeby, bez zbędnych fajerwerków.' } ];
-            const firstNames = ['Jan', 'Piotr', 'Krzysztof', 'Andrzej', 'Paweł', 'Tomasz', 'Marek', 'Grzegorz', 'Józef', 'Marcin', 'Stanisław', 'Adam', 'Łukasz', 'Dariusz', 'Zbigniew', 'Jerzy', 'Tadeusz', 'Mateusz', 'Ryszard', 'Wojciech', 'Mariusz', 'Kazimierz', 'Robert', 'Michał', 'Henryk', 'Rafał', 'Jacek', 'Kamil', 'Czesław', 'Sławomir', 'Artur', 'Zdzisław', 'Eugeniusz', 'Waldemar', 'Stefan', 'Roman', 'Mirosław', 'Damian', 'Sebastian', 'Patryk', 'Edward', 'Leszek', 'Bogdan', 'Janusz', 'Wiesław', 'Daniel', 'Adrian', 'Marian', 'Ireneusz', 'Arkadiusz'];
-            const lastNames = ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kowalczyk', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski', 'Kozłowski', 'Jankowski', 'Mazur', 'Wojciechowski', 'Kwiatkowski', 'Krawczyk', 'Kaczmarek', 'Piotrowski', 'Grabowski', 'Zając', 'Król', 'Pawłowski', 'Michalski', 'Wróbel', 'Jabłoński', 'Nowakowski', 'Majewski', 'Olszewski', 'Stępień', 'Malinowski', 'Górski', 'Adamczyk', 'Pawlak', 'Sikora', 'Walczak', 'Witkowski', 'Baran', 'Rutkowski', 'Michalak', 'Szewczyk', 'Ostrowski', 'Tomaszewski', 'Pietrzak', 'Zalewski', 'Wróblewski', 'Jasiński', 'Marciniak', 'Bąk', 'Sadowski'];
-            const nicknames = ["'Złota Rączka'", "'Betoniarz'", "'Fucha'", "'Majster'", "'Szpachla'", "'Patelnia'", "'Chochla'", "'Młotek'", "'Gulasz'", "'Dynamit'", "'Profesor'", "'Wirtuoz'", "'Cichy'", "'Szybki'", "'Fachura'", "'Terminator'", "'Harnaś'", "'Prezes'", "'Szefuńcio'", "'Artysta'", "'Wąsacz'", "'Cyklop'", "'Bosman'", "'Hefajstos'", "'Wulkan'", "'Sieka'", "'Tytan'", "'Maszyna'", "'Demon'", "'Walec'", "'Niszczyciel'", "'Grom'", "'Piorun'", "'Laser'", "'Cegła'", "'Kielnia'", "'Poziomica'", "'Wiertara'", "'Kat'", "'Bestia'"];
-            const styleA_opisy = ["Nie tylko ściany potrafię postawić na nogi.", "Moje fugi są tak gładkie jak moje komplementy.", "Zbuduję Ci dom, a potem skradnę serce.", "U mnie wszystko stoi w pionie.", "Specjalista od gorących tematów... i podgrzewanych podłóg.", "Potrafię rozpalić ogień... w kominku i nie tylko.", "Gwarantuję solidne fundamenty. W każdej dziedzinie życia.", "Moje narzędzia nie są jedyną rzeczą, która robi wrażenie.", "Ze mną remont to czysta przyjemność.", "Zamontuję Ci półkę, a potem skradnę buziaka.", "Znam się na dobrych proporcjach.", "Kładę kafelki z precyzją chirurga, a gotuję z pasją kochanka.", "U mnie każda śruba jest dokręcona na maksa.", "Zostawiam po sobie porządek i dobre wrażenie.", "Praca ze mną to inwestycja, która zawsze się zwraca.", "Potrafię naprawić wszystko, łącznie ze złym humorem.", "Moje usługi są premium, tak jak ja.", "W kuchni i na budowie - zawsze daję z siebie 110%.", "Perfekcja w każdym calu, od fundamentów po dach.", "Nie uznaję kompromisów, jeśli chodzi o jakość.", "Zbuduję dla Ciebie pałac, królowo.", "Ufam swojej poziomicy i intuicji.", "Każdy detal ma znaczenie. Dokładnie tak jak Ty.", "Moje menu degustacyjne powala na kolana.", "Mistrz patelni i kielni.", "Twój dom zasługuje na najlepsze. Ty też.", "Znam sekret idealnego betonu i udanej randki.", "Po mojej wizycie wszystko będzie lśnić.", "Ze mną każdy projekt kończy się happy endem.", "Gotowy na remont życia?"];
-            const styleA_biogramy = ["Jestem jak dobrze zaprojektowany budynek: solidny, niezawodny i miło na mnie popatrzeć. W pracy cenię precyzję, a po godzinach lubię dobre wino i inteligentną rozmowę. Moja specjalność to wykończenia, które zapierają dech w piersiach. Daj mi szansę, a udowodnię, że remont może być ekscytujący.", "Mówią, że jestem artystą w swoim fachu. Niezależnie czy trzymam w ręku kielnię, czy nóż szefa kuchni, tworzę coś wyjątkowego. Lubię wyzwania, skomplikowane projekty i kobiety z charakterem. Jeśli szukasz kogoś, kto wniesie do Twojego życia jakość i odrobinę pikanterii, to właśnie go znalazłaś.", "Fachowiec z klasą. Nie interesują mnie półśrodki. Wszystko, co robię, musi być zapięte na ostatni guzik. Po pracy zrzucam robocze ciuchy, by oddać się drugiej pasji - tańcom latynoamerykańskim. Pozwól mi poprowadzić się na parkiecie... i podczas remontu.", "Uważam, że praca powinna być pasją. Moja to tworzenie pięknych i funkcjonalnych przestrzeni. Każde zlecenie traktuję indywidualnie, bo wierzę, że każdy dom ma duszę. Prywatnie jestem miłośnikiem górskich wędrówek i wieczorów przy kominku. Może następny spędzimy razem?", "Jestem konkretny i zdecydowany. Wiem, czego chcę, zarówno na budowie, jak i w życiu. Cenię sobie szczerość, lojalność i poczucie humoru. Moja kuchnia fusion zaskoczyła już niejednego smakosza. Pozwól, że zaskoczę i Ciebie.", ...Array(25).fill("To profesjonalista, który podchodzi do życia z pasją. Niezależnie od zadania, wkłada w nie całe serce. Ceni sobie estetykę, porządek i dobrą organizację. Poza pracą rozwija swoje zainteresowania, bo wie, że wszechstronność jest klucem do sukcesu. To partner, na którym można polegać.")];
-            const styleB_opisy = ["A za moich czasów to się robiło, a nie narzekało!", "Panie, kto to panu tak... A, nieważne, poprawi się.", "Daj mi pięć minut. Albo pięćdziesiąt.", "Szefie, polej, bo schnie!", "Zdrówko! A teraz do roboty. Kiedyś.", "Poczekaj, muszę zebrać myśli.", "To się zrobi. Ale najpierw kawusia.", "Spokojnie, bez nerwów, wszystko w swoim czasie.", "Kiedyś to były budowy... A teraz? Szkoda gadać.", "Ta ściana? Ona tak ma. Taki styl.", "A pamiętasz, Ryśku, jak... A, nie, ty nie Rysiek.", "Najważniejsze to dobre podejście. I drzemka po obiedzie.", "Ja tu tylko na chwilę... od tygodnia.", "Zrobię tak, że będzie pan zadowolony. Może nie od razu.", "Jeszcze po jednym i lecimy z tematem.", "Grunt to rodzina! I żeby spoina wyschła.", "Co się odwlecze, to nie uciecze.", "To jest robota na spokojnie, na medytację.", "Taniej już się nie da. Wolniej też.", "A zatańczymy? Po robocie, oczywiście.", "Priorytetem jest spokój ducha. Reszta poczeka.", "Jutro. Jutro to jest magiczne słowo.", "Mam takie powiedzenie: co masz zrobić dziś, zrób pojutrze.", "Daj pan spokój, poniedziałek jest.", "Zaraz, zaraz, muszę to przemyśleć.", "Ta robota sama się nie zrobi. Ale sama też nie ucieknie.", "Wszystko pod kontrolą. Moją, powolną kontrolą.", "To się nazywa 'slow building'. Teraz to modne.", "Bez pośpiechu, bo się człowiek spoci.", "Pomalutku, a do celu. Kiedyś."];
-            const styleB_biogramy = ["Człowiek z zasadami. Pierwsza zasada: nigdy się nie spieszyć. Druga: patrz zasada pierwsza. Mam swoje tempo, ale jak już coś zrobię, to jest zrobione. W życiu widziałem wszystko, więc nic mnie już nie zdziwi. Lubię wspominać stare, dobre czasy i prawić morały młodzieży. Daj mi spokój, a ja dam Ci niską cenę.", "Filozof kielni i betoniarki. Uważam, że pośpiech jest wrogiem jakości i dobrego samopoczucia. Pracuję w rytmie natury, czyli powoli, ale systematycznie. Po pracy lubię usiąść, popatrzeć w dal i pomyśleć o niebieskich migdałach. Ze mną nerwy Ci przejdą, bo i tak nic nie przyspieszysz.", "Doświadczenie nauczyło mnie jednego: cierpliwości. Zarówno do materiałów, jak i do klientów. Moje usługi są dla tych, którzy rozumieją, że na dobre rzeczy trzeba poczekać. Czasami trochę dłużej. W wolnych chwilach rozwiązuję krzyżówki i słucham radia. Bez nerwowej atmosfery, proszę.", "Jestem jak stary, poczciwy diesel. Długo się rozgrzewam, ale jak już ruszę, to jadę. Może nie za szybko, ale do przodu. Cenię sobie tradycyjne metody pracy i tradycyjny odpoczynek po niej. Ze mną nie ma co się denerwować, lepiej usiąść i pogadać o życiu.", "Mistrz prokrastynacji i niskich stawek. Robota? Zrobi się. Kiedy? Jak przyjdzie wena. A wena to kapryśna pani. Najlepiej czuję się z kubkiem kawy w ręku, planując kolejne ruchy. Planowanie to podstawa, wykonanie to już szczegół. Jeśli masz czas, ja mam cenę.", ...Array(25).fill("To człowiek starej daty. Wierzy, że pośpiech jest złym doradcą. Wszystko robi w swoim, sprawdzonym od lat tempie. Ma swoje rytuały, których nic nie jest w stanie zaburzyć. Ceni sobie spokój, tradycję i proste przyjemności. Idealny dla tych, którzy nigdzie się nie spieszą.")];
-            const styleC_opisy = ["Jasne, 'mała poprawka'. Znamy te 'małe poprawki'.", "A kto tu przede mną był?!", "Projekt? A po co komu projekt?", "Tego się tak nie da. No po prostu się nie da.", "Panie, to trzeba było myśleć wcześniej.", "Za takie pieniądze to cudów nie będzie.", "Znowu krzywe ściany... jak ja to kocham.", "Czy ja wyglądam na czarodzieja?", "No i fajnie. Cały dzień w plecy.", "A mówiłem, żeby kupić droższe...", "No comment. Po prostu no comment.", "Dobra, dobra, już robię.", "Czemu to zawsze ja muszę po kimś poprawiać?", "Wszystko na wczoraj, a płatność 'kiedyś'. Standard.", "Ten materiał to chyba z plasteliny jest.", "Da się zrobić. Ale będzie pan narzekał.", "Kolejny poniedziałek, kolejny dramat na budowie.", "Ja już nic nie mówię.", "Będzie trzymać. Chyba.", "No i kto za to zapłaci?", "Znowu geniusz architektury wymyślił.", "A gdzie tu jest pion?", "Sufit podwieszany? A może od razu latający dywan?", "Niech mi pan da święty spokój na pięć minut.", "Robię, co mogę. Z tym, co mam.", "To prowizorka. Ale będzie trzymać dłużej niż oryginał.", "Tak, tak, oczywiście. 'Tylko przesunąć gniazdko'.", "Mam tego dość. Ale czynsz sam się nie zapłaci.", "Będzie pan zadowolony. Albo i nie.", "Zrobione. Następny."];
-            const styleC_biogramy = ["Realista. Twardo stąpam po ziemi, która najczęściej jest krzywym wylewkami poprzedniej ekipy. Robię swoje, bez zbędnego gadania. Nie obiecuję gruszek na wierzbie, tylko solidną robotę za rozsądną cenę. Denerwują mnie 'złote rady' i klienci, którzy 'wiedzą lepiej'. Daj mi jasne wytyczne i zostaw w spokoju, a robota będzie zrobiona.", "Mam alergię na trzy rzeczy: kurz, głupotę i poprawianie po partaczach. Niestety, na budowie spotykam wszystkie trzy codziennie. Staram się zachować zen, ale czasem kielnia sama rwie się do rzucania. Mimo wszystko, lubię swoją pracę. Zwłaszcza w dniu wypłaty. Zrobię, co trzeba, ale nie pytaj, czy jestem szczęśliwy.", "Weteran tysiąca remontów i stu tysięcy 'małych poprawek'. Widziałem już tyle, że nic mnie nie zdziwi. Moja twarz może i wygląda na zmęczoną życiem, ale ręce wciąż wiedzą, co robić. Znam się na robocie, ale nie mam już siły na dyskusje o kolorze fugi. Wybierz, zapłać, a ja to zrobię.", "Balansuję na cienkiej linie między 'jakoś to będzie' a 'zrobię to perfekcyjnie'. Efekt końcowy zależy od mojego nastroju, pogody i jakości dostarczonych materiałów. Jestem solidnym rzemieślnikiem, ale nie oczekuj uśmiechu gratis. Uśmiecham się po dobrze wykonanej pracy i terminowej zapłacie.", "Motto życiowe: 'Zrób swoje i idź do domu'. Nie szukam w pracy głębszego sensu, tylko sposobu na opłacenie rachunków. Ale jak już coś robię, to robię to porządnie, żeby nie musieć wracać i poprawiać. To by była strata czasu, a czas to pieniądz. Konkretnie, zwięźle i na temat - taki jestem.", ...Array(25).fill("To pragmatyk, który widział już wszystko. Nie szuka problemów, ale potrafi je rozwiązywać. Jego cynizm maskuje solidne umiejętności i lata doświadczenia. Chce po prostu zrobić swoją robotę dobrze i mieć święty spokój. Zapewni dobry stosunek jakości do ceny, ale niekoniecznie miłą pogawędkę.")];
-            
-            const database = [];
-            const shuffleArray = (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; };
-            const generateUniqueProfiles = (count, category, namePool, nicknamePool, descPool, bioPool) => { const shuffledNames = shuffleArray([...namePool.imiona]); const shuffledLastNames = shuffleArray([...namePool.nazwiska]); const shuffledNicknames = shuffleArray([...nicknamePool]); const shuffledDescs = shuffleArray([...descPool]); const shuffledBios = shuffleArray([...bioPool]); for (let i = 0; i < count; i++) { database.push({ id: database.length + 1, imie: shuffledNames.pop() || 'Brak Imienia', nazwisko: shuffledLastNames.pop() || 'Brak Nazwiska', ksywka: shuffledNicknames.pop() || 'Brak Ksywki', wiek: Math.floor(Math.random() * (54 - 32 + 1)) + 32, opis: shuffledDescs.pop() || 'Brak opisu.', biogram: shuffledBios.pop() || 'Brak biogramu.', kategoria: category }); } };
-            const nameSource = { imiona: firstNames, nazwiska: lastNames };
-            generateUniqueProfiles(30, 'A', nameSource, nicknames, styleA_opisy, styleA_biogramy);
-            generateUniqueProfiles(30, 'B', nameSource, nicknames, styleB_opisy, styleB_biogramy);
-            generateUniqueProfiles(30, 'C', nameSource, nicknames, styleC_opisy, styleC_biogramy);
-            // =======================================================================
-            //                        KONIEC SEKCJI EASY-EDIT
-            // =======================================================================
+        // EASY-EDIT-2: Opisy kafelków wyboru
+        const categoryDescriptions = {
+            'budowlańcy': 'Mężczyźni, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami.',
+            'kucharze': 'Artyści kuchni, którzy potrafią rozkochać Cię w jedzeniu. Ich dania smakują jak miłość od pierwszego kęsa.',
+            'pośredni': 'Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy lubią mieć wszystko w jednym.'
+        };
 
+        // Teksty do pokoju rozczarowań
+        const hangoverTexts = [
+            "Może jednak nie był to najlepszy wybór? Ale nie martw się - prawdziwa miłość do fachowca czeka tuż za rogiem!",
+            "Czasem trzeba poczekać, żeby znaleźć tego jedynego... fachowca. Spróbuj jeszcze raz!",
+            "Nie trać nadziei! Każde 'nie' przybliża Cię do tego jednego wielkiego 'TAK' od idealnego specjalisty.",
+            "Fachowcy też mają uczucia. Daj im jeszcze jedną szansę, a może tym razem będzie to miłość od pierwszego wezwania?",
+            "Czasem trzeba pocałować kilka żab, zanim znajdzie się księcia... z narzędziami. Albo z patelnią."
+        ];
 
-            // --- LOGIKA APLIKACJI ---
-            let currentSelectedProfile = null;
+        // EASY-EDIT-3: Dane osobowe (profil 1-15: budowlańcy, 16-30: kucharze, 31-45: pośredni)
+        const profiles = [
+            // Budowlańcy (1-15)
+            {
+                id: 1,
+                category: 'budowlańcy',
+                name: 'Jan Kowalski',
+                nickname: 'Pablo',
+                age: 42,
+                education: 'technik budowlaniec',
+                bio: 'Hej, jestem Pablo. Nie tylko położę Twoje kafelki idealnie prosto, ale też sprawię, że będziesz się czuła jak królewna we własnym domu. Moje ręce potrafią czarować - zarówno z poziomicą, jak i... no wiesz, przy innych czynnościach.',
+                image: 'man1.jpg',
+                popupText: 'Pablo to mistrz precyzji. Z nim każdy remont będzie jak romantyczna randka - pełen niespodzianek i satysfakcji.'
+            },
+            {
+                id: 2,
+                category: 'budowlańcy',
+                name: 'Marek Nowak',
+                nickname: 'Groszek',
+                age: 38,
+                education: 'technik architektury',
+                bio: 'Witam, Groszek w służbie! Moje projekty są tak dopracowane jak moje komplementy. Lubię, kiedy wszystko jest na swoim miejscu - zarówno płytki, jak i... serca klientek.',
+                image: 'man2.jpg',
+                popupText: 'Groszek to perfekcjonista z poczuciem humoru. Z nim nawet najtrudniejszy remont będzie przyjemnością.'
+            },
+            {
+                id: 3,
+                category: 'budowlańcy',
+                name: 'Piotr Wiśniewski',
+                nickname: 'Marlon',
+                age: 50,
+                education: 'inżynier budownictwa',
+                bio: 'Marlon na usługi. Doświadczenie? Mam. Urok osobisty? Też. Potrafię zbudować nie tylko dom, ale też... no, powiedzmy, że umiem stworzyć odpowiedni klimat.',
+                image: 'man3.jpg',
+                popupText: 'Marlon to żywa legenda budowlana. Z nim każda praca będzie wykonana z klasą i stylem.'
+            },
+            {
+                id: 4,
+                category: 'budowlańcy',
+                name: 'Tomasz Dąbrowski',
+                nickname: 'Szybki',
+                age: 35,
+                education: 'technik elektryk',
+                bio: 'Nie ma czasu do stracenia! Jestem szybki, sprawny i zawsze gotowy do działania. Potrzebujesz czegoś na już? Jestem Twoim człowiekiem.',
+                image: 'man4.jpg',
+                popupText: 'Szybki to mistrz efektywności. Z nim każda naprawa będzie wykonana w mgnieniu oka.'
+            },
+            {
+                id: 5,
+                category: 'budowlańcy',
+                name: 'Andrzej Zawadzki',
+                nickname: 'Stary Wyga',
+                age: 54,
+                education: 'mistrz budowlany',
+                bio: 'Mówią na mnie Stary Wyga, ale w moim wieku wiem, jak zrobić wszystko tak, żeby działało. I nie tylko chodzi mi o instalacje...',
+                image: 'man5.jpg',
+                popupText: 'Stary Wyga to skarbnica wiedzy. Z nim każdy problem zostanie rozwiązany mądrze i trwale.'
+            },
+            {
+                id: 6,
+                category: 'budowlańcy',
+                name: 'Grzegorz Kowalczyk',
+                nickname: 'Fred',
+                age: 40,
+                education: 'ślusarz',
+                bio: 'Fred na usługi! Specjalizuję się w spawaniu, ale potrafię też... no, powiedzmy, że umiem łączyć różne elementy w harmonijną całość.',
+                image: 'man6.jpg',
+                popupText: 'Fred to mistrz metalu. Z nim każda konstrukcja będzie solidna i trwała.'
+            },
+            {
+                id: 7,
+                category: 'budowlańcy',
+                name: 'Ryszard Lis',
+                nickname: 'Złota Rączka',
+                age: 48,
+                education: 'technik budownictwa',
+                bio: 'Złota Rączka to nie tylko pseudonim - to obietnica. Potrafię naprawić wszystko, a przy okazji... no, powiedzmy, że umiem stworzyć odpowiedni nastrój.',
+                image: 'man7.jpg',
+                popupText: 'Złota Rączka to gwarancja jakości. Z nim każda naprawa będzie wykonana perfekcyjnie.'
+            },
+            {
+                id: 8,
+                category: 'budowlańcy',
+                name: 'Wojciech Mazur',
+                nickname: 'Wujek',
+                age: 32,
+                education: 'technik budownictwa',
+                bio: 'Młody, ale z doświadczeniem starszego kolegi. Zawsze uśmiechnięty, zawsze gotowy pomóc. I nie tylko w sprawach budowlanych...',
+                image: 'man8.jpg',
+                popupText: 'Wujek to mistrz dobrych rad i solidnej pracy. Z nim każdy remont będzie przyjemnością.'
+            },
+            {
+                id: 9,
+                category: 'budowlańcy',
+                name: 'Stanisław Wójcik',
+                nickname: 'Ciepluszek',
+                age: 45,
+                education: 'technik technologii drewna',
+                bio: 'Ciepluszek nie bez powodu. Potrafię stworzyć ciepłą atmosferę nie tylko w domu, ale też... no, sam rozumiesz.',
+                image: 'man9.jpg',
+                popupText: 'Ciepluszek to mistrz przytulnych wnętrz. Z nim każdy dom będzie pełen ciepła.'
+            },
+            {
+                id: 10,
+                category: 'budowlańcy',
+                name: 'Dariusz Kaczmarek',
+                nickname: 'Dachowiec',
+                age: 39,
+                education: 'technik budownictwa',
+                bio: 'Specjalizuję się w dachach, ale potrafię też... no, powiedzmy, że umiem zadbać o to, żebyś miała dach nad głową w każdym sensie.',
+                image: 'man10.jpg',
+                popupText: 'Dachowiec to mistrz wysokości. Z nim każdy dach będzie solidny i bezpieczny.'
+            },
+            {
+                id: 11,
+                category: 'budowlańcy',
+                name: 'Marcin Jasiński',
+                nickname: 'Murarz',
+                age: 37,
+                education: 'technik budownictwa',
+                bio: 'Buduję nie tylko ściany, ale też... no, powiedzmy, że umiem stworzyć solidne fundamenty dla każdego związku.',
+                image: 'man11.jpg',
+                popupText: 'Murarz to mistrz solidnych konstrukcji. Z nim każda ściana będzie idealnie prosta.'
+            },
+            {
+                id: 12,
+                category: 'budowlańcy',
+                name: 'Paweł Zając',
+                nickname: 'Płytkarz',
+                age: 41,
+                education: 'technik budownictwa',
+                bio: 'Płytki układam z precyzją chirurga, a komplementy wypowiadam z wdziękiem poety. Co jeszcze potrafię? Może się przekonasz...',
+                image: 'man12.jpg',
+                popupText: 'Płytkarz to artysta kafelek. Z nim każda łazienka będzie wyglądała jak z katalogu.'
+            },
+            {
+                id: 13,
+                category: 'budowlańcy',
+                name: 'Robert Lewandowski',
+                nickname: 'Malarz',
+                age: 34,
+                education: 'technik malarstwa budowlanego',
+                bio: 'Kolory to moja pasja. Potrafię dobrać idealny odcień nie tylko do ścian, ale też... no, powiedzmy, że umiem dopasować się do każdej sytuacji.',
+                image: 'man13.jpg',
+                popupText: 'Malarz to mistrz kolorów. Z nim każda ściana będzie perfekcyjnie pomalowana.'
+            },
+            {
+                id: 14,
+                category: 'budowlańcy',
+                name: 'Krzysztof Nowicki',
+                nickname: 'Instalator',
+                age: 43,
+                education: 'technik sanitarny',
+                bio: 'Potrafię poprowadzić każdą instalację tak, żeby działała bez zarzutu. I nie chodzi mi tylko o rury...',
+                image: 'man14.jpg',
+                popupText: 'Instalator to mistrz rur. Z nim każda instalacja będzie działała bezawaryjnie.'
+            },
+            {
+                id: 15,
+                category: 'budowlańcy',
+                name: 'Łukasz Baran',
+                nickname: 'Elektryk',
+                age: 36,
+                education: 'technik elektryk',
+                bio: 'Prąd to moja specjalność, ale potrafię też... no, powiedzmy, że umiem rozświetlić każde pomieszczenie.',
+                image: 'man15.jpg',
+                popupText: 'Elektryk to mistrz prądu. Z nim każda instalacja będzie bezpieczna i sprawna.'
+            },
 
-            // Selektory DOM
-            const pageSections = document.querySelectorAll('.page-section');
-            const ctaButton = document.getElementById('cta-button');
-            const backButton = document.getElementById('back-to-selection-button');
-            const categoryContainer = document.querySelector('.category-container');
-            const profileGrid = document.getElementById('profile-grid');
-            const listTitle = document.getElementById('list-title');
+            // Kucharze (16-30)
+            {
+                id: 16,
+                category: 'kucharze',
+                name: 'Adam Nowak',
+                nickname: 'Pablo',
+                age: 45,
+                education: 'doktor filologii',
+                bio: 'Gotuję z pasją, jak piszę wiersze - z sercem i wyczuciem. Moje dania smakują jak miłość od pierwszego kęsa. A może chciałabyś spróbować?',
+                image: 'man16.jpg',
+                popupText: 'Pablo to poeta kuchni. Z nim każdy posiłek będzie jak romantyczna kolacja.'
+            },
+            {
+                id: 17,
+                category: 'kucharze',
+                name: 'Tadeusz Kowalski',
+                nickname: 'Filozof',
+                age: 52,
+                education: 'licencjat filozofii',
+                bio: 'W kuchni jak w życiu - wszystko musi mieć sens. Moje dania nie tylko smakują, ale też skłaniają do refleksji. A może chciałabyś o czymś porozmawiać przy kolacji?',
+                image: 'man17.jpg',
+                popupText: 'Filozof to mistrz głębokich smaków. Z nim każdy posiłek będzie doświadczeniem dla duszy.'
+            },
+            {
+                id: 18,
+                category: 'kucharze',
+                name: 'Jerzy Wiśniewski',
+                nickname: 'Dziadek',
+                age: 48,
+                education: 'tylko podstawówka',
+                bio: 'Gotuję jak moja babcia - prosto, smacznie i z sercem. U mnie zjesz jak w domu, tylko że... no, powiedzmy, że moje dania mają ten specjalny smak.',
+                image: 'man18.jpg',
+                popupText: 'Dziadek to mistrz domowej kuchni. Z nim każdy posiłek będzie smakował jak u babci.'
+            },
+            {
+                id: 19,
+                category: 'kucharze',
+                name: 'Marian Dąbrowski',
+                nickname: 'Kolekcjoner',
+                age: 50,
+                education: 'pierwsze dwie klasy podstawówki',
+                bio: 'Znam tysiące przepisów i potrafię dopasować je do każdej okazji. A może chciałabyś być okazją do wypróbowania mojego specjalnego menu?',
+                image: 'man19.jpg',
+                popupText: 'Kolekcjoner to skrzynia skarbów kulinarnych. Z nim każdy posiłek będzie unikalny.'
+            },
+            {
+                id: 20,
+                category: 'kucharze',
+                name: 'Zbigniew Zawadzki',
+                nickname: 'Grillmaster',
+                age: 47,
+                education: 'mimo podeszłego wieku, dalej w podstawówce',
+                bio: 'Na moim grillu wszystko smakuje lepiej. A może chciałabyś spróbować czegoś specjalnie dla Ciebie przygotowanego?',
+                image: 'man20.jpg',
+                popupText: 'Grillmaster to król ognia. Z nim każde mięso będzie soczyste i pełne smaku.'
+            },
+            {
+                id: 21,
+                category: 'kucharze',
+                name: 'Ryszard Kaczmarek',
+                nickname: 'Streetfood',
+                age: 42,
+                education: 'nie dostał się do podstawówki',
+                bio: 'Moje dania z food trucka podbijają serca klientów. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
+                image: 'man21.jpg',
+                popupText: 'Streetfood to mistrz ulicznych smaków. Z nim każdy posiłek będzie pełen przygody.'
+            },
+            {
+                id: 22,
+                category: 'kucharze',
+                name: 'Piotr Lis',
+                nickname: 'Piekarz',
+                age: 39,
+                education: 'nie ukończył nawet zawodówki',
+                bio: 'Moje pieczywo jest świeże, chrupiące i pachnące. A może chciałabyś spróbować czegoś słodkiego, przygotowanego specjalnie dla Ciebie?',
+                image: 'man22.jpg',
+                popupText: 'Piekarz to mistrz mąki. Z nim każdy wypiek będzie pyszny i aromatyczny.'
+            },
+            {
+                id: 23,
+                category: 'kucharze',
+                name: 'Waldemar Mazur',
+                nickname: 'Azjata',
+                age: 44,
+                education: 'technik żywienia',
+                bio: 'Moje dania azjatyckie są ostre, aromatyczne i pełne pasji. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
+                image: 'man23.jpg',
+                popupText: 'Azjata to mistrz wschodnich smaków. Z nim każdy posiłek będzie pełen egzotyki.'
+            },
+            {
+                id: 24,
+                category: 'kucharze',
+                name: 'Stanisław Wójcik',
+                nickname: 'Smażalnia',
+                age: 49,
+                education: 'technik hotelarstwa',
+                bio: 'Moje frytki są chrupiące, a kotlety soczyste. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
+                image: 'man24.jpg',
+                popupText: 'Smażalnia to mistrz smażenia. Z nim każde danie będzie chrupiące i złociste.'
+            },
+            {
+                id: 25,
+                category: 'kucharze',
+                name: 'Dariusz Baran',
+                nickname: 'Dietetyk',
+                age: 36,
+                education: 'technik żywienia i usług gastronomicznych',
+                bio: 'Potrafię przygotować zdrowe dania, które smakują jak najbardziej niezdrowe. A może chciałabyś spróbować menu przygotowanego specjalnie dla Ciebie?',
+                image: 'man25.jpg',
+                popupText: 'Dietetyk to mistrz zdrowego smaku. Z nim każdy posiłek będzie pożywny i pyszny.'
+            },
+            {
+                id: 26,
+                category: 'kucharze',
+                name: 'Marek Jasiński',
+                nickname: 'Włoch',
+                age: 41,
+                education: 'technik technologii żywności',
+                bio: 'Moje spaghetti smakuje jak we Włoszech. A może chciałabyś spróbować romantycznej kolacji przygotowanej specjalnie dla Ciebie?',
+                image: 'man26.jpg',
+                popupText: 'Włoch to mistrz makaronów. Z nim każdy posiłek będzie jak podróż do Włoch.'
+            },
+            {
+                id: 27,
+                category: 'kucharze',
+                name: 'Tomasz Zając',
+                nickname: 'Śniadaniowy',
+                age: 38,
+                education: 'technik żywienia',
+                bio: 'Uwielbiam przygotowywać śniadania, które dają energię na cały dzień. A może chciałabyś spróbować śniadania przygotowanego specjalnie dla Ciebie?',
+                image: 'man27.jpg',
+                popupText: 'Śniadaniowy to mistrz porannych posiłków. Z nim każdy dzień zacznie się pysznie.'
+            },
+            {
+                id: 28,
+                category: 'kucharze',
+                name: 'Andrzej Nowicki',
+                nickname: 'Cukiernik',
+                age: 46,
+                education: 'technik cukiernictwa',
+                bio: 'Moje desery są słodkie jak miłość. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
+                image: 'man28.jpg',
+                popupText: 'Cukiernik to mistrz słodyczy. Z nim każdy deser będzie nieziemsko pyszny.'
+            },
+            {
+                id: 29,
+                category: 'kucharze',
+                name: 'Krzysztof Baran',
+                nickname: 'Naukowiec',
+                age: 35,
+                education: 'technik analityk',
+                bio: 'Moje dania to eksperymenty smaku, które zawsze się udają. A może chciałabyś być moją współlokatorką w kuchennym laboratorium?',
+                image: 'man29.jpg',
+                popupText: 'Naukowiec to mistrz kulinarnych eksperymentów. Z nim każdy posiłek będzie niespodzianką.'
+            },
+            {
+                id: 30,
+                category: 'kucharze',
+                name: 'Łukasz Kowalczyk',
+                nickname: 'Lodziarz',
+                age: 33,
+                education: 'technik chłodnictwa',
+                bio: 'Moje lody są legendą w mieście. A może chciałabyś spróbować smaku przygotowanego specjalnie dla Ciebie?',
+                image: 'man30.jpg',
+                popupText: 'Lodziarz to mistrz mrożonych słodyczy. Z nim każde lody będą nieziemsko pyszne.'
+            },
 
-            // Selektory Modali
-            const modalOverlays = document.querySelectorAll('.modal-overlay');
-            const confirmModal = document.getElementById('selection-confirm-modal');
-            const confirmModalTitle = document.getElementById('confirm-modal-title');
-            const confirmContinueBtn = document.getElementById('confirm-modal-continue-btn');
+            // Pośredni (31-45)
+            {
+                id: 31,
+                category: 'pośredni',
+                name: 'Michał Nowak',
+                nickname: 'Wszechstronny',
+                age: 40,
+                education: 'technik budownictwa i technik żywienia',
+                bio: 'Potrafię i zbudować, i ugotować. Idealny do remontu kuchni... i nie tylko. Może chciałabyś, żebym przygotował dla Ciebie coś specjalnego?',
+                image: 'man31.jpg',
+                popupText: 'Wszechstronny to mistrz wielu umiejętności. Z nim każdy projekt będzie kompleksowo zrealizowany.'
+            },
+            {
+                id: 32,
+                category: 'pośredni',
+                name: 'Grzegorz Kowalski',
+                nickname: 'Złota Rączka',
+                age: 37,
+                education: 'technik budownictwa z kursem kucharskim',
+                bio: 'Potrafię naprawić zlew i ugotować obiad. Idealny do małych remontów i domowych posiłków. A może chciałabyś, żebym przygotował dla Ciebie coś wyjątkowego?',
+                image: 'man32.jpg',
+                popupText: 'Złota Rączka to mistrz domowych spraw. Z nim każdy problem zostanie rozwiązany.'
+            },
+            {
+                id: 33,
+                category: 'pośredni',
+                name: 'Tadeusz Wiśniewski',
+                nickname: 'Remontowo-Kulinarny',
+                age: 45,
+                education: 'technik architektury z doświadczeniem kuchennym',
+                bio: 'Potrafię zaprojektować kuchnię i ugotować w niej obiad. Idealny do kompleksowych usług. A może chciałabyś, żebym przygotował dla Ciebie specjalne menu?',
+                image: 'man33.jpg',
+                popupText: 'Remontowo-Kulinarny to mistrz kompleksowych rozwiązań. Z nim każdy projekt będzie perfekcyjnie zrealizowany.'
+            },
+            {
+                id: 34,
+                category: 'pośredni',
+                name: 'Marian Dąbrowski',
+                nickname: 'Majsterkowicz',
+                age: 42,
+                education: 'technik mechanik z zamiłowaniem do gotowania',
+                bio: 'Potrafię naprawić wszystko w domu i ugotować pyszny obiad. Idealny dla zapracowanych. A może chciałabyś, żebym przygotował dla Ciebie coś specjalnego?',
+                image: 'man34.jpg',
+                popupText: 'Majsterkowicz to mistrz domowych spraw. Z nim każdy problem zostanie rozwiązany.'
+            },
+            {
+                id: 35,
+                category: 'pośredni',
+                name: 'Dariusz Zawadzki',
+                nickname: 'Domowy',
+                age: 39,
+                education: 'technik budownictwa z kursem kucharskim',
+                bio: 'Specjalizuję się w małych remontach i prostych, smacznych daniach. Idealny dla singli. A może chciałabyś, żebym przygotował dla Ciebie coś pysznego?',
+                image: 'man35.jpg',
+                popupText: 'Domowy to mistrz prostoty. Z nim każdy problem zostanie rozwiązany szybko i smacznie.'
+            }
+        ];
 
-            const callScreen = document.getElementById('incoming-call-screen');
-            const callAvatar = document.getElementById('call-avatar-img');
-            const callName = document.getElementById('call-name');
-            const callBio = document.getElementById('call-bio');
-            const acceptCallBtn = document.getElementById('accept-call-btn');
-            const rejectCallBtn = document.getElementById('reject-call-btn');
-            
-            const soberingRoom = document.getElementById('sobering-up-room');
-            const retryCallBtn = document.getElementById('retry-call-btn');
-            const goHomeBtn = document.getElementById('go-home-btn');
+        // Current state
+        let currentCategory = null;
+        let currentProfile = null;
 
+        // DOM elements
+        const pages = document.querySelectorAll('.page');
+        const categoryCards = document.querySelectorAll('.selection-card');
+        const listTitle = document.getElementById('list-title');
+        const profilesContainer = document.getElementById('profiles-container');
+        const popupOverlay = document.getElementById('popup-overlay');
+        const popupTitle = document.getElementById('popup-title');
+        const popupText = document.getElementById('popup-text');
+        const connectionOverlay = document.getElementById('connection-overlay');
+        const connectionImage = document.getElementById('connection-image');
+        const connectionName = document.getElementById('connection-name');
+        const connectionNickname = document.getElementById('connection-nickname');
+        const connectionBio = document.getElementById('connection-bio');
+        const hangoverOverlay = document.getElementById('hangover-overlay');
+        const hangoverText = document.getElementById('hangover-text');
+        const heartsContainer = document.getElementById('hearts-container');
 
-            // Funkcje pomocnicze
-            const showPage = (pageId) => {
-                pageSections.forEach(section => section.classList.remove('active'));
-                const activePage = document.getElementById(pageId);
-                if (activePage) activePage.classList.add('active');
-                window.scrollTo(0, 0);
+        // Navigation functions
+        function navigateTo(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'page3-list' && currentCategory) {
+                listTitle.textContent = pageTitles[currentCategory];
+                renderProfiles();
+            }
+        }
+
+        function selectCategory(category) {
+            // Reset active state
+            categoryCards.forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Set new active category
+            currentCategory = category;
+            document.getElementById(`category-${category}`).classList.add('active');
+
+            // Add hearts animation
+            createHearts();
+
+            // Navigate to list after short delay
+            setTimeout(() => {
+                navigateTo('page3-list');
+            }, 800);
+        }
+
+        // Profile rendering
+        function renderProfiles() {
+            profilesContainer.innerHTML = '';
+
+            const categoryProfiles = profiles.filter(profile => profile.category === currentCategory);
+
+            if (categoryProfiles.length === 0) {
+                const noProfiles = document.createElement('div');
+                noProfiles.className = 'no-profiles';
+                noProfiles.innerHTML = `
+                    <div class="no-profiles-icon">💔</div>
+                    <p>Skończyli się fachowcy...<br>
+                    Masz zbyt duże wymagania albo budżet.<br>
+                    Coś się nie spina, spróbuj innej kategorii!</p>
+                `;
+                profilesContainer.appendChild(noProfiles);
+                return;
+            }
+
+            categoryProfiles.forEach(profile => {
+                const profileCard = document.createElement('div');
+                profileCard.className = 'profile-card';
+
+                profileCard.innerHTML = `
+                    <div class="profile-image-container">
+                        ${profile.image ?
+                            `<img class="profile-image" src="foty/${profile.image}" alt="${profile.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">` :
+                            ''}
+                        <div class="image-placeholder" style="${profile.image ? 'display: none' : ''}">Brak zdjęcia</div>
+                    </div>
+                    <div class="profile-content">
+                        <h3 class="profile-name">${profile.name}</h3>
+                        <p class="profile-nickname">${profile.nickname}</p>
+                        <p class="profile-age">${profile.age} lat</p>
+                        <p class="profile-education">${profile.education}</p>
+                        <p class="profile-bio">${profile.bio}</p>
+                        <button class="select-button" onclick="selectProfile(${profile.id})">WYBIERAM</button>
+                    </div>
+                `;
+
+                profilesContainer.appendChild(profileCard);
+            });
+        }
+
+        // Profile selection
+        function selectProfile(profileId) {
+            currentProfile = profiles.find(profile => profile.id === profileId);
+            showPopup();
+        }
+
+        function showPopup() {
+            popupTitle.textContent = `${currentProfile.name} to świetny wybór!`;
+            popupText.textContent = currentProfile.popupText;
+            popupOverlay.classList.add('active');
+        }
+
+        function closePopup() {
+            popupOverlay.classList.remove('active');
+        }
+
+        function proceedToConnection() {
+            closePopup();
+            showConnectionScreen();
+        }
+
+        function showConnectionScreen() {
+            const imageUrl = currentProfile.image ? `foty/${currentProfile.image}` : '';
+
+            connectionImage.src = imageUrl;
+            connectionImage.onerror = function() {
+                this.style.display = 'none';
             };
-            
-            const showOverlay = (overlayId) => {
-                const overlay = document.getElementById(overlayId);
-                if (overlay) overlay.classList.add('active');
-            };
 
-            const hideAllOverlays = () => {
-                modalOverlays.forEach(overlay => overlay.classList.remove('active'));
-            };
+            connectionName.textContent = currentProfile.name;
+            connectionNickname.textContent = currentProfile.nickname;
+            connectionBio.textContent = currentProfile.bio;
 
-            const renderCategories = () => {
-                categoryContainer.innerHTML = '';
-                categoryData.forEach(cat => {
-                    const tile = document.createElement('div');
-                    tile.className = 'category-tile';
-                    tile.dataset.category = cat.category;
-                    tile.innerHTML = `<h3>${cat.title}</h3><p>${cat.description}</p>`;
-                    categoryContainer.appendChild(tile);
-                });
-            };
+            connectionOverlay.classList.add('active');
+        }
 
-            const renderProfiles = (category) => {
-                profileGrid.innerHTML = '';
-                const filteredProfiles = database.filter(p => p.kategoria === category);
-                const categoryInfo = categoryData.find(cat => cat.category === category);
-                listTitle.textContent = categoryInfo ? categoryInfo.title : "Lista Profili";
+        function closeConnection() {
+            connectionOverlay.classList.remove('active');
+        }
 
-                filteredProfiles.forEach(profile => {
-                    const photoId = (profile.id - 1) % 60 + 1;
-                    const imagePath = `foty/man${photoId}.jpg`;
-                    const card = document.createElement('div');
-                    card.className = 'profile-card';
-                    card.innerHTML = `
-                        <div class="profile-image-placeholder">
-                            <img src="${imagePath}" alt="Zdjęcie: ${profile.imie}" onerror="this.style.display='none'">
-                        </div>
-                        <div class="profile-content">
-                            <h3>${profile.imie} ${profile.nazwisko} <span class="ksywka">${profile.ksywka}</span></h3>
-                            <p class="profile-meta">Wiek: ${profile.wiek} lat</p>
-                            <p class="profile-opis">"${profile.opis}"</p>
-                            <p class="profile-biogram">${profile.biogram}</p>
-                            <button class="btn btn-accent profile-btn" data-id="${profile.id}">Wybieram ${profile.imie} na budowę</button>
-                        </div>
-                    `;
-                    profileGrid.appendChild(card);
-                });
-            };
+        function acceptCall() {
+            // Redirect to YouTube
+            window.location.href = 'https://youtu.be/E4xIqwZgPT8?si=ycyHt1X3QxPwl9k8';
+        }
 
-            // --- Event Listeners Głównej Aplikacji ---
-            ctaButton.addEventListener('click', () => showPage('page2-selection'));
-            backButton.addEventListener('click', () => showPage('page2-selection'));
+        function rejectCall() {
+            closeConnection();
+            showHangoverRoom();
+        }
 
-            categoryContainer.addEventListener('click', (e) => {
-                const tile = e.target.closest('.category-tile');
-                if (tile) {
-                    renderProfiles(tile.dataset.category);
-                    showPage('page3-list');
-                }
-            });
+        function showHangoverRoom() {
+            // Random hangover text
+            const randomIndex = Math.floor(Math.random() * hangoverTexts.length);
+            hangoverText.textContent = hangoverTexts[randomIndex];
 
-            // --- Event Listeners dla nowego flow (modale) ---
-            profileGrid.addEventListener('click', (e) => {
-                if (e.target.classList.contains('profile-btn')) {
-                    const profileId = parseInt(e.target.dataset.id, 10);
-                    currentSelectedProfile = database.find(p => p.id === profileId);
-                    if (currentSelectedProfile) {
-                        // Krok 1: Pokaż modal potwierdzenia
-                        confirmModalTitle.textContent = `${currentSelectedProfile.imie} to świetny wybór!`;
-                        showOverlay('selection-confirm-modal');
-                    }
-                }
-            });
+            hangoverOverlay.classList.add('active');
+        }
 
-            confirmContinueBtn.addEventListener('click', () => {
-                hideAllOverlays();
-                if (currentSelectedProfile) {
-                    // Krok 2: Pokaż ekran połączenia
-                    const photoId = (currentSelectedProfile.id - 1) % 60 + 1;
-                    callAvatar.src = `foty/man${photoId}.jpg`;
-                    callName.textContent = `${currentSelectedProfile.imie} ${currentSelectedProfile.ksywka}`;
-                    callBio.textContent = `Dzwoni... ${currentSelectedProfile.biogram.substring(0, 100)}...`;
-                    showOverlay('incoming-call-screen');
-                }
-            });
+        function closeHangover() {
+            hangoverOverlay.classList.remove('active');
+        }
 
-            acceptCallBtn.addEventListener('click', () => {
-                // Przekierowanie na YouTube
-                window.location.href = 'https://youtu.be/E4xIqwZgPT8?si=ycyHt1X3QxPwl9k8';
-            });
-            
-            rejectCallBtn.addEventListener('click', () => {
-                hideAllOverlays();
-                // Krok 3: Pokaż pokój wytrzeźwień
-                showOverlay('sobering-up-room');
-            });
-            
-            retryCallBtn.addEventListener('click', () => {
-                hideAllOverlays();
-                // Powrót do kroku 2 (ekran połączenia)
-                if (currentSelectedProfile) {
-                    showOverlay('incoming-call-screen');
-                }
-            });
-            
-            goHomeBtn.addEventListener('click', () => {
-                hideAllOverlays();
-                // Powrót na sam początek
-                showPage('page1-landing');
-            });
+        function tryAgain() {
+            closeHangover();
+            showConnectionScreen();
+        }
 
-            // --- Inicjalizacja Aplikacji ---
-            renderCategories();
-            // Pokaż stronę powitalną na starcie (już jest ustawiona w HTML)
+        // Close popups when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target === popupOverlay) {
+                closePopup();
+            }
+            if (event.target === connectionOverlay) {
+                closeConnection();
+            }
+            if (event.target === hangoverOverlay) {
+                closeHangover();
+            }
+        });
+
+        // Close popups with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closePopup();
+                closeConnection();
+                closeHangover();
+            }
+        });
+
+        // Hearts animation
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    heart.style.display = 'block';
+                    heartsContainer.appendChild(heart);
+
+                    // Remove heart after animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 6000);
+                }, i * 100);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some initial hearts
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    heart.style.display = 'block';
+                    heartsContainer.appendChild(heart);
+
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 6000);
+                }, i * 1500);
+            }
         });
     </script>
-
 </body>
 </html>
