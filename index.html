@@ -191,13 +191,76 @@
         <a href="#" id="nav-ukochani">Ukochani</a>
     </nav>
     
-    <div id="screen-landing" class="screen active">
-        <p class="small-text">Artur Kudlik Przedstawia 🔥</p>
-        <h1>Randki dla nastolatków</h1>
-        <p>Różne tryby - Pojedyncza, w ciemno, mieszana, trójkątna, typ taki że spotykacie się o 23:30</p>
-        <button id="main-enter-button" class="button" data-target="screen-categories">Wchodzę w to!</button>
-    </div>
+<div id="screen-landing" class="screen active">
+  <p class="small-text">Artur Kudlik Przedstawia 🔥</p>
+  <h1>Randki dla nastolatków</h1>
+  <p>Różne tryby - Pojedyncza, w ciemno, mieszana, trójkątna, typ taki że spotykacie się o 23:30</p>
+  <button id="main-enter-button" class="button" data-target="screen-categories">Wchodzę w to!</button>
+</div>
 
+<!-- Stopka z napisem -->
+<div id="footer-note">Ta strona to żart i nie ma na celu nikogo urazić</div>
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  .screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  #footer-note {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: #ccc;          /* znacznie jaśniejszy szary */
+    opacity: 1;           /* pełna widoczność */
+    transition: opacity 0.3s ease;
+  }
+
+  #footer-note.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .button {
+    margin-top: 10px;
+    padding: 12px 24px;   /* większy przycisk */
+    font-size: 18px;      /* większy font */
+    background-color: #FFD700;  /* żółty kolor */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .button:hover {
+    background-color: #FFC300;
+    transform: scale(1.05);
+  }
+</style>
+
+<script>
+  document.getElementById('main-enter-button').addEventListener('click', function() {
+    document.getElementById('footer-note').classList.add('hidden');
+  });
+</script>
+<script>
+  document.getElementById('main-enter-button').addEventListener('click', function() {
+    const footer = document.getElementById('footer-note');
+    footer.classList.add('hidden');
+  });
+</script>
     <div id="screen-categories" class="screen">
         <h2>Jaki masz typ?</h2>
         <div class="category-box" data-category="solidni">
