@@ -3,1559 +3,613 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budowlańcy & randki</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Randki dla Dorosłych Ludzi</title>
     <style>
+        /* --- GŁÓWNE STYLE I RESET --- */
         :root {
-            --primary-bg: #121212;
-            --secondary-bg: #1e1e1e;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --accent: #FFD700;
-            --accent-hover: #e6c200;
-            --border-color: #333;
-            --card-bg: #252525;
-            --success: #4CAF50;
-            --danger: #F44336;
+            --dark-bg: #1a1a1a;
+            --main-text: #f0f0f0;
+            --yellow: #ffd700;
+            --dark-yellow: #e6c200;
+            --darker-bg: #111;
+            --red: #e74c3c;
+            --green: #2ecc71;
+            --border-radius: 8px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         }
 
         body {
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .hearts-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            pointer-events: none;
-            z-index: 100;
-            height: 100vh;
+            background-color: var(--dark-bg);
+            color: var(--main-text);
             overflow: hidden;
         }
 
-        .heart {
-            position: absolute;
-            color: var(--accent);
-            font-size: 1.5rem;
-            animation: float 10s linear forwards;
-            opacity: 1;
-            display: none;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-120vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        .page {
-            display: none;
-            flex: 1;
-            padding: 2rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        /* Page 1 - Landing */
-        .landing-content {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 80vh;
-            position: relative;
-        }
-
-        .landing-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-            position: relative;
-        }
-
-        .landing-title::after {
-            content: "❤️";
-            margin-left: 0.5rem;
-            color: var(--accent);
-        }
-
-        .landing-subtitle {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-
-        .landing-subtitle-small {
-            font-size: 1rem;
-            color: var(--accent);
-            margin-bottom: 3rem;
-            font-style: italic;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .cta-button {
-            background-color: var(--accent);
-            color: var(--primary-bg);
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-
-        .cta-button:active {
-            transform: translateY(1px);
-        }
-
-        /* Page 2 - Selection */
-        .selection-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-            position: relative;
-        }
-
-        .selection-title::after {
-            content: "";
-            display: block;
-            width: 100px;
-            height: 3px;
-            background: var(--accent);
-            margin: 0.5rem auto 0;
-        }
-
-        .selection-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (min-width: 768px) {
-            .selection-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .selection-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .selection-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border-color: var(--accent);
-        }
-
-        .selection-card.active {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent);
-            background-color: rgba(255, 215, 0, 0.05);
-        }
-
-        .selection-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .selection-card h3::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .selection-card p {
-            color: var(--text-secondary);
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-
-        /* Page 3 - List */
-        .list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .list-title {
-            font-size: 1.8rem;
-            color: var(--text-primary);
-            position: relative;
-            padding-bottom: 0.3rem;
-        }
-
-        .list-title::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .back-button {
-            background-color: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background-color: rgba(255, 215, 0, 0.1);
-        }
-
-        .profiles-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        @media (min-width: 768px) {
-            .profiles-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .profile-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            border-color: var(--accent);
-        }
-
-        .profile-image-container {
-            height: 200px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .profile-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .profile-card:hover .profile-image {
-            transform: scale(1.05);
-        }
-
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            background-color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-        }
-
-        .profile-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-            color: var(--text-primary);
-            position: relative;
-            padding-bottom: 0.3rem;
-        }
-
-        .profile-name::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 1px;
-            background: var(--accent);
-        }
-
-        .profile-nickname {
-            color: var(--accent);
-            font-style: italic;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        .profile-age {
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .profile-age::before {
-            content: "🎂";
-        }
-
-        .profile-education {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .profile-education::before {
-            content: "🎓";
-        }
-
-        .profile-bio {
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-            flex-grow: 1;
-            font-style: italic;
-        }
-
-        .select-button {
-            width: 100%;
-            background-color: var(--accent);
-            color: var(--primary-bg);
-            border: none;
-            padding: 0.8rem;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .select-button:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .select-button::after {
-            content: "👷‍♂️";
-        }
-
-        /* No more profiles */
-        .no-profiles {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            font-style: italic;
-            grid-column: 1 / -1;
-        }
-
-        .no-profiles-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        /* Popup */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .popup-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .popup {
-            background-color: var(--secondary-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .popup-close:hover {
-            color: var(--text-primary);
-        }
-
-        .popup-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .popup-title::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .popup-text {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .popup-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        @media (min-width: 480px) {
-            .popup-buttons {
-                flex-direction: row;
-                justify-content: center;
-            }
-        }
-
-        .popup-button {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            flex: 1;
-        }
-
-        .popup-button.primary {
-            background-color: var(--accent);
-            color: var(--primary-bg);
-        }
-
-        .popup-button.primary:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .popup-button.secondary {
-            background-color: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-
-        .popup-button.secondary:hover {
-            background-color: rgba(255, 215, 0, 0.1);
-        }
-
-        /* Connection Screen */
-        .connection-screen {
-            text-align: center;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .calling-animation {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: rgba(255, 215, 0, 0.2);
-            border: 3px solid var(--accent);
-            animation: pulse 1.5s infinite;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
-        }
-
-        .connection-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1.5rem;
-            display: block;
-            border: 4px solid var(--accent);
-            position: relative;
-        }
-
-        .connection-name {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-            color: var(--text-primary);
-        }
-
-        .connection-nickname {
-            color: var(--accent);
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .connection-bio {
-            color: var(--text-primary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            font-style: italic;
-        }
-
-        .call-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .call-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            transition: all 0.2s ease;
-        }
-
-        .call-button.accept {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .call-button.accept:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-
-        .call-button.reject {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .call-button.reject:hover {
-            background-color: #d32f2f;
-            transform: scale(1.05);
-        }
-
-        /* Hangover Room */
-        .hangover-screen {
-            text-align: center;
-            padding: 2rem;
-            max-width: 800px;
-            width: 90%;
-        }
-
-        .hangover-title {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .hangover-title::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .hangover-text {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            font-style: italic;
-        }
-
-        .hangover-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 480px) {
-            .hangover-buttons {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
-
-        .video-container {
-            margin: 2rem auto;
-            width: 100%;
-            max-width: 560px;
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            border: 2px solid var(--accent);
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: auto;
-        }
-
-        .footer-heart {
-            color: var(--accent);
-            margin: 0 0.3rem;
-            animation: heartbeat 1.5s infinite;
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.3); }
-            50% { transform: scale(1); }
-            75% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            .landing-subtitle {
-                font-size: 1.8rem;
-            }
-
-            .selection-title {
-                font-size: 1.5rem;
-            }
-
-            .list-title {
-                font-size: 1.3rem;
-            }
-
-            .profile-name {
-                font-size: 1.1rem;
-            }
-
-            .call-buttons {
-                gap: 1rem;
-            }
+        /* --- NAWIGACJA --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background-color: var(--darker-bg);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 20px; z-index: 1000;
+        }
+        nav a {
+            color: var(--main-text); text-decoration: none; padding: 8px 15px;
+            font-weight: bold; border-radius: var(--border-radius); transition: background-color 0.3s;
+        }
+        nav a:hover { background-color: rgba(255, 255, 255, 0.1); }
+
+        /* --- EKRANY APLIKACJI --- */
+        .screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 80px 20px 20px; text-align: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
+            overflow-y: auto;
+        }
+        .screen.active { opacity: 1; visibility: visible; z-index: 100; }
+        /* POPRAWKA PRZYCIĘCIA */
+        #screen-profiles, #screen-ukochani {
+             justify-content: flex-start;
+        }
+
+        /* --- ELEMENTY INTERFEJSU --- */
+        h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        h2 { font-size: 2rem; color: var(--yellow); margin-bottom: 20px; }
+        h3 { font-size: 1.5rem; margin-bottom: 5px; }
+        p { font-size: 1.2rem; max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
+        .small-text { font-size: 1rem; color: #aaa; }
+        .button {
+            background-color: var(--yellow); color: var(--dark-bg); border: none;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold;
+            border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.3s, transform 0.2s;
+            margin: 10px; border: 2px solid var(--yellow); position: relative; z-index: 2;
+        }
+        .button:hover { background-color: var(--dark-yellow); transform: scale(1.05); }
+        .button:disabled { background-color: #555; color: #999; border-color: #555; cursor: not-allowed; transform: none; }
+        .button.secondary { background-color: transparent; color: var(--yellow); }
+
+        /* --- LANDING PAGE ANIMACJE --- */
+        .flying-heart {
+            position: fixed; font-size: 1.5rem; color: var(--yellow);
+            opacity: 0.7; pointer-events: none; z-index: 1;
+            animation: fly-to-button 8s linear infinite;
+        }
+        @keyframes fly-to-button {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: var(--tx) var(--ty) scale(1); opacity: 0; }
+        }
+
+        /* --- KATEGORIE I KAFELKI --- */
+        .category-box { background-color: var(--darker-bg); padding: 30px; margin: 15px 0; border-radius: var(--border-radius); border: 2px solid transparent; cursor: pointer; transition: border-color 0.3s; max-width: 500px; width: 90%; }
+        .category-box:hover { border-color: var(--yellow); }
+        .category-box p { margin-bottom: 0; font-size: 1rem; color: #ccc; }
+
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; padding: 20px; }
+        .profile-card { background-color: var(--darker-bg); border-radius: var(--border-radius); overflow: hidden; border: 2px solid transparent; transition: border-color 0.3s; display: flex; flex-direction: column; cursor: pointer; }
+        .profile-card:hover { border-color: var(--yellow); }
+        .profile-card img { width: 100%; height: 300px; object-fit: cover; }
+        .img-placeholder { width: 100%; height: 300px; background-color: #333; color: #888; display: flex; justify-content: center; align-items: center; font-style: italic; }
+        .profile-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; text-align: left; }
+        .profile-card-content .nickname { color: var(--yellow); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
+        .profile-card-content .separator { border: none; height: 2px; width: 40px; background-color: var(--yellow); margin: 10px 0 15px 0; }
+        .profile-card-content .details span { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #aaa; }
+        .profile-card-content .quote { font-style: italic; color: #ccc; margin-bottom: 15px; flex-grow: 1; }
+        .life-quote { font-weight: bold; font-style: normal !important; background: linear-gradient(45deg, var(--yellow), var(--main-text)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .profile-card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .heart-button { background: none; border: none; cursor: pointer; padding: 10px; position: relative; }
+        .heart-icon { font-size: 2rem; color: var(--main-text); transition: color 0.3s, transform 0.3s; }
+        .heart-icon.loved { color: transparent; background-image: linear-gradient(45deg, #f06, #f79, #06f, #79f, #0f6, #7f9); -webkit-background-clip: text; background-clip: text; transform: scale(1.2); }
+        
+        .conversion-card {
+            background: linear-gradient(45deg, #222, #111);
+            border: 2px dashed var(--yellow); padding: 20px;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center;
+        }
+        .conversion-card h3 { color: var(--yellow); }
+        .conversion-card p { font-size: 0.9rem; color: #ccc; margin-bottom: 20px; }
+
+        /* --- POKÓJ NAWRÓCEŃ --- */
+        #screen-conversion { overflow: hidden; }
+        .marching-heart { position: fixed; font-size: 2.5rem; animation: march-across 15s linear infinite; pointer-events: none; }
+        @keyframes march-across-1 { 0% { left: -5vw; top: 10vh; transform: rotate(20deg); } 100% { left: 105vw; top: 90vh; transform: rotate(20deg); } }
+        @keyframes march-across-2 { 0% { left: 105vw; top: 20vh; transform: rotate(-160deg); } 100% { left: -5vw; top: 80vh; transform: rotate(-160deg); } }
+        @keyframes march-across-3 { 0% { top: -5vh; left: 80vw; transform: rotate(110deg); } 100% { top: 105vh; left: 20vw; transform: rotate(110deg); } }
+
+        /* --- EKRANY WIDEO, POŁĄCZEŃ, MODALI --- */
+        #screen-video-call .message-container { max-width: 80%; }
+        #screen-video-call .message { padding: 15px 20px; border-radius: 18px; line-height: 1.4; background-color: #333; border-bottom-left-radius: 4px; }
+        #video-player-container { width: 100%; max-width: 800px; margin-top: 20px; z-index: 10; }
+        #video-player-container iframe { aspect-ratio: 16 / 9; width: 100%; border: none; }
+        .call-screen-ui { background-color: #000; border-radius: 20px; padding: 50px; display: flex; flex-direction: column; align-items: center; max-width: 400px; width: 90%; }
+        .call-screen-ui img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--yellow); margin-bottom: 20px; }
+        .call-screen-ui .nickname { font-size: 2rem; font-weight: bold; }
+        .call-screen-ui .status { color: #aaa; font-size: 1.2rem; margin-bottom: 40px; }
+        .call-buttons { display: flex; justify-content: space-around; width: 100%; }
+        .call-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .call-btn svg { width: 35px; height: 35px; fill: white; }
+        .call-btn.accept { background-color: var(--green); }
+        .call-btn.reject { background-color: var(--red); }
+        .call-btn.reject svg { stroke: white; stroke-width: 5; fill: none; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background-color: var(--darker-bg); padding: 30px; border-radius: var(--border-radius); text-align: center; max-width: 400px; width: 90%; }
+        .modal-content p { margin-bottom: 25px; }
+        .modal-content .button { display: block; width: 100%; margin-bottom: 10px; }
+
+        /* --- EKRAN CZATU --- */
+        #screen-chat { padding-top: 50px; }
+        #chat-screen-content { width: 100%; max-width: 800px; height: 100%; display: flex; flex-direction: column; background-color: var(--darker-bg); border-radius: var(--border-radius) var(--border-radius) 0 0; }
+        .chat-header { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #333; background-color: #222; flex-shrink: 0; }
+        .chat-header img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
+        .chat-header-info .name { font-weight: bold; }
+        .chat-header-info .status { font-size: 0.8rem; color: var(--green); }
+        #chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column-reverse; }
+        .message-container { display: flex; margin-bottom: 15px; max-width: 80%; position: relative; }
+        .message { padding: 10px 15px; border-radius: 18px; line-height: 1.4; }
+        .bot-message-container { align-items: flex-start; flex-direction: row; align-items: flex-end; }
+        .bot-message-container .chat-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 10px; flex-shrink: 0; }
+        .bot-message { background-color: #333; border-bottom-left-radius: 4px; }
+        .user-message-container { align-self: flex-end; }
+        .user-message { background-color: var(--yellow); color: var(--dark-bg); border-bottom-right-radius: 4px; }
+        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #333; flex-shrink: 0; }
+        #chat-input { flex-grow: 1; background-color: #333; border: none; border-radius: var(--border-radius); padding: 15px; color: var(--main-text); font-size: 1rem; }
+        #send-button { margin-left: 10px; padding: 0 25px; }
+        .chat-particle { position: absolute; font-size: 1.2rem; pointer-events: none; animation: message-explode 2.5s cubic-bezier(0.1, 0.8, 0.7, 1) forwards; }
+        @keyframes message-explode { 0% { transform: scale(1); opacity: 1; } 100% { transform: var(--tx) var(--ty) scale(0); opacity: 0; } }
+
+        /* --- EKRAN BANA --- */
+        #chat-ban-full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(26, 26, 26, 0.95); z-index: 1001; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .ban-circle-container { position: relative; width: 250px; height: 250px; margin-bottom: 20px; animation: rotate-circle 20s linear infinite; }
+        .ban-emoji { position: absolute; font-size: 2rem; transform-origin: center center; }
+        @keyframes rotate-circle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .ban-text { font-size: 3rem; font-weight: bold; color: var(--yellow); margin-bottom: 30px; }
+        #audio-player-container { display: none; }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; } h2 { font-size: 1.5rem; } p { font-size: 1rem; }
+            .button { padding: 12px 25px; font-size: 1rem; }
+            #chat-screen-content, #screen-chat { border-radius: 0; padding-top: 50px; }
         }
     </style>
 </head>
 <body>
-    <!-- Hearts container -->
-    <div class="hearts-container" id="hearts-container"></div>
+    <div id="landing-page-hearts"></div>
+    <div id="audio-player-container"></div>
+    
+    <nav>
+        <a href="#" id="nav-back">Cofnij</a>
+        <a href="#" id="nav-home">Home</a>
+        <a href="#" id="nav-ukochani">Ukochani</a>
+    </nav>
+    
+    <div id="screen-landing" class="screen active">
+        <p class="small-text">Artur Kudlik Przedstawia 🔥</p>
+        <h1>Randki dla nastolatków</h1>
+        <p>Różne tryby - Pojedyncza, w ciemno, mieszana, trójkątna, typ taki że spotykacie się o 23:30</p>
+        <button id="main-enter-button" class="button" data-target="screen-categories">Wchodzę w to!</button>
+    </div>
 
-    <!-- Page 1: Landing -->
-    <div id="page1-landing" class="page active">
-        <div class="container">
-            <div class="landing-content">
-                <h1 class="landing-title">Artur Kudlik przedstawia</h1>
-                <h2 class="landing-subtitle">Portal Randka z rówieśnikiem</h2>
-                <p class="landing-subtitle-small">dzięki tej stronie nastolatkowie i nastolatki będą bliżej swojej drugiej połówki</p>
-                <button class="cta-button" onclick="navigateTo('page2-selection')">
-                    <span>SZUKAM</span>
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+    <div id="screen-categories" class="screen">
+        <h2>Jaki masz typ?</h2>
+        <div class="category-box" data-category="solidni">
+            <h3>Solidni i rozkochani</h3>
+            <p>chłopaki, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami..</p>
+        </div>
+        <div class="category-box" data-category="kreatywni">
+            <h3>Kreatywni i smaczni</h3>
+            <p>Artyści kuchni, którzy potrafią rozkochać Cię w jedzeniu. Ich dania smakują jak miłość od pierwszego kęsa..</p>
+        </div>
+        <div class="category-box" data-category="wszechstronni">
+            <h3>Wszechstronni i elastyczni</h3>
+            <p>Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy chcą Karola Kocembę ale wstydzą się podbić..</p>
         </div>
     </div>
 
-    <!-- Page 2: Selection -->
-    <div id="page2-selection" class="page">
-        <div class="container">
-            <h1 class="selection-title">jaka miłość Ci w duszy gra?</h1>
-            <div class="selection-grid">
-                <div class="selection-card" onclick="selectCategory('budowlańcy')" id="category-budowlańcy">
-                    <h3>Solidni i rozkochani</h3>
-                    <p>chłopaki, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami.</p>
-                </div>
-                <div class="selection-card" onclick="selectCategory('kucharze')" id="category-kucharze">
-                    <h3>Kreatywni i smaczni</h3>
-                    <p>Artyści kuchni, którzy potrafią rozkochać Cię w jedzeniu. Ich dania smakują jak miłość od pierwszego kęsa.</p>
-                </div>
-                <div class="selection-card" onclick="selectCategory('pośredni')" id="category-pośredni">
-                    <h3>Wszechstronni i elastyczni</h3>
-                    <p>Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy chcą Karola Kocembę ale wstydzą się podbić.</p>
-                </div>
-            </div>
+    <div id="screen-profiles" class="screen">
+        <div id="profiles-container" class="profile-grid"></div>
+    </div>
+    
+    <div id="screen-confirmation" class="screen">
+        <h2 id="confirmation-text"></h2>
+        <p id="confirmation-subtext"></p>
+        <div>
+            <button class="button" id="btn-polacz-sie">POŁĄCZ SIĘ</button>
+            <button class="button secondary" id="btn-wtrashe-pisac">WOLĘ PISAĆ</button>
         </div>
     </div>
-
-    <!-- Page 3: List -->
-    <div id="page3-list" class="page">
-        <div class="container">
-            <div class="list-header">
-                <h1 class="list-title" id="list-title">Nasi fachowcy</h1>
-                <button class="back-button" onclick="navigateTo('page2-selection')">
-                    <i class="fas fa-arrow-left"></i>
-                    WRÓĆ
-                </button>
-            </div>
-            <div class="profiles-grid" id="profiles-container">
-                <!-- Profiles will be inserted here by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Popup -->
-    <div class="popup-overlay" id="popup-overlay">
-        <div class="popup">
-            <button class="popup-close" onclick="closePopup()">&times;</button>
-            <h2 class="popup-title" id="popup-title">Świetny wybór!</h2>
-            <p class="popup-text" id="popup-text">Ten fachowiec to prawdziwy skarb. Nie tylko wykona pracę, ale też rozkocha Cię w swoim profesjonalizmie.</p>
-            <div class="popup-buttons">
-                <button class="popup-button primary" onclick="proceedToConnection()">POŁĄCZ SIĘ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Connection Screen -->
-    <div class="popup-overlay" id="connection-overlay">
-        <div class="popup connection-screen">
-            <div class="calling-animation"></div>
-            <button class="popup-close" onclick="closeConnection()">&times;</button>
-            <img class="connection-image" id="connection-image" src="" alt="Zdjęcie profilowe">
-            <h2 class="connection-name" id="connection-name">Jan Kowalski</h2>
-            <p class="connection-nickname" id="connection-nickname">"Pablo"</p>
-            <p class="connection-bio" id="connection-bio">Cześć, jestem Pablo. Nie tylko położę Twoje kafelki, ale też sprawię, że będziesz się czuła jak królewna we własnym domu.</p>
+    
+    <div id="screen-incoming-call" class="screen">
+       <div class="call-screen-ui">
+            <img id="call-img" src="" alt="">
+            <div id="call-nickname" class="nickname"></div>
+            <div class="status">do ciebie dzwoni...</div>
             <div class="call-buttons">
-                <button class="call-button accept" onclick="acceptCall()">
-                    <i class="fas fa-phone"></i>
-                </button>
-                <button class="call-button reject" onclick="rejectCall()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button class="call-btn reject" id="btn-reject-call"><svg viewBox="0 0 32 32"><line x1="2" y1="30" x2="30" y2="2"></line><line x1="2" y1="2" x2="30" y2="30"></line></svg></button>
+                <button class="call-btn accept" id="btn-accept-call"><svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg></button>
+            </div>
+       </div>
+    </div>
+
+    <div id="screen-video-call" class="screen">
+        <div class="message-container"><div id="video-message-text" class="message"></div></div>
+        <div id="video-player-container">
+            <iframe id="youtube-player" data-src="https://www.youtube.com/embed/yHAhqiyauhE?si=hJVvmT5FLQzs792Z" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div>
+            <button class="button" id="btn-go-to-chat">Przejdź do czatu</button>
+            <button class="button secondary" id="btn-end-call">Zakończ rozmowę</button>
+        </div>
+    </div>
+    
+    <div id="screen-chat" class="screen">
+        <div id="chat-screen-content">
+            <div class="chat-header">
+                <img id="chat-header-img" src="" alt="">
+                <div class="chat-header-info">
+                    <div id="chat-header-name" class="name"></div>
+                    <div class="status">aktywny teraz</div>
+                </div>
+            </div>
+            <div id="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Napisz wiadomość...">
+                <button class="button" id="send-button">Wyślij</button>
             </div>
         </div>
     </div>
 
-    <!-- Hangover Room -->
-    <div class="popup-overlay" id="hangover-overlay">
-        <div class="popup hangover-screen">
-            <button class="popup-close" onclick="closeHangover()">&times;</button>
-            <h2 class="hangover-title">Pokój Nawróceń</h2>
-            <p class="hangover-text" id="hangover-text">Może jednak nie był to najlepszy wybór? Ale nie martw się - prawdziwa miłość do fachowca czeka tuż za rogiem!</p>
-            <div class="hangover-buttons">
-                <button class="popup-button primary" onclick="tryAgain()">SPRÓBUJ JESZCZE RAZ</button>
-                <button class="popup-button secondary" onclick="navigateTo('page1-landing')">WRÓĆ NA POCZĄTEK</button>
-                <button class="popup-button secondary" onclick="showPresidentialSpeech()">PREZYDENCKIE PRZEMÓWIENIE</button>
-            </div>
-            <div class="video-container" id="video-container" style="display: none;">
-                <iframe src="https://www.youtube.com/embed/yHAhqiyauhE?si=DIKrw-GZs21w9Jl6" title="Przemówienie Prezydenta Karola Nawrockiego" allowfullscreen></iframe>
-            </div>
+    <div id="chat-ban-full-overlay">
+        <div class="ban-circle-container" id="ban-circle"></div>
+        <div class="ban-text">bywa</div>
+        <button class="button" id="btn-find-new">Znajdź nowego fachowca</button>
+        <button class="button secondary" id="btn-play-music">Puść muzykę</button>
+    </div>
+    
+    <div id="screen-conversion" class="screen">
+        <div id="conversion-hearts-container"></div>
+        <div id="video-player-container">
+            <iframe id="conversion-video-player" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+    
+    <div id="screen-ukochani" class="screen">
+        <div id="ukochani-empty" style="display: none; flex-direction: column;">
+            <h2>Twoja lista jest pusta</h2>
+            <p>Nie dodałaś jeszcze żadnego chłopaka, ale możesz to zrobić!</p>
+            <button class="button" id="btn-znajdz-chlopaka">Tutaj</button>
+        </div>
+        <div id="ukochani-list-container" class="profile-grid"></div>
+    </div>
+    
+    <div id="modal-reject" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Czy na pewno chcesz odrzucić takiego Męskiego chłopa?</h3>
+            <p id="rejection-argument"></p>
+            <button class="button" id="btn-call-again">Zadzwoń ponownie</button>
+            <button class="button secondary" id="btn-prefer-write">Wolę pisać</button>
+            <button class="button secondary" id="btn-im-shy">Wstydzę się</button>
+        </div>
+    </div>
+    
+    <div id="modal-shy" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Do odważnych świat należy 💪</h2>
+            <button class="button" id="btn-back-to-call">Wróć do połączenia</button>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <p>Zrobione z <span class="footer-heart">❤️</span> przez Artura Kudlika <span class="footer-heart">🔥</span> z pomocą mistral-medium</p>
-    </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-    <script>
-        // EASY-EDIT-1: Nagłówki
-        const pageTitles = {
-            'budowlańcy': 'Nasi budowlańcy',
-            'kucharze': 'Nasi kucharze',
-            'pośredni': 'Nasi wszechstronni'
-        };
+const profiles = [
+    { id: 1, name: 'Grzegorz Kowalczyk', nickname: 'Fred', age: '🎂 40', education: '🎓 Kurs ślusarstwa, reszta to szkoła życia', quote: 'Fred na usługi! Specjalizuję się w spawaniu, ale potrafię też... no, powiedzmy, że umiem łączyć różne elementy w harmonijną całość.', category: 'solidni', image: 'foty/man1.jpg', lifeQuote: '"Najpierw położę kafelki, a potem kres szkolnej propagandzie."', confirmationBlurb: 'to mistrz spawarki. Z nim każda relacja będzie trwała i nierozerwalna.' },
+    { id: 2, name: 'Andrzej Zawadzki', nickname: 'Młotek', age: '🎂 45', education: '🎓 Jedna klasa zawodówki samochodowej', quote: 'Jak coś się zepsuje, to ja to naprawię. Jak się nie da naprawić, to znaczy, że trzeba było mocniej uderzyć. Proste.', category: 'solidni', image: 'foty/man2.jpg', lifeQuote: '"Ona nie musi być piękna."', confirmationBlurb: 'to król młota. Z nim każdy gwóźdź zostanie wbity prosto i z finezją.' },
+    { id: 3, name: 'Krzysztof Malinowski', nickname: 'Betoniarz', age: '🎂 38', education: '🎓 Technik budownictwa, bez matury', quote: 'Moje serce jest jak dobrze wymieszany beton - twarde, solidne i gotowe na lata. Szukam kogoś, kto doceni mocny fundament.', category: 'solidni', image: 'foty/man3.jpg', lifeQuote: '"Wiem, że nic nie wiem."', confirmationBlurb: 'to twardziel o gołębim sercu. On nie buduje zamków z piasku, on wylewa fundamenty pod pałac.' },
+    { id: 4, name: 'Marian Paździoch', nickname: 'Wiertara', age: '🎂 52', education: '🎓 Dyplom mistrzowski w cechu rzemiosł różnych', quote: 'Życie jest jak ściana z wielkiej płyty, czasem trzeba użyć udaru, żeby się przebić. Mam wiertarkę i nie zawaham się jej użyć.', category: 'solidni', image: 'foty/man4.jpg', lifeQuote: '"Lepiej mieć udar w wiertarce niż w głowie."', confirmationBlurb: 'przewierci się przez każdy problem. Z nim żadna ściana nie stanie wam na drodze do szczęścia.' },
+    { id: 5, name: 'Damian Igielski', nickname: 'Słodki', age: '🎂 33', education: '🎓 Technik technologii żywienia, dorabia jako projektant', quote: 'Projektuję torty, które wyglądają jak dzieła sztuki i smakują jeszcze lepiej. Z Tobą chciałbym zaprojektować coś na całe życie.', category: 'kreatywni', image: 'foty/man5.jpg', lifeQuote: '"Życie jest za krótkie na dietę."', confirmationBlurb: 'osłodzi Ci życie. Z nim każdy dzień będzie smakował jak ulubiony deser.' },
+    { id: 6, name: 'Patryk Bochenek', nickname: 'Zakwas', age: '🎂 41', education: '🎓 Szkoła branżowa Cosinus - piekarz', quote: 'Jestem cierpliwy jak zakwas, który rośnie przez całą noc. Daj mi trochę ciepła, a stworzę dla Ciebie coś pysznego.', category: 'kreatywni', image: 'foty/man6.jpg', lifeQuote: '"Dobry chleb jest podstawą, reszta to dodatki."', confirmationBlurb: 'to mistrz cierpliwości. Daj mu trochę czasu, a upiecze dla ciebie chleb... i wspólną przyszłość.' },
+    { id: 7, name: 'Bartosz Heise', nickname: 'Croissant', age: '🎂 29', education: '🎓 Technik fryzjerstwa z doświadczeniem w gastronomii', quote: 'Moje życie ma więcej warstw niż idealny croissant. Odkryjmy je razem, jedna po drugiej.', category: 'kreatywni', image: 'foty/man7.jpg', lifeQuote: '"W życiu jak we włosach - czasem trzeba coś zakręcić."', confirmationBlurb: 'jest wielowarstwowy jak jego ulubione ciasto. Każdego dnia odkryjesz w nim coś nowego i zaskakującego.' },
+    { id: 8, name: 'Sebastian Macierewicz', nickname: 'Kruszonka', age: '🎂 35', education: '🎓 Absolwent liceum plastycznego', quote: 'Rzeźbię w glinie, ale najlepiej wychodzi mi lepienie pierogów. Jestem artystą w kuchni i poza nią. Posypmy nasze życie kruszonką szczęścia.', category: 'kreatywni', image: 'foty/man8.jpg', lifeQuote: '"Sztuka jest wszędzie, nawet w pierogach."', confirmationBlurb: 'jest artystą duszy i podniebienia. Z nim życie nabierze barw i smaku.' },
+    { id: 9, name: 'Tomasz Hajto', nickname: 'Trytyt', age: '🎂 39', education: '🎓 Technik informatyk, który woli pracę fizyczną', quote: 'Nie ma problemu, którego nie da się rozwiązać trytytką albo srebrną taśmą. Jestem elastyczny i mocno trzymam. Jak trytytka.', category: 'wszechstronni', image: 'foty/man9.jpg', lifeQuote: '"Jak się trzyma, to nie ruszać."', confirmationBlurb: 'to człowiek-orkiestra. Z nim wszystko będzie się trzymać mocno i pewnie.' },
+    { id: 10, name: 'Robert Borkowski', nickname: 'Francuz', age: '🎂 48', education: '🎓 Technik mechanik, samouk hydrauliki', quote: 'Dopasuję się do każdej sytuacji, jak klucz francuski do każdej śruby. Skomplikowane? Dla mnie to wyzwanie!', category: 'wszechstronni', image: 'foty/man10.jpg', lifeQuote: '"Każdy problem ma swój rozmiar klucza."', confirmationBlurb: 'dopasuje się do każdej sytuacji. Z nim żaden problem nie jest zbyt skomplikowany.' },
+    { id: 11, name: 'Cezary Koszkul', nickname: 'Guma', age: '🎂 31', education: '🎓 Technik reklamy, instruktor na siłowni', quote: 'Potrafię złożyć szafę, a potem zrobić szpagat na jej blacie. Moja elastyczność nie zna granic, ani w życiu, ani w związku.', category: 'wszechstronni', image: 'foty/man11.jpg', lifeQuote: '"Granice są po to, żeby je rozciągać."', confirmationBlurb: 'jest elastyczny jak nikt inny. Z nim znajdziecie rozwiązanie na każdy problem i wyjście z każdej sytuacji.' },
+    { id: 12, name: 'Igor Wróbel', nickname: 'Iskra', age: '🎂 42', education: '🎓 Ukończył kursy spawania TIG/MIG/MAG', quote: 'Łączę metale w nierozerwalne całości. Myślę, że z nami mogłoby być podobnie. Zaiskrzyło?', category: 'wszechstronni', image: 'foty/man12.jpg', lifeQuote: '"Miłość jest jak spaw - musi być gorąca, żeby była trwała."', confirmationBlurb: 'potrafi rozpalić ogień. Z nim na pewno zaiskrzy, a wasz związek będzie spojony na stałe.' },
+];
 
-        // EASY-EDIT-2: Opisy kafelków wyboru
-        const categoryDescriptions = {
-            'budowlańcy': 'Mężczyźni, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami.',
-            'kucharze': 'Artyści kuchni, którzy potrafią rozkochać Cię w jedzeniu. Ich dania smakują jak miłość od pierwszego kęsa.',
-            'pośredni': 'Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy lubią mieć wszystko w jednym.'
-        };
+const rejectionArguments = [
+    "Ten facet potrafi wymienić uszczelkę pod głowicą i uszczelkę w kranie. Taki skarb się nie odrzuca!",
+    "Pomyśl o tych wszystkich niedokręconych szafkach w Twoim domu. On jest rozwiązaniem.",
+    "Jego męski zapach to mieszanka potu, smaru i determinacji. Gdzie indziej znajdziesz taki bukiet?",
+    "On nie pyta, on działa. Jak Chuck Norris, tylko z młotkiem zamiast kopniaka z półobrotu.",
+    "Z nim nigdy nie będziesz musiała prosić sąsiada o pomoc w noszeniu ciężkich zakupów. On jest chodzącą siłownią.",
+    "Prawdopodobnie ma na sobie flanelową koszulę. Czy trzeba dodawać coś więcej?",
+];
 
-        // Teksty do pokoju rozczarowań
-        const hangoverTexts = [
-            "Może jednak nie był to najlepszy wybór? Ale nie martw się - prawdziwa miłość do fachowca czeka tuż za rogiem!",
-            "Czasem trzeba poczekać, żeby znaleźć tego jedynego... fachowca. Spróbuj jeszcze raz!",
-            "Nie trać nadziei! Każde 'nie' przybliża Cię do tego jednego wielkiego 'TAK' od idealnego specjalisty.",
-            "Fachowcy też mają uczucia. Daj im jeszcze jedną szansę, a może tym razem będzie to miłość od pierwszego wezwania?",
-            "Czasem trzeba pocałować kilka żab, zanim znajdzie się księcia... z narzędziami. Albo z patelnią.",
-            "Nie poddawaj się! Za którymś razem na pewno trafisz na fachowca, który spełni wszystkie Twoje oczekiwania.",
-            "Pamiętaj - każdy fachowiec ma swoje wady, ale każdy też ma swoje zalety. Może warto dać im jeszcze jedną szansę?"
-        ];
+const videoCallMessages = [
+    "Dobrze, że odebrałaś. Jestem w stanie zrobić to zlecenie, tutaj masz fajny filmik, który dużo pomoże.",
+    "Halo, halo! Już myślałem, że się nie połączymy. Zanim przejdziemy do konkretów, obejrzyj to, to ważne.",
+    "Super, jesteś! Posłuchaj, to jest instrukcja, jak przygotować miejsce pracy. Zobacz i działamy dalej.",
+];
 
-        // EASY-EDIT-3: Dane osobowe (profil 1-15: budowlańcy, 16-30: kucharze, 31-45: pośredni)
-        const profiles = [
-            // Budowlańcy (1-15)
-            {
-                id: 1,
-                category: 'budowlańcy',
-                name: 'Jan Kowalski',
-                nickname: 'Pablo',
-                age: 42,
-                education: 'technik budowlaniec',
-                bio: 'Hej, jestem Pablo. Nie tylko położę Twoje kafelki idealnie prosto, ale też sprawię, że będziesz się czuła jak królewna we własnym domu. Moje ręce potrafią czarować - zarówno z poziomicą, jak i... no wiesz, przy innych czynnościach.',
-                image: 'man1.jpg',
-                popupText: 'Pablo to mistrz precyzji. Z nim każdy remont będzie jak romantyczna randka - pełen niespodzianek i satysfakcji.'
-            },
-            {
-                id: 2,
-                category: 'budowlańcy',
-                name: 'Marek Nowak',
-                nickname: 'Groszek',
-                age: 38,
-                education: 'technik architektury',
-                bio: 'Witam, Groszek w służbie! Moje projekty są tak dopracowane jak moje komplementy. Lubię, kiedy wszystko jest na swoim miejscu - zarówno płytki, jak i... serca klientek.',
-                image: 'man2.jpg',
-                popupText: 'Groszek to perfekcjonista z poczuciem humoru. Z nim nawet najtrudniejszy remont będzie przyjemnością.'
-            },
-            {
-                id: 3,
-                category: 'budowlańcy',
-                name: 'Piotr Wiśniewski',
-                nickname: 'Marlon',
-                age: 50,
-                education: 'inżynier budownictwa',
-                bio: 'Marlon na usługi. Doświadczenie? Mam. Urok osobisty? Też. Potrafię zbudować nie tylko dom, ale też... no, powiedzmy, że umiem stworzyć odpowiedni klimat.',
-                image: 'man3.jpg',
-                popupText: 'Marlon to żywa legenda budowlana. Z nim każda praca będzie wykonana z klasą i stylem.'
-            },
-            {
-                id: 4,
-                category: 'budowlańcy',
-                name: 'Tomasz Dąbrowski',
-                nickname: 'Szybki',
-                age: 35,
-                education: 'technik elektryk',
-                bio: 'Nie ma czasu do stracenia! Jestem szybki, sprawny i zawsze gotowy do działania. Potrzebujesz czegoś na już? Jestem Twoim człowiekiem.',
-                image: 'man4.jpg',
-                popupText: 'Szybki to mistrz efektywności. Z nim każda naprawa będzie wykonana w mgnieniu oka.'
-            },
-            {
-                id: 5,
-                category: 'budowlańcy',
-                name: 'Andrzej Zawadzki',
-                nickname: 'Stary Wyga',
-                age: 54,
-                education: 'mistrz budowlany',
-                bio: 'Mówią na mnie Stary Wyga, ale w moim wieku wiem, jak zrobić wszystko tak, żeby działało. I nie tylko chodzi mi o instalacje...',
-                image: 'man5.jpg',
-                popupText: 'Stary Wyga to skarbnica wiedzy. Z nim każdy problem zostanie rozwiązany mądrze i trwale.'
-            },
-            {
-                id: 6,
-                category: 'budowlańcy',
-                name: 'Grzegorz Kowalczyk',
-                nickname: 'Fred',
-                age: 40,
-                education: 'ślusarz',
-                bio: 'Fred na usługi! Specjalizuję się w spawaniu, ale potrafię też... no, powiedzmy, że umiem łączyć różne elementy w harmonijną całość.',
-                image: 'man6.jpg',
-                popupText: 'Fred to mistrz metalu. Z nim każda konstrukcja będzie solidna i trwała.'
-            },
-            {
-                id: 7,
-                category: 'budowlańcy',
-                name: 'Ryszard Lis',
-                nickname: 'Złota Rączka',
-                age: 48,
-                education: 'technik budownictwa',
-                bio: 'Złota Rączka to nie tylko pseudonim - to obietnica. Potrafię naprawić wszystko, a przy okazji... no, powiedzmy, że umiem stworzyć odpowiedni nastrój.',
-                image: 'man7.jpg',
-                popupText: 'Złota Rączka to gwarancja jakości. Z nim każda naprawa będzie wykonana perfekcyjnie.'
-            },
-            {
-                id: 8,
-                category: 'budowlańcy',
-                name: 'Wojciech Mazur',
-                nickname: 'Wujek',
-                age: 32,
-                education: 'technik budownictwa',
-                bio: 'Młody, ale z doświadczeniem starszego kolegi. Zawsze uśmiechnięty, zawsze gotowy pomóc. I nie tylko w sprawach budowlanych...',
-                image: 'man8.jpg',
-                popupText: 'Wujek to mistrz dobrych rad i solidnej pracy. Z nim każdy remont będzie przyjemnością.'
-            },
-            {
-                id: 9,
-                category: 'budowlańcy',
-                name: 'Stanisław Wójcik',
-                nickname: 'Ciepluszek',
-                age: 45,
-                education: 'technik technologii drewna',
-                bio: 'Ciepluszek nie bez powodu. Potrafię stworzyć ciepłą atmosferę nie tylko w domu, ale też... no, sam rozumiesz.',
-                image: 'man9.jpg',
-                popupText: 'Ciepluszek to mistrz przytulnych wnętrz. Z nim każdy dom będzie pełen ciepła.'
-            },
-            {
-                id: 10,
-                category: 'budowlańcy',
-                name: 'Dariusz Kaczmarek',
-                nickname: 'Dachowiec',
-                age: 39,
-                education: 'technik budownictwa',
-                bio: 'Specjalizuję się w dachach, ale potrafię też... no, powiedzmy, że umiem zadbać o to, żebyś miała dach nad głową w każdym sensie.',
-                image: 'man10.jpg',
-                popupText: 'Dachowiec to mistrz wysokości. Z nim każdy dach będzie solidny i bezpieczny.'
-            },
-            {
-                id: 11,
-                category: 'budowlańcy',
-                name: 'Marcin Jasiński',
-                nickname: 'Murarz',
-                age: 37,
-                education: 'technik budownictwa',
-                bio: 'Buduję nie tylko ściany, ale też... no, powiedzmy, że umiem stworzyć solidne fundamenty dla każdego związku.',
-                image: 'man11.jpg',
-                popupText: 'Murarz to mistrz solidnych konstrukcji. Z nim każda ściana będzie idealnie prosta.'
-            },
-            {
-                id: 12,
-                category: 'budowlańcy',
-                name: 'Paweł Zając',
-                nickname: 'Płytkarz',
-                age: 41,
-                education: 'technik budownictwa',
-                bio: 'Płytki układam z precyzją chirurga, a komplementy wypowiadam z wdziękiem poety. Co jeszcze potrafię? Może się przekonasz...',
-                image: 'man12.jpg',
-                popupText: 'Płytkarz to artysta kafelek. Z nim każda łazienka będzie wyglądała jak z katalogu.'
-            },
-            {
-                id: 13,
-                category: 'budowlańcy',
-                name: 'Robert Lewandowski',
-                nickname: 'Malarz',
-                age: 34,
-                education: 'technik malarstwa budowlanego',
-                bio: 'Kolory to moja pasja. Potrafię dobrać idealny odcień nie tylko do ścian, ale też... no, powiedzmy, że umiem dopasować się do każdej sytuacji.',
-                image: 'man13.jpg',
-                popupText: 'Malarz to mistrz kolorów. Z nim każda ściana będzie perfekcyjnie pomalowana.'
-            },
-            {
-                id: 14,
-                category: 'budowlańcy',
-                name: 'Krzysztof Nowicki',
-                nickname: 'Instalator',
-                age: 43,
-                education: 'technik sanitarny',
-                bio: 'Potrafię poprowadzić każdą instalację tak, żeby działała bez zarzutu. I nie chodzi mi tylko o rury...',
-                image: 'man14.jpg',
-                popupText: 'Instalator to mistrz rur. Z nim każda instalacja będzie działała bezawaryjnie.'
-            },
-            {
-                id: 15,
-                category: 'budowlańcy',
-                name: 'Łukasz Baran',
-                nickname: 'Elektryk',
-                age: 36,
-                education: 'technik elektryk',
-                bio: 'Prąd to moja specjalność, ale potrafię też... no, powiedzmy, że umiem rozświetlić każde pomieszczenie.',
-                image: 'man15.jpg',
-                popupText: 'Elektryk to mistrz prądu. Z nim każda instalacja będzie bezpieczna i sprawna.'
-            },
+const chatInitMessages = [
+    "Dobra, pani, co ci na duszy gra? Może remont łazienki?",
+    "No, jestem. O co chodzi? Fugi w kuchni do wymiany?",
+    "Słucham. Mów, bo robota czeka, a ja tu w telefon klikam.",
+    "Jestem, ale się nie cieszę. Jaka jest awaria tym razem?",
+    "Telefon od ciebie to jak wezwanie do usterki. Co się zepsuło?",
+    "Centrala zgłoś się. Jaki problem do rozwiązania na dziś?",
+    "Cześć. Krótko i na temat, bo czas to pieniądz, a ja nie mam ani jednego, ani drugiego.",
+    "Mów, co trzeba zrobić. Tylko bez marudzenia, że drogo.",
+];
 
-            // Kucharze (16-30)
-            {
-                id: 16,
-                category: 'kucharze',
-                name: 'Adam Nowak',
-                nickname: 'Pablo',
-                age: 45,
-                education: 'doktor filologii',
-                bio: 'Gotuję z pasją, jak piszę wiersze - z sercem i wyczuciem. Moje dania smakują jak miłość od pierwszego kęsa. A może chciałabyś spróbować?',
-                image: 'man16.jpg',
-                popupText: 'Pablo to poeta kuchni. Z nim każdy posiłek będzie jak romantyczna kolacja.'
-            },
-            {
-                id: 17,
-                category: 'kucharze',
-                name: 'Tadeusz Kowalski',
-                nickname: 'Filozof',
-                age: 52,
-                education: 'licencjat filozofii',
-                bio: 'W kuchni jak w życiu - wszystko musi mieć sens. Moje dania nie tylko smakują, ale też skłaniają do refleksji. A może chciałabyś o czymś porozmawiać przy kolacji?',
-                image: 'man17.jpg',
-                popupText: 'Filozof to mistrz głębokich smaków. Z nim każdy posiłek będzie doświadczeniem dla duszy.'
-            },
-            {
-                id: 18,
-                category: 'kucharze',
-                name: 'Jerzy Wiśniewski',
-                nickname: 'Dziadek',
-                age: 48,
-                education: 'tylko podstawówka',
-                bio: 'Gotuję jak moja babcia - prosto, smacznie i z sercem. U mnie zjesz jak w domu, tylko że... no, powiedzmy, że moje dania mają ten specjalny smak.',
-                image: 'man18.jpg',
-                popupText: 'Dziadek to mistrz domowej kuchni. Z nim każdy posiłek będzie smakował jak u babci.'
-            },
-            {
-                id: 19,
-                category: 'kucharze',
-                name: 'Marian Dąbrowski',
-                nickname: 'Kolekcjoner',
-                age: 50,
-                education: 'pierwsze dwie klasy podstawówki',
-                bio: 'Znam tysiące przepisów i potrafię dopasować je do każdej okazji. A może chciałabyś być okazją do wypróbowania mojego specjalnego menu?',
-                image: 'man19.jpg',
-                popupText: 'Kolekcjoner to skrzynia skarbów kulinarnych. Z nim każdy posiłek będzie unikalny.'
-            },
-            {
-                id: 20,
-                category: 'kucharze',
-                name: 'Zbigniew Zawadzki',
-                nickname: 'Grillmaster',
-                age: 47,
-                education: 'mimo podeszłego wieku, dalej w podstawówce',
-                bio: 'Na moim grillu wszystko smakuje lepiej. A może chciałabyś spróbować czegoś specjalnie dla Ciebie przygotowanego?',
-                image: 'man20.jpg',
-                popupText: 'Grillmaster to król ognia. Z nim każde mięso będzie soczyste i pełne smaku.'
-            },
-            {
-                id: 21,
-                category: 'kucharze',
-                name: 'Ryszard Kaczmarek',
-                nickname: 'Streetfood',
-                age: 42,
-                education: 'nie dostał się do podstawówki',
-                bio: 'Moje dania z food trucka podbijają serca klientów. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
-                image: 'man21.jpg',
-                popupText: 'Streetfood to mistrz ulicznych smaków. Z nim każdy posiłek będzie pełen przygody.'
-            },
-            {
-                id: 22,
-                category: 'kucharze',
-                name: 'Piotr Lis',
-                nickname: 'Piekarz',
-                age: 39,
-                education: 'nie ukończył nawet zawodówki',
-                bio: 'Moje pieczywo jest świeże, chrupiące i pachnące. A może chciałabyś spróbować czegoś słodkiego, przygotowanego specjalnie dla Ciebie?',
-                image: 'man22.jpg',
-                popupText: 'Piekarz to mistrz mąki. Z nim każdy wypiek będzie pyszny i aromatyczny.'
-            },
-            {
-                id: 23,
-                category: 'kucharze',
-                name: 'Waldemar Mazur',
-                nickname: 'Azjata',
-                age: 44,
-                education: 'technik żywienia',
-                bio: 'Moje dania azjatyckie są ostre, aromatyczne i pełne pasji. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
-                image: 'man23.jpg',
-                popupText: 'Azjata to mistrz wschodnich smaków. Z nim każdy posiłek będzie pełen egzotyki.'
-            },
-            {
-                id: 24,
-                category: 'kucharze',
-                name: 'Stanisław Wójcik',
-                nickname: 'Smażalnia',
-                age: 49,
-                education: 'technik hotelarstwa',
-                bio: 'Moje frytki są chrupiące, a kotlety soczyste. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
-                image: 'man24.jpg',
-                popupText: 'Smażalnia to mistrz smażenia. Z nim każde danie będzie chrupiące i złociste.'
-            },
-            {
-                id: 25,
-                category: 'kucharze',
-                name: 'Dariusz Baran',
-                nickname: 'Dietetyk',
-                age: 36,
-                education: 'technik żywienia i usług gastronomicznych',
-                bio: 'Potrafię przygotować zdrowe dania, które smakują jak najbardziej niezdrowe. A może chciałabyś spróbować menu przygotowanego specjalnie dla Ciebie?',
-                image: 'man25.jpg',
-                popupText: 'Dietetyk to mistrz zdrowego smaku. Z nim każdy posiłek będzie pożywny i pyszny.'
-            },
-            {
-                id: 26,
-                category: 'kucharze',
-                name: 'Marek Jasiński',
-                nickname: 'Włoch',
-                age: 41,
-                education: 'technik technologii żywności',
-                bio: 'Moje spaghetti smakuje jak we Włoszech. A może chciałabyś spróbować romantycznej kolacji przygotowanej specjalnie dla Ciebie?',
-                image: 'man26.jpg',
-                popupText: 'Włoch to mistrz makaronów. Z nim każdy posiłek będzie jak podróż do Włoch.'
-            },
-            {
-                id: 27,
-                category: 'kucharze',
-                name: 'Tomasz Zając',
-                nickname: 'Śniadaniowy',
-                age: 38,
-                education: 'technik żywienia',
-                bio: 'Uwielbiam przygotowywać śniadania, które dają energię na cały dzień. A może chciałabyś spróbować śniadania przygotowanego specjalnie dla Ciebie?',
-                image: 'man27.jpg',
-                popupText: 'Śniadaniowy to mistrz porannych posiłków. Z nim każdy dzień zacznie się pysznie.'
-            },
-            {
-                id: 28,
-                category: 'kucharze',
-                name: 'Andrzej Nowicki',
-                nickname: 'Cukiernik',
-                age: 46,
-                education: 'technik cukiernictwa',
-                bio: 'Moje desery są słodkie jak miłość. A może chciałabyś spróbować czegoś przygotowanego specjalnie dla Ciebie?',
-                image: 'man28.jpg',
-                popupText: 'Cukiernik to mistrz słodyczy. Z nim każdy deser będzie nieziemsko pyszny.'
-            },
-            {
-                id: 29,
-                category: 'kucharze',
-                name: 'Krzysztof Baran',
-                nickname: 'Naukowiec',
-                age: 35,
-                education: 'technik analityk',
-                bio: 'Moje dania to eksperymenty smaku, które zawsze się udają. A może chciałabyś być moją współlokatorką w kuchennym laboratorium?',
-                image: 'man29.jpg',
-                popupText: 'Naukowiec to mistrz kulinarnych eksperymentów. Z nim każdy posiłek będzie niespodzianką.'
-            },
-            {
-                id: 30,
-                category: 'kucharze',
-                name: 'Łukasz Kowalczyk',
-                nickname: 'Lodziarz',
-                age: 33,
-                education: 'technik chłodnictwa',
-                bio: 'Moje lody są legendą w mieście. A może chciałabyś spróbować smaku przygotowanego specjalnie dla Ciebie?',
-                image: 'man30.jpg',
-                popupText: 'Lodziarz to mistrz mrożonych słodyczy. Z nim każde lody będą nieziemsko pyszne.'
-            },
+const chatDiscourageMessages = [
+    "Dobrze, że wybrałaś mnie, a nie tych 'kreatywnych'. Co oni ci zrobią? Upieką ciasto? Ja ci dom postawię!",
+    "Tylko nie mów, że myślałaś o tych 'wszechstronnych'. Facet, który zna się na wszystkim, nie zna się na niczym. Ja znam się na betonie i to się liczy.",
+    "Zobaczyłem, że polubiłaś też tego 'Słodkiego'. Daj spokój, on ci co najwyżej lukrem życie posmaruje. Ja je zaleję solidnym fundamentem.",
+    "Wybór między mną a jakimś 'artystą' to jak wybór między młotem a pędzelkiem. Czym wbijesz gwóźdź?",
+    "Ci 'elastyczni' to się wyginają we wszystkie strony, bo nie mają kręgosłupa. Ja mam kręgosłup moralny i stalowy pręt w kieszeni. Na wszelki wypadek.",
+    "Słyszałem, że ten 'Francuz' jest popularny. Pewnie, dopasuje się. Ja nie muszę się dopasowywać, ja tworzę rzeczywistość pod siebie. I pod ciebie.",
+    "Nie daj się nabrać na tych 'designerów'. Oni ci zaprojektują ładną porażkę. Ja ci zbuduję brzydkie zwycięstwo, które przetrwa lata.",
+    "Dobry wybór. Prawdziwy facet brudzi sobie ręce, a nie posypuje babeczki brokatem.",
+    "Widzę, że masz gust. Z dala od tych, co zamiast klucza 13-tki noszą w torbie notesik na wiersze.",
+    "Całe szczęście. Tamci 'smakosze' znają się na przyprawach. Ja znam się na proporcjach cementu do piasku. Zgadnij, co jest ważniejsze.",
+    "Zapomnij o reszcie. Oni ci zaoferują 'doświadczenie'. Ja ci zaoferuję solidną, ciężką i satysfakcjonującą robotę.",
+    "Jesteś mądrą kobietą. Wiesz, że prawdziwa miłość pachnie smarem, a nie wanilią.",
+    "Uff, już myślałem, że pójdziesz do tych od jogi. Ja cię tak rozciągnę, że zapomnisz jak się nazywasz... przy remoncie oczywiście.",
+];
+    const chatEmoteMessages = ["👍", "💪", "😉", "😎", "😏", "👷‍♂️", "💯", "👌", "🍻"];
+    const chatExcuseMessages = [ "Dobra, kończę na dziś. Jestem na kacu i muszę iść spać.", "Sory, żona mnie woła na obiad. Muszę lecieć.", "Jeszcze wrócę, kotku. Teraz majster musi odpocząć.", "Kończymy, bo mi się piwo grzeje. Do następnego.", "Muszę spadać, wezwali mnie do pilnej awarii. Rura pękła. Gdzieś.", "Zadzwonię później, teraz leci 'Familiada'.", ];
+    const conversionVideos = { solidni: 'https://www.youtube.com/embed/TfZQcDo5wVk?si=Tm7xoiMdGhbEJT7_', kreatywni: 'https://www.youtube.com/embed/SrAUdR3cVGQ?si=gKgZqOL-1HmY6ibK', wszechstronni: 'https://www.youtube.com/embed/1mNH_gwxu2g?si=Jl0Ye3rjnDj5UL8I' };
 
-            // Pośredni (31-45)
-            {
-                id: 31,
-                category: 'pośredni',
-                name: 'Michał Nowak',
-                nickname: 'Wszechstronny',
-                age: 40,
-                education: 'technik budownictwa i technik żywienia',
-                bio: 'Potrafię i zbudować, i ugotować. Idealny do remontu kuchni... i nie tylko. Może chciałabyś, żebym przygotował dla Ciebie coś specjalnego?',
-                image: 'man31.jpg',
-                popupText: 'Wszechstronny to mistrz wielu umiejętności. Z nim każdy projekt będzie kompleksowo zrealizowany.'
-            },
-            {
-                id: 32,
-                category: 'pośredni',
-                name: 'Grzegorz Kowalski',
-                nickname: 'Złota Rączka',
-                age: 37,
-                education: 'technik budownictwa z kursem kucharskim',
-                bio: 'Potrafię naprawić zlew i ugotować obiad. Idealny do małych remontów i domowych posiłków. A może chciałabyś, żebym przygotował dla Ciebie coś wyjątkowego?',
-                image: 'man32.jpg',
-                popupText: 'Złota Rączka to mistrz domowych spraw. Z nim każdy problem zostanie rozwiązany.'
-            },
-            {
-                id: 33,
-                category: 'pośredni',
-                name: 'Tadeusz Wiśniewski',
-                nickname: 'Remontowo-Kulinarny',
-                age: 45,
-                education: 'technik architektury z doświadczeniem kuchennym',
-                bio: 'Potrafię zaprojektować kuchnię i ugotować w niej obiad. Idealny do kompleksowych usług. A może chciałabyś, żebym przygotował dla Ciebie specjalne menu?',
-                image: 'man33.jpg',
-                popupText: 'Remontowo-Kulinarny to mistrz kompleksowych rozwiązań. Z nim każdy projekt będzie perfekcyjnie zrealizowany.'
-            },
-            {
-                id: 34,
-                category: 'pośredni',
-                name: 'Marian Dąbrowski',
-                nickname: 'Majsterkowicz',
-                age: 42,
-                education: 'technik mechanik z zamiłowaniem do gotowania',
-                bio: 'Potrafię naprawić wszystko w domu i ugotować pyszny obiad. Idealny dla zapracowanych. A może chciałabyś, żebym przygotował dla Ciebie coś specjalnego?',
-                image: 'man34.jpg',
-                popupText: 'Majsterkowicz to mistrz domowych spraw. Z nim każdy problem zostanie rozwiązany.'
-            },
-            {
-                id: 35,
-                category: 'pośredni',
-                name: 'Dariusz Zawadzki',
-                nickname: 'Domowy',
-                age: 39,
-                education: 'technik budownictwa z kursem kucharskim',
-                bio: 'Specjalizuję się w małych remontach i prostych, smacznych daniach. Idealny dla singli. A może chciałabyś, żebym przygotował dla Ciebie coś pysznego?',
-                image: 'man35.jpg',
-                popupText: 'Domowy to mistrz prostoty. Z nim każdy problem zostanie rozwiązany szybko i smacznie.'
-            }
-        ];
+    let currentState = { currentProfile: null, currentCategory: null, history: ['screen-landing'] };
+    let ukochani = []; 
+    let chatStates = {};
+    const allScreens = document.querySelectorAll('.screen');
+    const youtubePlayer = document.getElementById('youtube-player');
+    const banOverlay = document.getElementById('chat-ban-full-overlay');
 
-        // Current state
-        let currentCategory = null;
-        let currentProfile = null;
-
-        // DOM elements
-        const pages = document.querySelectorAll('.page');
-        const categoryCards = document.querySelectorAll('.selection-card');
-        const listTitle = document.getElementById('list-title');
-        const profilesContainer = document.getElementById('profiles-container');
-        const popupOverlay = document.getElementById('popup-overlay');
-        const popupTitle = document.getElementById('popup-title');
-        const popupText = document.getElementById('popup-text');
-        const connectionOverlay = document.getElementById('connection-overlay');
-        const connectionImage = document.getElementById('connection-image');
-        const connectionName = document.getElementById('connection-name');
-        const connectionNickname = document.getElementById('connection-nickname');
-        const connectionBio = document.getElementById('connection-bio');
-        const hangoverOverlay = document.getElementById('hangover-overlay');
-        const hangoverText = document.getElementById('hangover-text');
-        const videoContainer = document.getElementById('video-container');
-        const heartsContainer = document.getElementById('hearts-container');
-
-        // Navigation functions
-        function navigateTo(pageId) {
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-
-            if (pageId === 'page3-list' && currentCategory) {
-                listTitle.textContent = pageTitles[currentCategory];
-                renderProfiles();
+    function initLandingPageAnimations() {
+        const container = document.getElementById('landing-page-hearts');
+        const button = document.getElementById('main-enter-button');
+        if (!container || !button) return;
+        const buttonRect = button.getBoundingClientRect();
+        const targetX = buttonRect.left + buttonRect.width / 2;
+        const targetY = buttonRect.top + buttonRect.height / 2;
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'flying-heart';
+            heart.innerHTML = '♥';
+            const startX = Math.random() < 0.5 ? -50 : window.innerWidth + 50;
+            const startY = Math.random() * window.innerHeight;
+            heart.style.left = `${startX}px`;
+            heart.style.top = `${startY}px`;
+            const transX = targetX - startX;
+            const transY = targetY - startY;
+            heart.style.setProperty('--tx', `translateX(${transX}px)`);
+            heart.style.setProperty('--ty', `translateY(${transY}px)`);
+            heart.style.animationDelay = `${Math.random() * 8}s`;
+            container.appendChild(heart);
+        }
+    }
+    initLandingPageAnimations();
+    
+    function showScreen(screenId, direction = 'forward') {
+        const targetScreen = document.getElementById(screenId);
+        if (!targetScreen) return;
+        allScreens.forEach(screen => screen.classList.remove('active'));
+        targetScreen.classList.add('active');
+        if (direction === 'forward') {
+            if (currentState.history[currentState.history.length - 1] !== screenId) {
+                currentState.history.push(screenId);
             }
         }
-
-        function selectCategory(category) {
-            // Reset active state
-            categoryCards.forEach(card => {
-                card.classList.remove('active');
-            });
-
-            // Set new active category
-            currentCategory = category;
-            document.getElementById(`category-${category}`).classList.add('active');
-
-            // Add hearts animation
-            createHearts();
-
-            // Navigate to list after short delay
-            setTimeout(() => {
-                navigateTo('page3-list');
-            }, 800);
+        if (screenId !== 'screen-video-call' && screenId !== 'screen-conversion') {
+            youtubePlayer.src = '';
+            document.getElementById('conversion-video-player').src = '';
         }
+    }
 
-        // Profile rendering
-        function renderProfiles() {
-            profilesContainer.innerHTML = '';
+    document.getElementById('nav-back').addEventListener('click', (e) => { e.preventDefault(); if (currentState.history.length > 1) { currentState.history.pop(); const lastScreen = currentState.history[currentState.history.length - 1]; showScreen(lastScreen, 'back'); } });
+    document.getElementById('nav-home').addEventListener('click', (e) => { e.preventDefault(); currentState.history = ['screen-landing']; showScreen('screen-landing'); });
+    document.getElementById('nav-ukochani').addEventListener('click', (e) => { e.preventDefault(); renderUkochaniScreen(); showScreen('screen-ukochani'); });
+    document.addEventListener('click', (e) => { if (e.target.matches('.button[data-target]')) { showScreen(e.target.dataset.target); } });
+    document.querySelectorAll('.category-box').forEach(box => { box.addEventListener('click', () => { const category = box.dataset.category; currentState.currentCategory = category; renderProfileCards(category); showScreen('screen-profiles'); }); });
 
-            const categoryProfiles = profiles.filter(profile => profile.category === currentCategory);
-
-            if (categoryProfiles.length === 0) {
-                const noProfiles = document.createElement('div');
-                noProfiles.className = 'no-profiles';
-                noProfiles.innerHTML = `
-                    <div class="no-profiles-icon">💔</div>
-                    <p>Skończyli się fachowcy...<br>
-                    Masz zbyt duże wymagania albo budżet.<br>
-                    Coś się nie spina, spróbuj innej kategorii!</p>
-                `;
-                profilesContainer.appendChild(noProfiles);
-                return;
-            }
-
-            categoryProfiles.forEach(profile => {
-                const profileCard = document.createElement('div');
-                profileCard.className = 'profile-card';
-
-                profileCard.innerHTML = `
-                    <div class="profile-image-container">
-                        ${profile.image ?
-                            `<img class="profile-image" src="foty/${profile.image}" alt="${profile.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">` :
-                            ''}
-                        <div class="image-placeholder" style="${profile.image ? 'display: none' : ''}">Brak zdjęcia</div>
-                    </div>
-                    <div class="profile-content">
-                        <h3 class="profile-name">${profile.name}</h3>
-                        <p class="profile-nickname">${profile.nickname}</p>
-                        <p class="profile-age">${profile.age} lat</p>
-                        <p class="profile-education">${profile.education}</p>
-                        <p class="profile-bio">${profile.bio}</p>
-                        <button class="select-button" onclick="selectProfile(${profile.id})">WYBIERAM</button>
-                    </div>
-                `;
-
-                profilesContainer.appendChild(profileCard);
+    function createProfileCard(profile, isLoved, context) {
+        const card = document.createElement('div');
+        card.className = 'profile-card';
+        card.dataset.profileId = profile.id;
+        
+        let actionsHtml = `
+            <div class="profile-card-actions">
+                <button class="button select-now-btn">Wybieram teraz</button>
+                <button class="heart-button">
+                    <span class="heart-icon ${isLoved ? 'loved' : ''}">♥</span>
+                </button>
+            </div>`;
+        
+        if (context === 'ukochani') {
+            actionsHtml = `<p class="quote">Kliknij, aby kontynuować rozmowę...</p>`;
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'BUTTON') {
+                    prepareChatScreen(profile);
+                    showScreen('screen-chat');
+                }
             });
         }
 
-        // Profile selection
-        function selectProfile(profileId) {
-            currentProfile = profiles.find(profile => profile.id === profileId);
-            showPopup();
-        }
+        card.innerHTML = `
+            <img src="${profile.image}" alt="" onerror="this.outerHTML = '<div class=\\'img-placeholder\\'>brak zdjęcia ${profile.image.split('/')[1]}</div>'">
+            <div class="profile-card-content">
+                <h3>${profile.name}</h3>
+                <div class="nickname">${profile.nickname}</div>
+                <hr class="separator">
+                <div class="details">
+                    <span>${profile.age} lat</span>
+                    <span>${profile.education}</span>
+                </div>
+                <p class="quote">"${profile.quote}"</p>
+                <p class="life-quote">${profile.lifeQuote}</p>
+                ${actionsHtml}
+            </div>
+        `;
+        return card;
+    }
 
-        function showPopup() {
-            popupTitle.textContent = `${currentProfile.name} to świetny wybór!`;
-            popupText.textContent = currentProfile.popupText;
-            popupOverlay.classList.add('active');
-        }
-
-        function closePopup() {
-            popupOverlay.classList.remove('active');
-        }
-
-        function proceedToConnection() {
-            closePopup();
-            showConnectionScreen();
-        }
-
-        function showConnectionScreen() {
-            const imageUrl = currentProfile.image ? `foty/${currentProfile.image}` : '';
-
-            connectionImage.src = imageUrl;
-            connectionImage.onerror = function() {
-                this.style.display = 'none';
-            };
-
-            connectionName.textContent = currentProfile.name;
-            connectionNickname.textContent = currentProfile.nickname;
-            connectionBio.textContent = currentProfile.bio;
-
-            connectionOverlay.classList.add('active');
-        }
-
-        function closeConnection() {
-            connectionOverlay.classList.remove('active');
-            videoContainer.style.display = 'none';
-        }
-
-        function acceptCall() {
-            // Redirect to YouTube
-            window.location.href = 'https://youtu.be/E4xIqwZgPT8?si=ycyHt1X3QxPwl9k8';
-        }
-
-        function rejectCall() {
-            closeConnection();
-            showHangoverRoom();
-        }
-
-        function showHangoverRoom() {
-            // Random hangover text
-            const randomIndex = Math.floor(Math.random() * hangoverTexts.length);
-            hangoverText.textContent = hangoverTexts[randomIndex];
-
-            hangoverOverlay.classList.add('active');
-        }
-
-        function closeHangover() {
-            hangoverOverlay.classList.remove('active');
-            videoContainer.style.display = 'none';
-        }
-
-        function tryAgain() {
-            closeHangover();
-            showConnectionScreen();
-        }
-
-        function showPresidentialSpeech() {
-            videoContainer.style.display = 'block';
-            const randomIndex = Math.floor(Math.random() * hangoverTexts.length);
-            hangoverText.textContent = "Obejrzyj przemówienie naszego kochanego Prezydenta Karola Nawrockiego z okazji Święta Niepodległości. Może Ci to doda otuchy w poszukiwaniu idealnego fachowca!";
-        }
-
-        // Close popups when clicking outside
-        document.addEventListener('click', function(event) {
-            if (event.target === popupOverlay) {
-                closePopup();
-            }
-            if (event.target === connectionOverlay) {
-                closeConnection();
-            }
-            if (event.target === hangoverOverlay) {
-                closeHangover();
-            }
+    function renderProfileCards(category) {
+        const container = document.getElementById('profiles-container');
+        container.innerHTML = '';
+        profiles.filter(p => p.category === category).forEach(profile => {
+            container.appendChild(createProfileCard(profile, ukochani.includes(profile.id), 'profiles'));
         });
-
-        // Close popups with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closePopup();
-                closeConnection();
-                closeHangover();
-            }
-        });
-
-        // Hearts animation
-        function createHearts() {
-            for (let i = 0; i < 15; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    heart.innerHTML = '❤️';
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
-                    heart.style.display = 'block';
-                    heartsContainer.appendChild(heart);
-
-                    // Remove heart after animation
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 12000);
-                }, i * 100);
-            }
+        const conversionCard = document.createElement('div');
+        conversionCard.className = 'profile-card conversion-card';
+        conversionCard.innerHTML = `<h3>Pokój nawróceń</h3><p>Jeżeli zwątpiłaś w to, że znajdziesz idealnego fachowca, to jest miejsce dla ciebie.</p><button class="button">Wejdź do pokoju</button>`;
+        conversionCard.querySelector('button').addEventListener('click', () => { showConversionRoom(category); });
+        container.appendChild(conversionCard);
+    }
+    
+    function showConversionRoom(category) {
+        const videoUrl = conversionVideos[category] || conversionVideos.solidni;
+        document.getElementById('conversion-video-player').src = videoUrl + '&autoplay=1';
+        const heartsContainer = document.getElementById('conversion-hearts-container');
+        heartsContainer.innerHTML = '';
+        const colors = ['#ff6b6b', '#f9c55d', '#4ecdc4', '#45b7d1', '#f7f7f7', '#feca57', '#9b59b6', '#3498db'];
+        for(let i = 0; i < 40; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'marching-heart';
+            heart.innerHTML = '❤';
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.animationName = `march-across-${(i % 3) + 1}`;
+            heart.style.animationDelay = `${(i / 40) * 15}s`;
+            heartsContainer.appendChild(heart);
         }
+        showScreen('screen-conversion');
+    }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add some initial hearts
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    heart.innerHTML = '❤️';
-                    heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
-                    heart.style.display = 'block';
-                    heartsContainer.appendChild(heart);
+    document.getElementById('profiles-container').addEventListener('click', e => {
+        const profileCard = e.target.closest('.profile-card:not(.conversion-card)');
+        if (!profileCard) return;
+        const profileId = parseInt(profileCard.dataset.profileId);
+        currentState.currentProfile = profiles.find(p => p.id === profileId);
+        if (e.target.closest('.select-now-btn')) { renderConfirmationScreen(currentState.currentProfile); showScreen('screen-confirmation'); }
+        if (e.target.closest('.heart-button')) { e.stopPropagation(); toggleHeart(e.target.closest('.heart-button'), profileId); }
+    });
+    
+    function toggleHeart(button, profileId) { const heartIcon = button.querySelector('.heart-icon'); const isLoved = heartIcon.classList.toggle('loved'); if (isLoved) { if (!ukochani.includes(profileId)) { ukochani.push(profileId); } createHeartParticles(button); } else { ukochani = ukochani.filter(id => id !== profileId); } }
+    function createHeartParticles(element) { const rect = element.getBoundingClientRect(); const originX = rect.left + rect.width / 2; const originY = rect.top + rect.height / 2; for (let i = 0; i < 20; i++) { const particle = document.createElement('div'); particle.className = 'particle'; particle.innerHTML = '♥'; document.body.appendChild(particle); particle.animate([ { transform: 'translate(0, 0) scale(1)', opacity: 1 }, { transform: `translate(${(Math.random() - 0.5) * 200}px, -80vh) scale(0) rotate(${(Math.random() - 0.5) * 500}deg)`, opacity: 0 } ], { duration: 2000 + Math.random() * 3000, easing: 'ease-out', delay: Math.random() * 200 }); particle.style.left = `${originX}px`; particle.style.top = `${originY}px`; setTimeout(() => { particle.remove(); }, 5000); } }
+    
+    function renderConfirmationScreen(profile) { document.getElementById('confirmation-text').textContent = `${profile.name} to świetny wybór!`; document.getElementById('confirmation-subtext').textContent = `${profile.nickname} ${profile.confirmationBlurb}`; }
+    document.getElementById('btn-polacz-sie').addEventListener('click', () => { renderIncomingCallScreen(currentState.currentProfile); showScreen('screen-incoming-call'); });
+    document.getElementById('btn-wtrashe-pisac').addEventListener('click', () => { prepareChatScreen(currentState.currentProfile); showScreen('screen-chat'); });
 
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 12000);
-                }, i * 1500);
+    function renderIncomingCallScreen(profile) { document.getElementById('call-img').src = profile.image; document.getElementById('call-nickname').textContent = profile.nickname; }
+    document.getElementById('btn-accept-call').addEventListener('click', () => { document.getElementById('video-message-text').textContent = videoCallMessages[Math.floor(Math.random() * videoCallMessages.length)]; youtubePlayer.src = youtubePlayer.dataset.src + '&autoplay=1'; showScreen('screen-video-call'); });
+    document.getElementById('btn-reject-call').addEventListener('click', () => { document.getElementById('rejection-argument').textContent = rejectionArguments[Math.floor(Math.random() * rejectionArguments.length)]; document.getElementById('modal-reject').classList.add('active'); });
+    document.getElementById('btn-call-again').addEventListener('click', () => { document.getElementById('modal-reject').classList.remove('active'); renderIncomingCallScreen(currentState.currentProfile); showScreen('screen-incoming-call'); });
+    document.getElementById('btn-prefer-write').addEventListener('click', () => { document.getElementById('modal-reject').classList.remove('active'); prepareChatScreen(currentState.currentProfile); showScreen('screen-chat'); });
+    document.getElementById('btn-im-shy').addEventListener('click', () => { document.getElementById('modal-shy').classList.add('active'); });
+    document.getElementById('btn-back-to-call').addEventListener('click', () => { document.getElementById('modal-shy').classList.remove('active'); });
+    document.getElementById('btn-go-to-chat').addEventListener('click', () => { prepareChatScreen(currentState.currentProfile); showScreen('screen-chat'); });
+    document.getElementById('btn-end-call').addEventListener('click', () => { renderProfileCards(currentState.currentCategory || 'solidni'); showScreen('screen-profiles'); });
+
+    function prepareChatScreen(profile) {
+        currentState.currentProfile = profile;
+        if (!chatStates[profile.id]) { chatStates[profile.id] = { stage: 0, messages: [], isBanned: false }; }
+        document.getElementById('chat-header-img').src = profile.image;
+        document.getElementById('chat-header-name').textContent = `${profile.name} (${profile.nickname})`;
+        renderChatMessages(profile.id);
+        if (chatStates[profile.id].isBanned) { showBanScreen(); } else { banOverlay.style.display = 'none'; }
+        if (chatStates[profile.id].stage === 0 && chatStates[profile.id].messages.length === 0) {
+            setTimeout(() => addBotMessage(chatInitMessages[Math.floor(Math.random() * chatInitMessages.length)]), 1000);
+            chatStates[profile.id].stage = 1;
+        }
+    }
+    
+    function createMessageParticles(element) { const colors = ['#ff6b6b', '#f9c55d', '#4ecdc4', '#45b7d1', '#f7f7f7', '#feca57']; for (let i = 0; i < 15; i++) { const particle = document.createElement('div'); particle.className = 'chat-particle'; particle.innerHTML = '♥'; particle.style.color = colors[Math.floor(Math.random() * colors.length)]; element.appendChild(particle); const angle = Math.random() * 2 * Math.PI; const radius = 50 + Math.random() * 150; const transX = Math.cos(angle) * radius; const transY = Math.sin(angle) * radius; particle.style.left = '50%'; particle.style.top = '50%'; particle.style.setProperty('--tx', `translateX(${transX}px)`); particle.style.setProperty('--ty', `translateY(${transY}px)`); setTimeout(() => particle.remove(), 2500); } }
+    function addMessageToDisplay(msg, profile) { const container = document.createElement('div'); const messageEl = document.createElement('div'); container.className = `message-container ${msg.sender}-message-container`; messageEl.className = `message ${msg.sender}-message`; messageEl.textContent = msg.text; if (msg.sender === 'bot') { const avatar = document.createElement('img'); avatar.src = profile.image; avatar.className = 'chat-avatar'; container.appendChild(avatar); container.appendChild(messageEl); setTimeout(() => createMessageParticles(container), 100); } else { container.appendChild(messageEl); } document.getElementById('chat-messages').prepend(container); }
+    function addBotMessage(text) { const profileId = currentState.currentProfile.id; const msg = { sender: 'bot', text }; chatStates[profileId].messages.push(msg); addMessageToDisplay(msg, currentState.currentProfile); }
+    function handleUserMessage() {
+        const text = document.getElementById('chat-input').value.trim();
+        if (text === '') return;
+        const profileId = currentState.currentProfile.id;
+        if(chatStates[profileId].isBanned) return;
+        const msg = { sender: 'user', text };
+        chatStates[profileId].messages.push(msg);
+        addMessageToDisplay(msg, currentState.currentProfile);
+        document.getElementById('chat-input').value = '';
+        const state = chatStates[profileId];
+        setTimeout(() => {
+            switch(state.stage) {
+                case 1: addBotMessage(chatDiscourageMessages[Math.floor(Math.random() * chatDiscourageMessages.length)]); state.stage = 2; break;
+                case 2: addBotMessage(chatEmoteMessages[Math.floor(Math.random() * chatEmoteMessages.length)]); state.stage = 3; break;
+                case 3: addBotMessage(chatExcuseMessages[Math.floor(Math.random() * chatExcuseMessages.length)]); state.stage = 4; break;
+                case 4: state.isBanned = true; showBanScreen(); break;
             }
-        });
-    </script>
+        }, 1500 + Math.random() * 1000);
+    }
+    document.getElementById('send-button').addEventListener('click', handleUserMessage);
+    document.getElementById('chat-input').addEventListener('keypress', e => { if (e.key === 'Enter') handleUserMessage(); });
+    function renderChatMessages(profileId) { const container = document.getElementById('chat-messages'); container.innerHTML = ''; if (chatStates[profileId]) { chatStates[profileId].messages.forEach(msg => { addMessageToDisplay(msg, profiles.find(p => p.id === profileId)); }); } }
+
+    function showBanScreen() {
+        banOverlay.style.display = 'flex';
+        const circle = document.getElementById('ban-circle');
+        if (circle.childElementCount > 0) return;
+        const radius = 110;
+        for (let i = 0; i < 20; i++) {
+            const emoji = document.createElement('span');
+            emoji.className = 'ban-emoji';
+            emoji.innerHTML = '😭';
+            const angle = (i / 20) * 2 * Math.PI;
+            emoji.style.left = `${radius + radius * Math.cos(angle)}px`;
+            emoji.style.top = `${radius + radius * Math.sin(angle)}px`;
+            emoji.style.transform = `rotate(${angle + Math.PI / 2}rad)`;
+            circle.appendChild(emoji);
+        }
+    }
+    document.getElementById('btn-find-new').addEventListener('click', () => { banOverlay.style.display = 'none'; document.getElementById('audio-player-container').innerHTML = ''; const musicBtn = document.getElementById('btn-play-music'); musicBtn.disabled = false; musicBtn.textContent = 'Puść muzykę'; showScreen('screen-categories'); });
+    document.getElementById('btn-play-music').addEventListener('click', (e) => {
+        const musicBtn = e.target;
+        if (musicBtn.disabled) return;
+        const playlistId = 'PLE8A15ECB9F1761FB';
+        const musicUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=1&loop=1&index=${Math.floor(Math.random() * 10)}`;
+        document.getElementById('audio-player-container').innerHTML = `<iframe src="${musicUrl}" allow="autoplay" hidden></iframe>`;
+        musicBtn.textContent = 'Muzyka gra...';
+        musicBtn.disabled = true;
+        setTimeout(() => {
+            musicBtn.disabled = false;
+            musicBtn.textContent = 'Puść ponownie';
+        }, 3000);
+    });
+
+    function renderUkochaniScreen() {
+        const emptyView = document.getElementById('ukochani-empty');
+        const listContainer = document.getElementById('ukochani-list-container');
+        listContainer.innerHTML = '';
+        if(ukochani.length === 0) {
+            emptyView.style.display = 'flex';
+            listContainer.style.display = 'none';
+        } else {
+            emptyView.style.display = 'none';
+            listContainer.style.display = 'grid';
+            profiles.filter(p => ukochani.includes(p.id)).forEach(profile => {
+                listContainer.appendChild(createProfileCard(profile, true, 'ukochani'));
+            });
+        }
+    }
+    document.getElementById('btn-znajdz-chlopaka').addEventListener('click', () => { showScreen('screen-categories'); });
+});
+</script>
+
 </body>
 </html>
