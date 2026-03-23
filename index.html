@@ -1,678 +1,248 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uroczo pozdrawiam Martyne</title>
-    <style>
-        /* --- GŁÓWNE STYLE I RESET --- */
-        :root {
-            --dark-bg: #1a1a1a;
-            --main-text: #f0f0f0;
-            --yellow: #ffd700;
-            --dark-yellow: #e6c200;
-            --darker-bg: #111;
-            --red: #e74c3c;
-            --green: #2ecc71;
-            --border-radius: 8px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Tabeli (edycja) – Suma na żywo</title>
+  <style>
+    body{
+      font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      background:#f4f4f9;
+      margin:0;
+      padding:20px;
+      color:#222;
+    }
+    .wrapper{
+      max-width:1200px;
+      margin:0 auto;
+      background:#fff;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    }
+    h1{
+      text-align:center;
+      margin-top:0;
+      font-size:24px;
+    }
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:15px;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:20px;
+      padding:15px;
+      background:#f0f4ff;
+      border-radius:8px;
+    }
+    label{
+      font-weight:600;
+      font-size:15px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    input[type="number"]{
+      width:90px;
+      padding:8px 10px;
+      font-size:15px;
+      border:2px solid #aaa;
+      border-radius:6px;
+      text-align:center;
+    }
+    button{
+      padding:10px 22px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      border:none;
+      border-radius:6px;
+      transition:all 0.2s;
+      margin:5px;
+    }
+    .btn-generate{ background:#2e7d32; color:#fff; }
+    .btn-generate:hover{ background:#1b5e20; }
+    .btn-fullscreen{ background:#1565c0; color:#fff; }
+    .btn-fullscreen:hover{ background:#0d47a1; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        }
+    #tableContainer{
+      display:none;
+      margin-top:20px;
+      text-align:center;
+    }
+    #sumDisplay{
+      font-size:22px;
+      font-weight:bold;
+      margin-bottom:15px;
+      color:#b71c1c;
+      background:#ffebee;
+      padding:10px;
+      border-radius:8px;
+      display:inline-block;
+    }
 
-        body {
-            background-color: var(--dark-bg);
-            color: var(--main-text);
-            overflow: hidden;
-        }
+    table{
+      border-collapse:collapse;
+      margin:0 auto;
+      background:#fff;
+    }
+    td{
+      padding:14px;
+      border:3px solid #000; /* grubość nadpisuje JS */
+      font-size:56px;
+      text-align:center;
+      font-weight:bold;
+      font-family:"Arial Black", Arial, sans-serif;
+      min-width:70px;
+      vertical-align:middle;
+    }
 
-        /* --- NAWIGACJA --- */
-        nav {
-            position: fixed; top: 0; left: 0; width: 100%;
-            background-color: var(--darker-bg);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 20px; z-index: 1000;
-        }
-        nav a {
-            color: var(--main-text); text-decoration: none; padding: 8px 15px;
-            font-weight: bold; border-radius: var(--border-radius); transition: background-color 0.3s;
-        }
-        nav a:hover { background-color: rgba(255, 255, 255, 0.1); }
+    /* Dropdown wygląda “twardo” na ploter */
+    select.valueSelect{
+      width:100%;
+      height:64px;
+      font-size:36px;
+      font-weight:800;
+      text-align:center;
+      border:0;
+      outline:none;
+      background:#fff;
+      cursor:pointer;
+      font-family:"Arial Black", Arial, sans-serif;
+      -webkit-appearance: none;
+      appearance: none;
+      padding:0 6px;
+    }
 
-        /* --- EKRANY APLIKACJI --- */
-        .screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 80px 20px 20px; text-align: center;
-            opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s;
-            overflow-y: auto;
-        }
-        .screen.active { opacity: 1; visibility: visible; z-index: 100; }
-        /* POPRAWKA PRZYCIĘCIA */
-        #screen-profiles, #screen-ukochani {
-             justify-content: flex-start;
-        }
-
-        /* --- ELEMENTY INTERFEJSU --- */
-        h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        h2 { font-size: 2rem; color: var(--yellow); margin-bottom: 20px; }
-        h3 { font-size: 1.5rem; margin-bottom: 5px; }
-        p { font-size: 1.2rem; max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
-        .small-text { font-size: 1rem; color: #aaa; }
-        .button {
-            background-color: var(--yellow); color: var(--dark-bg); border: none;
-            padding: 15px 30px; font-size: 1.2rem; font-weight: bold;
-            border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.3s, transform 0.2s;
-            margin: 10px; border: 2px solid var(--yellow); position: relative; z-index: 2;
-        }
-        .button:hover { background-color: var(--dark-yellow); transform: scale(1.05); }
-        .button:disabled { background-color: #555; color: #999; border-color: #555; cursor: not-allowed; transform: none; }
-        .button.secondary { background-color: transparent; color: var(--yellow); }
-
-        /* --- LANDING PAGE ANIMACJE --- */
-        .flying-heart {
-            position: fixed; font-size: 1.5rem; color: var(--yellow);
-            opacity: 0.7; pointer-events: none; z-index: 1;
-            animation: fly-to-button 8s linear infinite;
-        }
-        @keyframes fly-to-button {
-            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
-            100% { transform: var(--tx) var(--ty) scale(1); opacity: 0; }
-        }
-
-        /* --- KATEGORIE I KAFELKI --- */
-        .category-box { background-color: var(--darker-bg); padding: 30px; margin: 15px 0; border-radius: var(--border-radius); border: 2px solid transparent; cursor: pointer; transition: border-color 0.3s; max-width: 500px; width: 90%; }
-        .category-box:hover { border-color: var(--yellow); }
-        .category-box p { margin-bottom: 0; font-size: 1rem; color: #ccc; }
-
-        .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; padding: 20px; }
-        .profile-card { background-color: var(--darker-bg); border-radius: var(--border-radius); overflow: hidden; border: 2px solid transparent; transition: border-color 0.3s; display: flex; flex-direction: column; cursor: pointer; }
-        .profile-card:hover { border-color: var(--yellow); }
-        .profile-card img { width: 100%; height: 300px; object-fit: cover; }
-        .img-placeholder { width: 100%; height: 300px; background-color: #333; color: #888; display: flex; justify-content: center; align-items: center; font-style: italic; }
-        .profile-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; text-align: left; }
-        .profile-card-content .nickname { color: var(--yellow); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
-        .profile-card-content .separator { border: none; height: 2px; width: 40px; background-color: var(--yellow); margin: 10px 0 15px 0; }
-        .profile-card-content .details span { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #aaa; }
-        .profile-card-content .quote { font-style: italic; color: #ccc; margin-bottom: 15px; flex-grow: 1; }
-        .life-quote { font-weight: bold; font-style: normal !important; background: linear-gradient(45deg, var(--yellow), var(--main-text)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .profile-card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .heart-button { background: none; border: none; cursor: pointer; padding: 10px; position: relative; }
-        .heart-icon { font-size: 2rem; color: var(--main-text); transition: color 0.3s, transform 0.3s; }
-        .heart-icon.loved { color: transparent; background-image: linear-gradient(45deg, #f06, #f79, #06f, #79f, #0f6, #7f9); -webkit-background-clip: text; background-clip: text; transform: scale(1.2); }
-        
-        .conversion-card {
-            background: linear-gradient(45deg, #222, #111);
-            border: 2px dashed var(--yellow); padding: 20px;
-            display: flex; flex-direction: column; justify-content: center;
-            align-items: center; text-align: center;
-        }
-        .conversion-card h3 { color: var(--yellow); }
-        .conversion-card p { font-size: 0.9rem; color: #ccc; margin-bottom: 20px; }
-
-        /* --- POKÓJ NAWRÓCEŃ --- */
-        #screen-conversion { overflow: hidden; }
-        .marching-heart { position: fixed; font-size: 2.5rem; animation: march-across 15s linear infinite; pointer-events: none; }
-        @keyframes march-across-1 { 0% { left: -5vw; top: 10vh; transform: rotate(20deg); } 100% { left: 105vw; top: 90vh; transform: rotate(20deg); } }
-        @keyframes march-across-2 { 0% { left: 105vw; top: 20vh; transform: rotate(-160deg); } 100% { left: -5vw; top: 80vh; transform: rotate(-160deg); } }
-        @keyframes march-across-3 { 0% { top: -5vh; left: 80vw; transform: rotate(110deg); } 100% { top: 105vh; left: 20vw; transform: rotate(110deg); } }
-
-        /* --- EKRANY WIDEO, POŁĄCZEŃ, MODALI --- */
-        #screen-video-call .message-container { max-width: 80%; }
-        #screen-video-call .message { padding: 15px 20px; border-radius: 18px; line-height: 1.4; background-color: #333; border-bottom-left-radius: 4px; }
-        #video-player-container { width: 100%; max-width: 800px; margin-top: 20px; z-index: 10; }
-        #video-player-container iframe { aspect-ratio: 16 / 9; width: 100%; border: none; }
-        .call-screen-ui { background-color: #000; border-radius: 20px; padding: 50px; display: flex; flex-direction: column; align-items: center; max-width: 400px; width: 90%; }
-        .call-screen-ui img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--yellow); margin-bottom: 20px; }
-        .call-screen-ui .nickname { font-size: 2rem; font-weight: bold; }
-        .call-screen-ui .status { color: #aaa; font-size: 1.2rem; margin-bottom: 40px; }
-        .call-buttons { display: flex; justify-content: space-around; width: 100%; }
-        .call-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .call-btn svg { width: 35px; height: 35px; fill: white; }
-        .call-btn.accept { background-color: var(--green); }
-        .call-btn.reject { background-color: var(--red); }
-        .call-btn.reject svg { stroke: white; stroke-width: 5; fill: none; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background-color: var(--darker-bg); padding: 30px; border-radius: var(--border-radius); text-align: center; max-width: 400px; width: 90%; }
-        .modal-content p { margin-bottom: 25px; }
-        .modal-content .button { display: block; width: 100%; margin-bottom: 10px; }
-
-        /* --- EKRAN CZATU --- */
-        #screen-chat { padding-top: 50px; }
-        #chat-screen-content { width: 100%; max-width: 800px; height: 100%; display: flex; flex-direction: column; background-color: var(--darker-bg); border-radius: var(--border-radius) var(--border-radius) 0 0; }
-        .chat-header { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #333; background-color: #222; flex-shrink: 0; }
-        .chat-header img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
-        .chat-header-info .name { font-weight: bold; }
-        .chat-header-info .status { font-size: 0.8rem; color: var(--green); }
-        #chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column-reverse; }
-        .message-container { display: flex; margin-bottom: 15px; max-width: 80%; position: relative; }
-        .message { padding: 10px 15px; border-radius: 18px; line-height: 1.4; }
-        .bot-message-container { align-items: flex-start; flex-direction: row; align-items: flex-end; }
-        .bot-message-container .chat-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 10px; flex-shrink: 0; }
-        .bot-message { background-color: #333; border-bottom-left-radius: 4px; }
-        .user-message-container { align-self: flex-end; }
-        .user-message { background-color: var(--yellow); color: var(--dark-bg); border-bottom-right-radius: 4px; }
-        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #333; flex-shrink: 0; }
-        #chat-input { flex-grow: 1; background-color: #333; border: none; border-radius: var(--border-radius); padding: 15px; color: var(--main-text); font-size: 1rem; }
-        #send-button { margin-left: 10px; padding: 0 25px; }
-        .chat-particle { position: absolute; font-size: 1.2rem; pointer-events: none; animation: message-explode 2.5s cubic-bezier(0.1, 0.8, 0.7, 1) forwards; }
-        @keyframes message-explode { 0% { transform: scale(1); opacity: 1; } 100% { transform: var(--tx) var(--ty) scale(0); opacity: 0; } }
-
-        /* --- EKRAN BANA --- */
-        #chat-ban-full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(26, 26, 26, 0.95); z-index: 1001; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .ban-circle-container { position: relative; width: 250px; height: 250px; margin-bottom: 20px; animation: rotate-circle 20s linear infinite; }
-        .ban-emoji { position: absolute; font-size: 2rem; transform-origin: center center; }
-        @keyframes rotate-circle { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .ban-text { font-size: 3rem; font-weight: bold; color: var(--yellow); margin-bottom: 30px; }
-        #audio-player-container { display: none; }
-
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; } h2 { font-size: 1.5rem; } p { font-size: 1rem; }
-            .button { padding: 12px 25px; font-size: 1rem; }
-            #chat-screen-content, #screen-chat { border-radius: 0; padding-top: 50px; }
-        }
-    </style>
+    #tableContainer:fullscreen{
+      background:white;
+      padding:20px;
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      overflow:auto;
+    }
+    #tableContainer:fullscreen table{
+      max-width:95%;
+      max-height:95%;
+    }
+  </style>
 </head>
 <body>
-    <div id="landing-page-hearts"></div>
-    <div id="audio-player-container"></div>
-    
-    <nav>
-        <a href="#" id="nav-back">Cofnij</a>
-        <a href="#" id="nav-home">Home</a>
-        <a href="#" id="nav-ukochani">Ukochani</a>
-    </nav>
-    
-<div id="screen-landing" class="screen active">
-  <p class="small-text">Artur Kudlik Przedstawia 🔥</p>
-  <h1>Randki dla nastolatków</h1>
-  <p>Różne tryby - Pojedyncza, w ciemno, mieszana, trójkątna, typ taki że spotykacie się o 23:30</p>
-  <button id="main-enter-button" class="button" data-target="screen-categories">Wchodzę w to!</button>
-</div>
+  <div class="wrapper">
+    <h1>📊 Tabela – Suma na żywo + ręczna zmiana komórek (tylko: 5,10,20,50,100)</h1>
 
-<!-- Stopka z napisem -->
-<div id="footer-note">Ta strona to żart i nie ma na celu nikogo urazić</div>
+    <div class="controls">
+      <label>
+        Wiersze:
+        <input type="number" id="rows" min="1" max="50" value="4">
+      </label>
+      <label>
+        Kolumny:
+        <input type="number" id="cols" min="1" max="50" value="5">
+      </label>
+      <label>
+        Grubość ścianek (px):
+        <input type="number" id="borderThickness" min="1" max="20" value="4">
+      </label>
 
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-
-  .screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-
-  #footer-note {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 13px;
-    color: #ccc;          /* znacznie jaśniejszy szary */
-    opacity: 1;           /* pełna widoczność */
-    transition: opacity 0.3s ease;
-  }
-
-  #footer-note.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .button {
-    margin-top: 10px;
-    padding: 12px 24px;   /* większy przycisk */
-    font-size: 18px;      /* większy font */
-    background-color: #FFD700;  /* żółty kolor */
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-  }
-
-  .button:hover {
-    background-color: #FFC300;
-    transform: scale(1.05);
-  }
-</style>
-
-<script>
-  document.getElementById('main-enter-button').addEventListener('click', function() {
-    document.getElementById('footer-note').classList.add('hidden');
-  });
-</script>
-<script>
-  document.getElementById('main-enter-button').addEventListener('click', function() {
-    const footer = document.getElementById('footer-note');
-    footer.classList.add('hidden');
-  });
-</script>
-    <div id="screen-categories" class="screen">
-        <h2>Jaki masz typ?</h2>
-        <div class="category-box" data-category="solidni">
-            <h3>Solidni i rozkochani</h3>
-            <p>chłopaki, którzy wiedzą, co robią. Nie tylko położą kafelki, ale też podbiją Twoje serce swoimi umiejętnościami..</p>
-        </div>
-        <div class="category-box" data-category="kreatywni">
-            <h3>Kreatywni i smaczni</h3>
-            <p>Artyści kuchni, którzy potrafią rozkochać Cię w jedzeniu. Ich dania smakują jak miłość od pierwszego kęsa..</p>
-        </div>
-        <div class="category-box" data-category="wszechstronni">
-            <h3>Wszechstronni i elastyczni</h3>
-            <p>Fachowcy, którzy potrafią i zbudować, i ugotować. Idealni dla tych, którzy chcą Karola Kocembę ale wstydzą się podbić..</p>
-        </div>
+      <button class="btn-generate" onclick="generateTable()">Generuj tabelę</button>
     </div>
 
-    <div id="screen-profiles" class="screen">
-        <div id="profiles-container" class="profile-grid"></div>
+    <div id="tableContainer">
+      <div id="sumDisplay">Suma wszystkich liczb w tabeli: —</div>
+      <table id="dataTable"></table>
+      <button class="btn-fullscreen" onclick="goFullscreen()">🖥️ Wyświetl na pełny ekran (zrób screena)</button>
     </div>
-    
-    <div id="screen-confirmation" class="screen">
-        <h2 id="confirmation-text"></h2>
-        <p id="confirmation-subtext"></p>
-        <div>
-            <button class="button" id="btn-polacz-sie">POŁĄCZ SIĘ</button>
-            <button class="button secondary" id="btn-wtrashe-pisac">WOLĘ PISAĆ</button>
-        </div>
-    </div>
-    
-    <div id="screen-incoming-call" class="screen">
-       <div class="call-screen-ui">
-            <img id="call-img" src="" alt="">
-            <div id="call-nickname" class="nickname"></div>
-            <div class="status">do ciebie dzwoni...</div>
-            <div class="call-buttons">
-                <button class="call-btn reject" id="btn-reject-call"><svg viewBox="0 0 32 32"><line x1="2" y1="30" x2="30" y2="2"></line><line x1="2" y1="2" x2="30" y2="30"></line></svg></button>
-                <button class="call-btn accept" id="btn-accept-call"><svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg></button>
-            </div>
-       </div>
-    </div>
+  </div>
 
-    <div id="screen-video-call" class="screen">
-        <div class="message-container"><div id="video-message-text" class="message"></div></div>
-        <div id="video-player-container">
-            <iframe id="youtube-player" data-src="https://www.youtube.com/embed/yHAhqiyauhE?si=hJVvmT5FLQzs792Z" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-        <div>
-            <button class="button" id="btn-go-to-chat">Przejdź do czatu</button>
-            <button class="button secondary" id="btn-end-call">Zakończ rozmowę</button>
-        </div>
-    </div>
-    
-    <div id="screen-chat" class="screen">
-        <div id="chat-screen-content">
-            <div class="chat-header">
-                <img id="chat-header-img" src="" alt="">
-                <div class="chat-header-info">
-                    <div id="chat-header-name" class="name"></div>
-                    <div class="status">aktywny teraz</div>
-                </div>
-            </div>
-            <div id="chat-messages"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Napisz wiadomość...">
-                <button class="button" id="send-button">Wyślij</button>
-            </div>
-        </div>
-    </div>
+  <script>
+    const ALLOWED = [5, 10, 20, 50, 100];
 
-    <div id="chat-ban-full-overlay">
-        <div class="ban-circle-container" id="ban-circle"></div>
-        <div class="ban-text">bywa</div>
-        <button class="button" id="btn-find-new">Znajdź nowego fachowca</button>
-        <button class="button secondary" id="btn-play-music">Puść muzykę</button>
-    </div>
-    
-    <div id="screen-conversion" class="screen">
-        <div id="conversion-hearts-container"></div>
-        <div id="video-player-container">
-            <iframe id="conversion-video-player" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-    </div>
-    
-    <div id="screen-ukochani" class="screen">
-        <div id="ukochani-empty" style="display: none; flex-direction: column;">
-            <h2>Twoja lista jest pusta</h2>
-            <p>Nie dodałaś jeszcze żadnego chłopaka, ale możesz to zrobić!</p>
-            <button class="button" id="btn-znajdz-chlopaka">Tutaj</button>
-        </div>
-        <div id="ukochani-list-container" class="profile-grid"></div>
-    </div>
-    
-    <div id="modal-reject" class="modal-overlay">
-        <div class="modal-content">
-            <h3>Czy na pewno chcesz odrzucić takiego Męskiego chłopa?</h3>
-            <p id="rejection-argument"></p>
-            <button class="button" id="btn-call-again">Zadzwoń ponownie</button>
-            <button class="button secondary" id="btn-prefer-write">Wolę pisać</button>
-            <button class="button secondary" id="btn-im-shy">Wstydzę się</button>
-        </div>
-    </div>
-    
-    <div id="modal-shy" class="modal-overlay">
-        <div class="modal-content">
-            <h2>Do odważnych świat należy 💪</h2>
-            <button class="button" id="btn-back-to-call">Wróć do połączenia</button>
-        </div>
-    </div>
+    let allSelects = []; // do szybkiego liczenia sumy
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+    function randomAllowed() {
+      return ALLOWED[Math.floor(Math.random() * ALLOWED.length)];
+    }
 
-const profiles = [
-    { id: 1, name: 'Grzegorz Kowalczyk', nickname: 'Fred', age: '🎂 40', education: '🎓 Kurs ślusarstwa, reszta to szkoła życia', quote: 'Fred na usługi! Specjalizuję się w spawaniu, ale potrafię też... no, powiedzmy, że umiem łączyć różne elementy w harmonijną całość.', category: 'solidni', image: 'foty/man1.jpg', lifeQuote: '"Najpierw położę kafelki, a potem kres szkolnej propagandzie."', confirmationBlurb: 'to mistrz spawarki. Z nim każda relacja będzie trwała i nierozerwalna.' },
-    { id: 2, name: 'Andrzej Zawadzki', nickname: 'Młotek', age: '🎂 45', education: '🎓 Jedna klasa zawodówki samochodowej', quote: 'Jak coś się zepsuje, to ja to naprawię. Jak się nie da naprawić, to znaczy, że trzeba było mocniej uderzyć. Proste.', category: 'solidni', image: 'foty/man2.jpg', lifeQuote: '"Ona nie musi być piękna."', confirmationBlurb: 'to król młota. Z nim każdy gwóźdź zostanie wbity prosto i z finezją.' },
-    { id: 3, name: 'Krzysztof Malinowski', nickname: 'Betoniarz', age: '🎂 38', education: '🎓 Technik budownictwa, bez matury', quote: 'Moje serce jest jak dobrze wymieszany beton - twarde, solidne i gotowe na lata. Szukam kogoś, kto doceni mocny fundament.', category: 'solidni', image: 'foty/man3.jpg', lifeQuote: '"Wiem, że nic nie wiem."', confirmationBlurb: 'to twardziel o gołębim sercu. On nie buduje zamków z piasku, on wylewa fundamenty pod pałac.' },
-    { id: 4, name: 'Marian Paździoch', nickname: 'Wiertara', age: '🎂 52', education: '🎓 Dyplom mistrzowski w cechu rzemiosł różnych', quote: 'Życie jest jak ściana z wielkiej płyty, czasem trzeba użyć udaru, żeby się przebić. Mam wiertarkę i nie zawaham się jej użyć.', category: 'solidni', image: 'foty/man4.jpg', lifeQuote: '"Lepiej mieć udar w wiertarce niż w głowie."', confirmationBlurb: 'przewierci się przez każdy problem. Z nim żadna ściana nie stanie wam na drodze do szczęścia.' },
-    { id: 5, name: 'Damian Igielski', nickname: 'Słodki', age: '🎂 33', education: '🎓 Technik technologii żywienia, dorabia jako projektant', quote: 'Projektuję torty, które wyglądają jak dzieła sztuki i smakują jeszcze lepiej. Z Tobą chciałbym zaprojektować coś na całe życie.', category: 'kreatywni', image: 'foty/man5.jpg', lifeQuote: '"Życie jest za krótkie na dietę."', confirmationBlurb: 'osłodzi Ci życie. Z nim każdy dzień będzie smakował jak ulubiony deser.' },
-    { id: 6, name: 'Patryk Bochenek', nickname: 'Zakwas', age: '🎂 41', education: '🎓 Szkoła branżowa Cosinus - piekarz', quote: 'Jestem cierpliwy jak zakwas, który rośnie przez całą noc. Daj mi trochę ciepła, a stworzę dla Ciebie coś pysznego.', category: 'kreatywni', image: 'foty/man6.jpg', lifeQuote: '"Dobry chleb jest podstawą, reszta to dodatki."', confirmationBlurb: 'to mistrz cierpliwości. Daj mu trochę czasu, a upiecze dla ciebie chleb... i wspólną przyszłość.' },
-    { id: 7, name: 'Bartosz Heise', nickname: 'Croissant', age: '🎂 29', education: '🎓 Technik fryzjerstwa z doświadczeniem w gastronomii', quote: 'Moje życie ma więcej warstw niż idealny croissant. Odkryjmy je razem, jedna po drugiej.', category: 'kreatywni', image: 'foty/man7.jpg', lifeQuote: '"W życiu jak we włosach - czasem trzeba coś zakręcić."', confirmationBlurb: 'jest wielowarstwowy jak jego ulubione ciasto. Każdego dnia odkryjesz w nim coś nowego i zaskakującego.' },
-    { id: 8, name: 'Sebastian Macierewicz', nickname: 'Kruszonka', age: '🎂 35', education: '🎓 Absolwent liceum plastycznego', quote: 'Rzeźbię w glinie, ale najlepiej wychodzi mi lepienie pierogów. Jestem artystą w kuchni i poza nią. Posypmy nasze życie kruszonką szczęścia.', category: 'kreatywni', image: 'foty/man8.jpg', lifeQuote: '"Sztuka jest wszędzie, nawet w pierogach."', confirmationBlurb: 'jest artystą duszy i podniebienia. Z nim życie nabierze barw i smaku.' },
-    { id: 9, name: 'Tomasz Hajto', nickname: 'Trytyt', age: '🎂 39', education: '🎓 Technik informatyk, który woli pracę fizyczną', quote: 'Nie ma problemu, którego nie da się rozwiązać trytytką albo srebrną taśmą. Jestem elastyczny i mocno trzymam. Jak trytytka.', category: 'wszechstronni', image: 'foty/man9.jpg', lifeQuote: '"Jak się trzyma, to nie ruszać."', confirmationBlurb: 'to człowiek-orkiestra. Z nim wszystko będzie się trzymać mocno i pewnie.' },
-    { id: 10, name: 'Robert Borkowski', nickname: 'Francuz', age: '🎂 48', education: '🎓 Technik mechanik, samouk hydrauliki', quote: 'Dopasuję się do każdej sytuacji, jak klucz francuski do każdej śruby. Skomplikowane? Dla mnie to wyzwanie!', category: 'wszechstronni', image: 'foty/man10.jpg', lifeQuote: '"Każdy problem ma swój rozmiar klucza."', confirmationBlurb: 'dopasuje się do każdej sytuacji. Z nim żaden problem nie jest zbyt skomplikowany.' },
-    { id: 11, name: 'Cezary Koszkul', nickname: 'Guma', age: '🎂 31', education: '🎓 Technik reklamy, instruktor na siłowni', quote: 'Potrafię złożyć szafę, a potem zrobić szpagat na jej blacie. Moja elastyczność nie zna granic, ani w życiu, ani w związku.', category: 'wszechstronni', image: 'foty/man11.jpg', lifeQuote: '"Granice są po to, żeby je rozciągać."', confirmationBlurb: 'jest elastyczny jak nikt inny. Z nim znajdziecie rozwiązanie na każdy problem i wyjście z każdej sytuacji.' },
-    { id: 12, name: 'Igor Wróbel', nickname: 'Iskra', age: '🎂 42', education: '🎓 Ukończył kursy spawania TIG/MIG/MAG', quote: 'Łączę metale w nierozerwalne całości. Myślę, że z nami mogłoby być podobnie. Zaiskrzyło?', category: 'wszechstronni', image: 'foty/man12.jpg', lifeQuote: '"Miłość jest jak spaw - musi być gorąca, żeby była trwała."', confirmationBlurb: 'potrafi rozpalić ogień. Z nim na pewno zaiskrzy, a wasz związek będzie spojony na stałe.' },
-];
+    function updateSumLive() {
+      // Suma dokładnie z wartości w selectach (bez zaokrągleń)
+      let sum = 0;
+      for (const s of allSelects) sum += parseInt(s.value, 10);
+      document.getElementById('sumDisplay').textContent = `Suma wszystkich liczb w tabeli: ${sum}`;
+    }
 
-const rejectionArguments = [
-    "Ten facet potrafi wymienić uszczelkę pod głowicą i uszczelkę w kranie. Taki skarb się nie odrzuca!",
-    "Pomyśl o tych wszystkich niedokręconych szafkach w Twoim domu. On jest rozwiązaniem.",
-    "Jego męski zapach to mieszanka potu, smaru i determinacji. Gdzie indziej znajdziesz taki bukiet?",
-    "On nie pyta, on działa. Jak Chuck Norris, tylko z młotkiem zamiast kopniaka z półobrotu.",
-    "Z nim nigdy nie będziesz musiała prosić sąsiada o pomoc w noszeniu ciężkich zakupów. On jest chodzącą siłownią.",
-    "Prawdopodobnie ma na sobie flanelową koszulę. Czy trzeba dodawać coś więcej?",
-];
+    function generateTable() {
+      let rows = parseInt(document.getElementById('rows').value, 10);
+      let cols = parseInt(document.getElementById('cols').value, 10);
+      let border = parseInt(document.getElementById('borderThickness').value, 10);
 
-const videoCallMessages = [
-    "Dobrze, że odebrałaś. Jestem w stanie zrobić to zlecenie, tutaj masz fajny filmik, który dużo pomoże.",
-    "Halo, halo! Już myślałem, że się nie połączymy. Zanim przejdziemy do konkretów, obejrzyj to, to ważne.",
-    "Super, jesteś! Posłuchaj, to jest instrukcja, jak przygotować miejsce pracy. Zobacz i działamy dalej.",
-];
+      if (isNaN(rows) || isNaN(cols) || isNaN(border) || rows < 1 || cols < 1 || border < 1) {
+        alert("Wprowadź poprawne, dodatnie liczby całkowite!");
+        return;
+      }
 
-const chatInitMessages = [
-    "Dobra, pani, co ci na duszy gra? Może remont łazienki?",
-    "No, jestem. O co chodzi? Fugi w kuchni do wymiany?",
-    "Słucham. Mów, bo robota czeka, a ja tu w telefon klikam.",
-    "Jestem, ale się nie cieszę. Jaka jest awaria tym razem?",
-    "Telefon od ciebie to jak wezwanie do usterki. Co się zepsuło?",
-    "Centrala zgłoś się. Jaki problem do rozwiązania na dziś?",
-    "Cześć. Krótko i na temat, bo czas to pieniądz, a ja nie mam ani jednego, ani drugiego.",
-    "Mów, co trzeba zrobić. Tylko bez marudzenia, że drogo.",
-];
+      const table = document.getElementById('dataTable');
+      const container = document.getElementById('tableContainer');
 
-const chatDiscourageMessages = [
-    "Dobrze, że wybrałaś mnie, a nie tych 'kreatywnych'. Co oni ci zrobią? Upieką ciasto? Ja ci dom postawię!",
-    "Tylko nie mów, że myślałaś o tych 'wszechstronnych'. Facet, który zna się na wszystkim, nie zna się na niczym. Ja znam się na betonie i to się liczy.",
-    "Zobaczyłem, że polubiłaś też tego 'Słodkiego'. Daj spokój, on ci co najwyżej lukrem życie posmaruje. Ja je zaleję solidnym fundamentem.",
-    "Wybór między mną a jakimś 'artystą' to jak wybór między młotem a pędzelkiem. Czym wbijesz gwóźdź?",
-    "Ci 'elastyczni' to się wyginają we wszystkie strony, bo nie mają kręgosłupa. Ja mam kręgosłup moralny i stalowy pręt w kieszeni. Na wszelki wypadek.",
-    "Słyszałem, że ten 'Francuz' jest popularny. Pewnie, dopasuje się. Ja nie muszę się dopasowywać, ja tworzę rzeczywistość pod siebie. I pod ciebie.",
-    "Nie daj się nabrać na tych 'designerów'. Oni ci zaprojektują ładną porażkę. Ja ci zbuduję brzydkie zwycięstwo, które przetrwa lata.",
-    "Dobry wybór. Prawdziwy facet brudzi sobie ręce, a nie posypuje babeczki brokatem.",
-    "Widzę, że masz gust. Z dala od tych, co zamiast klucza 13-tki noszą w torbie notesik na wiersze.",
-    "Całe szczęście. Tamci 'smakosze' znają się na przyprawach. Ja znam się na proporcjach cementu do piasku. Zgadnij, co jest ważniejsze.",
-    "Zapomnij o reszcie. Oni ci zaoferują 'doświadczenie'. Ja ci zaoferuję solidną, ciężką i satysfakcjonującą robotę.",
-    "Jesteś mądrą kobietą. Wiesz, że prawdziwa miłość pachnie smarem, a nie wanilią.",
-    "Uff, już myślałem, że pójdziesz do tych od jogi. Ja cię tak rozciągnę, że zapomnisz jak się nazywasz... przy remoncie oczywiście.",
-];
-    const chatEmoteMessages = ["👍", "💪", "😉", "😎", "😏", "👷‍♂️", "💯", "👌", "🍻"];
-    const chatExcuseMessages = [ "Dobra, kończę na dziś. Jestem na kacu i muszę iść spać.", "Sory, żona mnie woła na obiad. Muszę lecieć.", "Jeszcze wrócę, kotku. Teraz majster musi odpocząć.", "Kończymy, bo mi się piwo grzeje. Do następnego.", "Muszę spadać, wezwali mnie do pilnej awarii. Rura pękła. Gdzieś.", "Zadzwonię później, teraz leci 'Familiada'.", ];
-    const conversionVideos = { solidni: 'https://www.youtube.com/embed/TfZQcDo5wVk?si=Tm7xoiMdGhbEJT7_', kreatywni: 'https://www.youtube.com/embed/SrAUdR3cVGQ?si=gKgZqOL-1HmY6ibK', wszechstronni: 'https://www.youtube.com/embed/1mNH_gwxu2g?si=Jl0Ye3rjnDj5UL8I' };
+      table.innerHTML = '';
+      allSelects = [];
 
-    let currentState = { currentProfile: null, currentCategory: null, history: ['screen-landing'] };
-    let ukochani = []; 
-    let chatStates = {};
-    const allScreens = document.querySelectorAll('.screen');
-    const youtubePlayer = document.getElementById('youtube-player');
-    const banOverlay = document.getElementById('chat-ban-full-overlay');
+      for (let r = 0; r < rows; r++) {
+        const tr = document.createElement('tr');
 
-    function initLandingPageAnimations() {
-        const container = document.getElementById('landing-page-hearts');
-        const button = document.getElementById('main-enter-button');
-        if (!container || !button) return;
-        const buttonRect = button.getBoundingClientRect();
-        const targetX = buttonRect.left + buttonRect.width / 2;
-        const targetY = buttonRect.top + buttonRect.height / 2;
-        for (let i = 0; i < 20; i++) {
-            const heart = document.createElement('div');
-            heart.className = 'flying-heart';
-            heart.innerHTML = '♥';
-            const startX = Math.random() < 0.5 ? -50 : window.innerWidth + 50;
-            const startY = Math.random() * window.innerHeight;
-            heart.style.left = `${startX}px`;
-            heart.style.top = `${startY}px`;
-            const transX = targetX - startX;
-            const transY = targetY - startY;
-            heart.style.setProperty('--tx', `translateX(${transX}px)`);
-            heart.style.setProperty('--ty', `translateY(${transY}px)`);
-            heart.style.animationDelay = `${Math.random() * 8}s`;
-            container.appendChild(heart);
+        for (let c = 0; c < cols; c++) {
+          const td = document.createElement('td');
+
+          // ustaw grubość ścianek dokładnie
+          td.style.borderWidth = border + "px";
+          td.style.borderStyle = "solid";
+          td.style.borderColor = "black";
+
+          // select z dozwolonymi wartościami (ręczna zmiana)
+          const sel = document.createElement('select');
+          sel.className = 'valueSelect';
+
+          for (const v of ALLOWED) {
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            sel.appendChild(opt);
+          }
+
+          sel.value = randomAllowed();
+
+          // aktualizacja sumy na żywo
+          sel.addEventListener('change', updateSumLive);
+
+          td.appendChild(sel);
+          tr.appendChild(td);
+
+          allSelects.push(sel);
         }
-    }
-    initLandingPageAnimations();
-    
-    function showScreen(screenId, direction = 'forward') {
-        const targetScreen = document.getElementById(screenId);
-        if (!targetScreen) return;
-        allScreens.forEach(screen => screen.classList.remove('active'));
-        targetScreen.classList.add('active');
-        if (direction === 'forward') {
-            if (currentState.history[currentState.history.length - 1] !== screenId) {
-                currentState.history.push(screenId);
-            }
-        }
-        if (screenId !== 'screen-video-call' && screenId !== 'screen-conversion') {
-            youtubePlayer.src = '';
-            document.getElementById('conversion-video-player').src = '';
-        }
+        table.appendChild(tr);
+      }
+
+      container.style.display = 'block';
+      updateSumLive();
     }
 
-    document.getElementById('nav-back').addEventListener('click', (e) => { e.preventDefault(); if (currentState.history.length > 1) { currentState.history.pop(); const lastScreen = currentState.history[currentState.history.length - 1]; showScreen(lastScreen, 'back'); } });
-    document.getElementById('nav-home').addEventListener('click', (e) => { e.preventDefault(); currentState.history = ['screen-landing']; showScreen('screen-landing'); });
-    document.getElementById('nav-ukochani').addEventListener('click', (e) => { e.preventDefault(); renderUkochaniScreen(); showScreen('screen-ukochani'); });
-    document.addEventListener('click', (e) => { if (e.target.matches('.button[data-target]')) { showScreen(e.target.dataset.target); } });
-    document.querySelectorAll('.category-box').forEach(box => { box.addEventListener('click', () => { const category = box.dataset.category; currentState.currentCategory = category; renderProfileCards(category); showScreen('screen-profiles'); }); });
+    function goFullscreen() {
+      const elem = document.getElementById('tableContainer');
 
-    function createProfileCard(profile, isLoved, context) {
-        const card = document.createElement('div');
-        card.className = 'profile-card';
-        card.dataset.profileId = profile.id;
-        
-        let actionsHtml = `
-            <div class="profile-card-actions">
-                <button class="button select-now-btn">Wybieram teraz</button>
-                <button class="heart-button">
-                    <span class="heart-icon ${isLoved ? 'loved' : ''}">♥</span>
-                </button>
-            </div>`;
-        
-        if (context === 'ukochani') {
-            actionsHtml = `<p class="quote">Kliknij, aby kontynuować rozmowę...</p>`;
-            card.addEventListener('click', (e) => {
-                if (e.target.tagName !== 'BUTTON') {
-                    prepareChatScreen(profile);
-                    showScreen('screen-chat');
-                }
-            });
-        }
-
-        card.innerHTML = `
-            <img src="${profile.image}" alt="" onerror="this.outerHTML = '<div class=\\'img-placeholder\\'>brak zdjęcia ${profile.image.split('/')[1]}</div>'">
-            <div class="profile-card-content">
-                <h3>${profile.name}</h3>
-                <div class="nickname">${profile.nickname}</div>
-                <hr class="separator">
-                <div class="details">
-                    <span>${profile.age} lat</span>
-                    <span>${profile.education}</span>
-                </div>
-                <p class="quote">"${profile.quote}"</p>
-                <p class="life-quote">${profile.lifeQuote}</p>
-                ${actionsHtml}
-            </div>
-        `;
-        return card;
+      if (!document.fullscreenElement) {
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+        else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
     }
-
-    function renderProfileCards(category) {
-        const container = document.getElementById('profiles-container');
-        container.innerHTML = '';
-        profiles.filter(p => p.category === category).forEach(profile => {
-            container.appendChild(createProfileCard(profile, ukochani.includes(profile.id), 'profiles'));
-        });
-        const conversionCard = document.createElement('div');
-        conversionCard.className = 'profile-card conversion-card';
-        conversionCard.innerHTML = `<h3>Pokój nawróceń</h3><p>Jeżeli zwątpiłaś w to, że znajdziesz idealnego fachowca, to jest miejsce dla ciebie.</p><button class="button">Wejdź do pokoju</button>`;
-        conversionCard.querySelector('button').addEventListener('click', () => { showConversionRoom(category); });
-        container.appendChild(conversionCard);
-    }
-    
-    function showConversionRoom(category) {
-        const videoUrl = conversionVideos[category] || conversionVideos.solidni;
-        document.getElementById('conversion-video-player').src = videoUrl + '&autoplay=1';
-        const heartsContainer = document.getElementById('conversion-hearts-container');
-        heartsContainer.innerHTML = '';
-        const colors = ['#ff6b6b', '#f9c55d', '#4ecdc4', '#45b7d1', '#f7f7f7', '#feca57', '#9b59b6', '#3498db'];
-        for(let i = 0; i < 40; i++) {
-            const heart = document.createElement('div');
-            heart.className = 'marching-heart';
-            heart.innerHTML = '❤';
-            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-            heart.style.animationName = `march-across-${(i % 3) + 1}`;
-            heart.style.animationDelay = `${(i / 40) * 15}s`;
-            heartsContainer.appendChild(heart);
-        }
-        showScreen('screen-conversion');
-    }
-
-    document.getElementById('profiles-container').addEventListener('click', e => {
-        const profileCard = e.target.closest('.profile-card:not(.conversion-card)');
-        if (!profileCard) return;
-        const profileId = parseInt(profileCard.dataset.profileId);
-        currentState.currentProfile = profiles.find(p => p.id === profileId);
-        if (e.target.closest('.select-now-btn')) { renderConfirmationScreen(currentState.currentProfile); showScreen('screen-confirmation'); }
-        if (e.target.closest('.heart-button')) { e.stopPropagation(); toggleHeart(e.target.closest('.heart-button'), profileId); }
-    });
-    
-    function toggleHeart(button, profileId) { const heartIcon = button.querySelector('.heart-icon'); const isLoved = heartIcon.classList.toggle('loved'); if (isLoved) { if (!ukochani.includes(profileId)) { ukochani.push(profileId); } createHeartParticles(button); } else { ukochani = ukochani.filter(id => id !== profileId); } }
-    function createHeartParticles(element) { const rect = element.getBoundingClientRect(); const originX = rect.left + rect.width / 2; const originY = rect.top + rect.height / 2; for (let i = 0; i < 20; i++) { const particle = document.createElement('div'); particle.className = 'particle'; particle.innerHTML = '♥'; document.body.appendChild(particle); particle.animate([ { transform: 'translate(0, 0) scale(1)', opacity: 1 }, { transform: `translate(${(Math.random() - 0.5) * 200}px, -80vh) scale(0) rotate(${(Math.random() - 0.5) * 500}deg)`, opacity: 0 } ], { duration: 2000 + Math.random() * 3000, easing: 'ease-out', delay: Math.random() * 200 }); particle.style.left = `${originX}px`; particle.style.top = `${originY}px`; setTimeout(() => { particle.remove(); }, 5000); } }
-    
-    function renderConfirmationScreen(profile) { document.getElementById('confirmation-text').textContent = `${profile.name} to świetny wybór!`; document.getElementById('confirmation-subtext').textContent = `${profile.nickname} ${profile.confirmationBlurb}`; }
-    document.getElementById('btn-polacz-sie').addEventListener('click', () => { renderIncomingCallScreen(currentState.currentProfile); showScreen('screen-incoming-call'); });
-    document.getElementById('btn-wtrashe-pisac').addEventListener('click', () => { prepareChatScreen(currentState.currentProfile); showScreen('screen-chat'); });
-
-    function renderIncomingCallScreen(profile) { document.getElementById('call-img').src = profile.image; document.getElementById('call-nickname').textContent = profile.nickname; }
-    document.getElementById('btn-accept-call').addEventListener('click', () => { document.getElementById('video-message-text').textContent = videoCallMessages[Math.floor(Math.random() * videoCallMessages.length)]; youtubePlayer.src = youtubePlayer.dataset.src + '&autoplay=1'; showScreen('screen-video-call'); });
-    document.getElementById('btn-reject-call').addEventListener('click', () => { document.getElementById('rejection-argument').textContent = rejectionArguments[Math.floor(Math.random() * rejectionArguments.length)]; document.getElementById('modal-reject').classList.add('active'); });
-    document.getElementById('btn-call-again').addEventListener('click', () => { document.getElementById('modal-reject').classList.remove('active'); renderIncomingCallScreen(currentState.currentProfile); showScreen('screen-incoming-call'); });
-    document.getElementById('btn-prefer-write').addEventListener('click', () => { document.getElementById('modal-reject').classList.remove('active'); prepareChatScreen(currentState.currentProfile); showScreen('screen-chat'); });
-    document.getElementById('btn-im-shy').addEventListener('click', () => { document.getElementById('modal-shy').classList.add('active'); });
-    document.getElementById('btn-back-to-call').addEventListener('click', () => { document.getElementById('modal-shy').classList.remove('active'); });
-    document.getElementById('btn-go-to-chat').addEventListener('click', () => { prepareChatScreen(currentState.currentProfile); showScreen('screen-chat'); });
-    document.getElementById('btn-end-call').addEventListener('click', () => { renderProfileCards(currentState.currentCategory || 'solidni'); showScreen('screen-profiles'); });
-
-    function prepareChatScreen(profile) {
-        currentState.currentProfile = profile;
-        if (!chatStates[profile.id]) { chatStates[profile.id] = { stage: 0, messages: [], isBanned: false }; }
-        document.getElementById('chat-header-img').src = profile.image;
-        document.getElementById('chat-header-name').textContent = `${profile.name} (${profile.nickname})`;
-        renderChatMessages(profile.id);
-        if (chatStates[profile.id].isBanned) { showBanScreen(); } else { banOverlay.style.display = 'none'; }
-        if (chatStates[profile.id].stage === 0 && chatStates[profile.id].messages.length === 0) {
-            setTimeout(() => addBotMessage(chatInitMessages[Math.floor(Math.random() * chatInitMessages.length)]), 1000);
-            chatStates[profile.id].stage = 1;
-        }
-    }
-    
-    function createMessageParticles(element) { const colors = ['#ff6b6b', '#f9c55d', '#4ecdc4', '#45b7d1', '#f7f7f7', '#feca57']; for (let i = 0; i < 15; i++) { const particle = document.createElement('div'); particle.className = 'chat-particle'; particle.innerHTML = '♥'; particle.style.color = colors[Math.floor(Math.random() * colors.length)]; element.appendChild(particle); const angle = Math.random() * 2 * Math.PI; const radius = 50 + Math.random() * 150; const transX = Math.cos(angle) * radius; const transY = Math.sin(angle) * radius; particle.style.left = '50%'; particle.style.top = '50%'; particle.style.setProperty('--tx', `translateX(${transX}px)`); particle.style.setProperty('--ty', `translateY(${transY}px)`); setTimeout(() => particle.remove(), 2500); } }
-    function addMessageToDisplay(msg, profile) { const container = document.createElement('div'); const messageEl = document.createElement('div'); container.className = `message-container ${msg.sender}-message-container`; messageEl.className = `message ${msg.sender}-message`; messageEl.textContent = msg.text; if (msg.sender === 'bot') { const avatar = document.createElement('img'); avatar.src = profile.image; avatar.className = 'chat-avatar'; container.appendChild(avatar); container.appendChild(messageEl); setTimeout(() => createMessageParticles(container), 100); } else { container.appendChild(messageEl); } document.getElementById('chat-messages').prepend(container); }
-    function addBotMessage(text) { const profileId = currentState.currentProfile.id; const msg = { sender: 'bot', text }; chatStates[profileId].messages.push(msg); addMessageToDisplay(msg, currentState.currentProfile); }
-    function handleUserMessage() {
-        const text = document.getElementById('chat-input').value.trim();
-        if (text === '') return;
-        const profileId = currentState.currentProfile.id;
-        if(chatStates[profileId].isBanned) return;
-        const msg = { sender: 'user', text };
-        chatStates[profileId].messages.push(msg);
-        addMessageToDisplay(msg, currentState.currentProfile);
-        document.getElementById('chat-input').value = '';
-        const state = chatStates[profileId];
-        setTimeout(() => {
-            switch(state.stage) {
-                case 1: addBotMessage(chatDiscourageMessages[Math.floor(Math.random() * chatDiscourageMessages.length)]); state.stage = 2; break;
-                case 2: addBotMessage(chatEmoteMessages[Math.floor(Math.random() * chatEmoteMessages.length)]); state.stage = 3; break;
-                case 3: addBotMessage(chatExcuseMessages[Math.floor(Math.random() * chatExcuseMessages.length)]); state.stage = 4; break;
-                case 4: state.isBanned = true; showBanScreen(); break;
-            }
-        }, 1500 + Math.random() * 1000);
-    }
-    document.getElementById('send-button').addEventListener('click', handleUserMessage);
-    document.getElementById('chat-input').addEventListener('keypress', e => { if (e.key === 'Enter') handleUserMessage(); });
-    function renderChatMessages(profileId) { const container = document.getElementById('chat-messages'); container.innerHTML = ''; if (chatStates[profileId]) { chatStates[profileId].messages.forEach(msg => { addMessageToDisplay(msg, profiles.find(p => p.id === profileId)); }); } }
-
-    function showBanScreen() {
-        banOverlay.style.display = 'flex';
-        const circle = document.getElementById('ban-circle');
-        if (circle.childElementCount > 0) return;
-        const radius = 110;
-        for (let i = 0; i < 20; i++) {
-            const emoji = document.createElement('span');
-            emoji.className = 'ban-emoji';
-            emoji.innerHTML = '😭';
-            const angle = (i / 20) * 2 * Math.PI;
-            emoji.style.left = `${radius + radius * Math.cos(angle)}px`;
-            emoji.style.top = `${radius + radius * Math.sin(angle)}px`;
-            emoji.style.transform = `rotate(${angle + Math.PI / 2}rad)`;
-            circle.appendChild(emoji);
-        }
-    }
-    document.getElementById('btn-find-new').addEventListener('click', () => { banOverlay.style.display = 'none'; document.getElementById('audio-player-container').innerHTML = ''; const musicBtn = document.getElementById('btn-play-music'); musicBtn.disabled = false; musicBtn.textContent = 'Puść muzykę'; showScreen('screen-categories'); });
-    document.getElementById('btn-play-music').addEventListener('click', (e) => {
-        const musicBtn = e.target;
-        if (musicBtn.disabled) return;
-        const playlistId = 'PLE8A15ECB9F1761FB';
-        const musicUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=1&loop=1&index=${Math.floor(Math.random() * 10)}`;
-        document.getElementById('audio-player-container').innerHTML = `<iframe src="${musicUrl}" allow="autoplay" hidden></iframe>`;
-        musicBtn.textContent = 'Muzyka gra...';
-        musicBtn.disabled = true;
-        setTimeout(() => {
-            musicBtn.disabled = false;
-            musicBtn.textContent = 'Puść ponownie';
-        }, 3000);
-    });
-
-    function renderUkochaniScreen() {
-        const emptyView = document.getElementById('ukochani-empty');
-        const listContainer = document.getElementById('ukochani-list-container');
-        listContainer.innerHTML = '';
-        if(ukochani.length === 0) {
-            emptyView.style.display = 'flex';
-            listContainer.style.display = 'none';
-        } else {
-            emptyView.style.display = 'none';
-            listContainer.style.display = 'grid';
-            profiles.filter(p => ukochani.includes(p.id)).forEach(profile => {
-                listContainer.appendChild(createProfileCard(profile, true, 'ukochani'));
-            });
-        }
-    }
-    document.getElementById('btn-znajdz-chlopaka').addEventListener('click', () => { showScreen('screen-categories'); });
-});
-</script>
-
+  </script>
 </body>
 </html>
