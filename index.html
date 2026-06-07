@@ -8,7 +8,6 @@
   * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
   html, body { background:#000; color:#fff; overflow-x:hidden; min-height:100vh; }
 
-  /* Xbox-like dashboard background */
   body {
     background:
       radial-gradient(ellipse at 30% 20%, rgba(0,180,40,0.35), transparent 60%),
@@ -19,14 +18,12 @@
   body::before {
     content:"";
     position:fixed; inset:0;
-    background:
-      repeating-linear-gradient(0deg, rgba(0,255,80,0.03) 0 2px, transparent 2px 4px);
+    background: repeating-linear-gradient(0deg, rgba(0,255,80,0.03) 0 2px, transparent 2px 4px);
     pointer-events:none; z-index:1;
   }
 
   .container { position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:30px 20px; }
 
-  /* Title with fire */
   .title-wrap { text-align:center; padding:40px 10px 20px; position:relative; }
   h1.fire {
     font-size: clamp(2.5rem, 9vw, 7rem);
@@ -39,7 +36,6 @@
     background: linear-gradient(0deg, #ff0 0%, #ff6a00 25%, #ff0000 50%, #ff6a00 75%, #ffff00 100%);
     background-size: 100% 400%;
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shake 3s infinite ease-in-out, fireMove 1.2s infinite linear;
     filter: drop-shadow(0 0 10px #ff5500) drop-shadow(0 0 25px #ff2200);
@@ -54,7 +50,7 @@
     50% { transform: translate(2px,-1px) rotate(1deg); }
     75% { transform: translate(-1px,2px) rotate(-0.5deg); }
   }
-  /* Fire flames */
+
   .flames { position:absolute; left:50%; bottom:-10px; transform:translateX(-50%); width:80%; height:50px; pointer-events:none; }
   .flame {
     position:absolute; bottom:0; width:30px; height:50px;
@@ -68,7 +64,6 @@
     to { transform: scaleY(1.3) scaleX(0.8); opacity: 1; }
   }
 
-  /* Xbox blade panels */
   .panel {
     background: linear-gradient(135deg, rgba(0,40,10,0.85), rgba(0,20,5,0.85));
     border: 1px solid rgba(0,255,80,0.4);
@@ -76,7 +71,6 @@
     padding: 25px;
     margin: 20px 0;
     box-shadow: 0 0 20px rgba(0,255,80,0.2), inset 0 0 30px rgba(0,255,80,0.05);
-    backdrop-filter: blur(5px);
   }
   .panel h2 {
     color:#9eff5a; text-shadow: 0 0 10px #00ff44;
@@ -86,7 +80,6 @@
     padding-bottom: 10px;
   }
 
-  /* Countdown */
   .countdown { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }
   .cd-box {
     background: linear-gradient(180deg, #0a3010, #051805);
@@ -100,14 +93,6 @@
   .cd-num { font-size: 2.5rem; font-weight:900; color:#fff; text-shadow:0 0 10px #00ff44; }
   .cd-lbl { font-size: 0.8rem; color:#9eff5a; text-transform:uppercase; letter-spacing:2px; margin-top:5px; }
 
-  /* Map */
-  .map-wrap { display:grid; grid-template-columns: 1fr; gap:20px; }
-  @media(min-width:768px){ .map-wrap{ grid-template-columns: 1fr 1fr; } }
-  .map-info p { margin:10px 0; font-size:1.1rem; }
-  .map-info a { color:#9eff5a; text-decoration:none; border-bottom:1px solid #9eff5a; }
-  .map-frame { width:100%; height:300px; border:2px solid #00ff44; border-radius:8px; box-shadow:0 0 15px rgba(0,255,80,0.3); }
-
-  /* Buttons */
   .xbtn {
     display:inline-block;
     background: linear-gradient(180deg, #00b830, #006a1c);
@@ -117,15 +102,14 @@
     border-radius: 50px;
     cursor:pointer;
     text-transform:uppercase; letter-spacing:2px;
-    box-shadow: 0 0 20px rgba(0,255,80,0.5), inset 0 0 20px rgba(255,255,255,0.1);
+    box-shadow: 0 0 20px rgba(0,255,80,0.5);
     transition: all 0.2s;
     text-decoration:none;
   }
   .xbtn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,255,80,0.8); }
   .center { text-align:center; padding:20px; }
 
-  /* Modal */
-  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
+  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
   .modal-bg.show { display:flex; }
   .modal {
     background: linear-gradient(135deg, #002a08, #001505);
@@ -133,81 +117,49 @@
     padding:30px; max-width:500px; width:100%;
     box-shadow:0 0 40px rgba(0,255,80,0.5);
   }
-  .modal h3 { color:#9eff5a; margin-bottom:20px; text-transform:uppercase; }
-  .modal input {
-    width:100%; padding:12px; background:#000; border:1px solid #00ff44;
-    color:#fff; border-radius:5px; font-size:1rem; margin-bottom:15px;
-  }
-  .color-grid { display:grid; grid-template-columns: repeat(8, 1fr); gap:8px; margin-bottom:20px; }
-  .color-opt { width:100%; aspect-ratio:1; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:all 0.2s; }
-  .color-opt:hover { transform:scale(1.15); }
-  .color-opt.sel { border:2px solid #fff; box-shadow:0 0 10px #fff; }
 
-  /* Chat */
-  .chat-wrap { display:none; }
-  .chat-wrap.show { display:block; }
-  .pinned-area {
-    background: rgba(255,200,0,0.1);
-    border:1px dashed #ffc800;
-    padding:10px; border-radius:8px; margin-bottom:15px;
+  /* Baner Modal */
+  .banner-modal {
+    position:fixed; inset:0; background:rgba(0,0,0,0.95);
+    z-index:200; display:none; flex-direction:column; align-items:center; justify-content:center;
   }
-  .pinned-area h4 { color:#ffc800; margin-bottom:8px; font-size:0.9rem; text-transform:uppercase; }
-  .messages {
-    height: 400px; overflow-y:auto;
-    background: rgba(0,0,0,0.5); border:1px solid rgba(0,255,80,0.3);
-    border-radius:8px; padding:15px; margin-bottom:15px;
+  .banner-modal.show { display:flex; }
+  .banner-modal img {
+    max-width:95%; max-height:75vh; border:3px solid #00ff44; border-radius:8px;
   }
-  .msg {
-    padding:8px 12px; margin:6px 0; border-radius:6px;
-    background: rgba(0,30,10,0.6);
-    border-left:3px solid #00ff44;
-    word-wrap:break-word;
-    position:relative;
+  .banner-close {
+    position:absolute; top:20px; right:25px;
+    font-size:2.5rem; color:#fff; cursor:pointer; z-index:10;
   }
-  .msg.admin {
-    background: linear-gradient(90deg, rgba(255,100,200,0.4), rgba(255,50,150,0.3));
-    border-left-color:#ff5cb3;
-    box-shadow:0 0 10px rgba(255,100,200,0.3);
-  }
-  .msg.pinned { border-left-color:#ffc800; background: rgba(60,40,0,0.5); }
-  .msg-head { display:flex; gap:8px; align-items:center; font-size:0.85rem; margin-bottom:4px; flex-wrap:wrap; }
-  .msg-nick { font-weight:bold; }
-  .msg-time { color:#888; font-size:0.75rem; }
-  .msg-rank { background:#ff5cb3; color:#fff; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:bold; }
-  .msg-text { font-size:1rem; }
-  .msg-actions { position:absolute; top:5px; right:5px; display:none; gap:5px; }
-  .msg:hover .msg-actions { display:flex; }
-  .msg-actions button {
-    background:#330; color:#fff; border:1px solid #ffc800;
-    padding:3px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;
-  }
-  .msg-actions button.del { border-color:#ff4444; }
-  .msg-actions button.ban { border-color:#ff8800; }
-
-  .input-row { display:flex; gap:10px; }
-  .input-row input {
-    flex:1; padding:12px; background:#000; border:1px solid #00ff44;
-    color:#fff; border-radius:5px; font-size:1rem;
-  }
-  .input-row button {
-    padding:12px 25px; background:linear-gradient(180deg,#00b830,#006a1c);
-    color:#fff; border:2px solid #00ff44; border-radius:5px; cursor:pointer;
+  .download-btn {
+    margin-top:25px;
+    padding:18px 60px;
+    font-size:1.4rem;
+    background: linear-gradient(180deg, #00b830, #006a1c);
+    color:#fff;
+    border:3px solid #00ff44;
+    border-radius:8px;
+    cursor:pointer;
+    text-transform:uppercase;
     font-weight:bold;
   }
-  .banned-screen { text-align:center; padding:50px; color:#ff4444; font-size:1.5rem; }
+
+  .msg { padding:8px 12px; margin:6px 0; border-radius:6px; background: rgba(0,30,10,0.6); border-left:3px solid #00ff44; word-wrap:break-word; position:relative; }
+  .msg.admin { background: linear-gradient(90deg, rgba(255,100,200,0.4), rgba(255,50,150,0.3)); border-left-color:#ff5cb3; }
+  .msg.pinned { border-left-color:#ffc800; background: rgba(60,40,0,0.5); }
 </style>
 </head>
 <body>
 
 <div class="container">
 
-  <!-- Title -->
+  <!-- Tytuł -->
   <div class="title-wrap">
     <h1 class="fire">WIELKI EVENT</h1>
     <div class="flames" id="flames"></div>
   </div>
 
-  <!-- Countdown -->
+  <!-- Odliczanie -->
   <div class="panel">
     <h2>⏱ Odliczanie do startu</h2>
     <div class="countdown" id="countdown">
@@ -218,55 +170,59 @@
     </div>
   </div>
 
-  <!-- Location -->
+  <!-- Miejsce -->
   <div class="panel">
     <h2>📍 Miejsce eventu</h2>
-    <div class="map-wrap">
-      <div class="map-info">
-        <p><strong>Data:</strong> 3 sierpnia 2026</p>
-        <p><strong>Miasto:</strong> Nowy Sącz</p>
-        <p><a href="https://maps.app.goo.gl/pnoA7nLf4PQJwPPSA" target="_blank">🌐 Otwórz w Google Maps</a></p>
-      </div>
-      <a href="https://maps.app.goo.gl/pnoA7nLf4PQJwPPSA" target="_blank">
-        <iframe class="map-frame"
-          src="https://www.google.com/maps?q=Nowy+S%C4%85cz&output=embed"
-          loading="lazy"></iframe>
-      </a>
-    </div>
+    <p><strong>Data:</strong> 3 sierpnia 2026</p>
+    <p><strong>Miasto:</strong> Nowy Sącz</p>
+    <br>
+    <a href="https://maps.app.goo.gl/pnoA7nLf4PQJwPPSA" target="_blank" class="xbtn" style="padding:14px 30px; font-size:1rem;">
+      📍 Otwórz lokalizację w Google Maps
+    </a>
   </div>
 
-  <!-- Chat button -->
+  <!-- Przyciski -->
   <div class="center">
+    <button class="xbtn" onclick="showBannerModal()" style="margin-bottom:15px; background: linear-gradient(180deg, #0066cc, #003366); border-color:#00aaff;">
+      🖼️ Baner eventu
+    </button><br>
     <button class="xbtn" onclick="openChatModal()">💬 Przejdź do czatu grupowego</button>
   </div>
 
-  <!-- Chat panel -->
+  <!-- Czat -->
   <div class="panel chat-wrap" id="chatWrap">
     <h2>💬 Czat grupowy <span id="userInfo" style="font-size:0.9rem;"></span></h2>
-    <div class="pinned-area">
-      <h4>📌 Przypięte wiadomości</h4>
-      <div id="pinnedList"><em style="color:#888; font-size:0.85rem;">Brak przypiętych</em></div>
+    <div class="pinned-area" style="background:rgba(255,200,0,0.1); border:1px dashed #ffc800; padding:10px; border-radius:8px; margin:15px 0;">
+      <h4 style="color:#ffc800; margin-bottom:8px;">📌 Przypięte wiadomości</h4>
+      <div id="pinnedList"><em style="color:#888;">Brak przypiętych</em></div>
     </div>
-    <div class="messages" id="messages"></div>
-    <div class="input-row">
-      <input id="msgInput" placeholder="Napisz wiadomość..." maxlength="500" onkeydown="if(event.key==='Enter')sendMsg()">
-      <button onclick="sendMsg()">Wyślij</button>
+    <div class="messages" id="messages" style="height:400px; overflow-y:auto; background:rgba(0,0,0,0.5); border:1px solid rgba(0,255,80,0.3); border-radius:8px; padding:15px; margin-bottom:15px;"></div>
+    <div class="input-row" style="display:flex; gap:10px;">
+      <input id="msgInput" placeholder="Napisz wiadomość..." maxlength="500" onkeydown="if(event.key==='Enter')sendMsg()" style="flex:1; padding:12px; background:#000; border:1px solid #00ff44; color:#fff; border-radius:5px;">
+      <button onclick="sendMsg()" style="padding:12px 25px; background:linear-gradient(180deg,#00b830,#006a1c); color:#fff; border:2px solid #00ff44; border-radius:5px; cursor:pointer; font-weight:bold;">Wyślij</button>
     </div>
   </div>
 </div>
 
-<!-- Nickname Modal -->
+<!-- Modal nicku -->
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <h3>🎮 Wybierz ksywę i kolor</h3>
-    <input id="nickInput" placeholder="Twoja ksywa..." maxlength="20">
-    <div class="color-grid" id="colorGrid"></div>
+    <h3 style="color:#9eff5a; margin-bottom:20px;">🎮 Wybierz ksywę i kolor</h3>
+    <input id="nickInput" placeholder="Twoja ksywa..." maxlength="20" style="width:100%; padding:12px; background:#000; border:1px solid #00ff44; color:#fff; border-radius:5px; margin-bottom:15px;">
+    <div id="colorGrid" style="display:grid; grid-template-columns: repeat(8, 1fr); gap:8px; margin-bottom:20px;"></div>
     <button class="xbtn" style="width:100%; padding:12px;" onclick="joinChat()">DOŁĄCZ</button>
   </div>
 </div>
 
+<!-- Modal Banera -->
+<div class="banner-modal" id="bannerModal">
+  <span class="banner-close" onclick="closeBannerModal()">&times;</span>
+  <img src="foty/baner_event.jpg" alt="Baner eventu">
+  <button class="download-btn" onclick="downloadBanner()">Pobierz baner do galerii</button>
+</div>
+
 <script>
-// === Fire flames ===
+// === Ogień ===
 const flamesEl = document.getElementById('flames');
 for(let i=0;i<15;i++){
   const f = document.createElement('div');
@@ -277,7 +233,7 @@ for(let i=0;i<15;i++){
   flamesEl.appendChild(f);
 }
 
-// === Countdown ===
+// === Odliczanie ===
 const target = new Date('2026-08-03T00:00:00').getTime();
 function updateCD(){
   const now = Date.now();
@@ -293,45 +249,33 @@ function updateCD(){
 }
 updateCD(); setInterval(updateCD,1000);
 
-// === Colors (24 basic) ===
-const COLORS = [
-  '#FF0000','#FF7F00','#FFFF00','#7FFF00','#00FF00','#00FF7F',
-  '#00FFFF','#007FFF','#0000FF','#7F00FF','#FF00FF','#FF007F',
-  '#FFFFFF','#C0C0C0','#808080','#400000','#804000','#808000',
-  '#008000','#008080','#000080','#400080','#800040','#FFC0CB'
-];
+// === Kolory ===
+const COLORS = ['#FF0000','#FF7F00','#FFFF00','#7FFF00','#00FF00','#00FF7F','#00FFFF','#007FFF','#0000FF','#7F00FF','#FF00FF','#FF007F','#FFFFFF','#C0C0C0','#808080','#400000','#804000','#808000','#008000','#008080','#000080','#400080','#800040','#FFC0CB'];
 const grid = document.getElementById('colorGrid');
 let selectedColor = COLORS[4];
 COLORS.forEach((c,i)=>{
   const d = document.createElement('div');
-  d.className='color-opt'+(i===4?' sel':'');
-  d.style.background = c;
-  d.onclick = ()=>{
-    document.querySelectorAll('.color-opt').forEach(e=>e.classList.remove('sel'));
-    d.classList.add('sel');
+  d.style.cssText = `width:100%; aspect-ratio:1; border-radius:50%; cursor:pointer; background:${c}; border:2px solid transparent`;
+  if(i===4) d.style.border = '2px solid #fff';
+  d.onclick = () => {
+    document.querySelectorAll('#colorGrid > div').forEach(e=>e.style.border='2px solid transparent');
+    d.style.border = '2px solid #fff';
     selectedColor = c;
   };
   grid.appendChild(d);
 });
 
-// === User identity (fake IP via fingerprint) ===
-function genId(){
-  let id = localStorage.getItem('we_userid');
-  if(!id){ id = 'u_'+Math.random().toString(36).slice(2,12); localStorage.setItem('we_userid',id); }
-  return id;
+// === Użytkownik ===
+function genId(){ 
+  let id = localStorage.getItem('we_userid'); 
+  if(!id){ id = 'u_'+Math.random().toString(36).slice(2,12); localStorage.setItem('we_userid',id); } 
+  return id; 
 }
 const MY_ID = genId();
-
-// === Storage helpers ===
-function getMsgs(){ return JSON.parse(localStorage.getItem('we_msgs')||'[]'); }
-function setMsgs(m){ localStorage.setItem('we_msgs', JSON.stringify(m)); }
-function getBans(){ return JSON.parse(localStorage.getItem('we_bans')||'[]'); }
-function setBans(b){ localStorage.setItem('we_bans', JSON.stringify(b)); }
-
-let me = null; // {nick,color,isAdmin}
+let me = null;
+let lastMessageTime = 0;
 
 function openChatModal(){
-  // restore session
   const saved = JSON.parse(sessionStorage.getItem('we_me')||'null');
   if(saved){ me = saved; showChat(); return; }
   document.getElementById('modal').classList.add('show');
@@ -348,41 +292,68 @@ function joinChat(){
 
 function showChat(){
   if(getBans().includes(MY_ID)){
-    document.getElementById('chatWrap').innerHTML = '<div class="banned-screen">⛔ Zostałeś zbanowany z czatu.</div>';
+    document.getElementById('chatWrap').innerHTML = '<div style="text-align:center;padding:50px;color:#ff4444;font-size:1.5rem;">⛔ Zostałeś zbanowany z czatu.</div>';
     document.getElementById('chatWrap').classList.add('show');
     return;
   }
   document.getElementById('chatWrap').classList.add('show');
-  document.getElementById('userInfo').innerHTML = `— zalogowany jako <span style="color:${me.color}">${escapeHtml(me.nick)}</span>${me.isAdmin?' <span class="msg-rank">ADMIN</span>':''}`;
-  renderMsgs();
-  document.getElementById('chatWrap').scrollIntoView({behavior:'smooth'});
+  document.getElementById('userInfo').innerHTML = `— zalogowany jako <span style="color:${me.color}">${me.nick}</span>${me.isAdmin?' <span style="background:#ff5cb3;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">ADMIN</span>':''}`;
 }
+
+// === Baner ===
+function showBannerModal(){
+  document.getElementById('bannerModal').classList.add('show');
+}
+function closeBannerModal(){
+  document.getElementById('bannerModal').classList.remove('show');
+}
+function downloadBanner(){
+  const link = document.createElement('a');
+  link.href = 'foty/baner_event.jpg';
+  link.download = 'baner_event.jpg';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// === Czat ===
+function getMsgs(){ return JSON.parse(localStorage.getItem('we_msgs')||'[]'); }
+function setMsgs(m){ localStorage.setItem('we_msgs', JSON.stringify(m)); }
+function getBans(){ return JSON.parse(localStorage.getItem('we_bans')||'[]'); }
+function setBans(b){ localStorage.setItem('we_bans', JSON.stringify(b)); }
 
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function fmtTime(ts){
   const d = new Date(ts);
-  const pad = n=>String(n).padStart(2,'0');
-  return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
 }
 
 function sendMsg(){
   const inp = document.getElementById('msgInput');
   const txt = inp.value.trim();
   if(!txt) return;
-  inp.value='';
+
+  // Limit 3 sekundy (admin pomija)
+  const now = Date.now();
+  if(!me.isAdmin && now - lastMessageTime < 3000){
+    alert('Poczekaj 3 sekundy przed wysłaniem kolejnej wiadomości.');
+    return;
+  }
+  lastMessageTime = now;
 
   if(txt === '/jajo121xd'){
     me.isAdmin = true;
     sessionStorage.setItem('we_me', JSON.stringify(me));
-    document.getElementById('userInfo').innerHTML = `— zalogowany jako <span style="color:${me.color}">${escapeHtml(me.nick)}</span> <span class="msg-rank">ADMIN</span>`;
+    document.getElementById('userInfo').innerHTML = `— zalogowany jako <span style="color:${me.color}">${me.nick}</span> <span style="background:#ff5cb3;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">ADMIN</span>`;
     alert('🎉 Otrzymałeś rangę ADMIN!');
+    inp.value = '';
     return;
   }
 
   const msgs = getMsgs();
   msgs.push({
-    id: 'm_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+    id: 'm_'+Date.now(),
     userId: MY_ID,
     nick: me.nick,
     color: me.color,
@@ -392,87 +363,56 @@ function sendMsg(){
     pinned: false
   });
   setMsgs(msgs);
+  inp.value = '';
   renderMsgs();
 }
 
-function delMsg(id){
-  if(!me.isAdmin) return;
-  setMsgs(getMsgs().filter(m=>m.id!==id));
-  renderMsgs();
-}
-function banUser(uid){
-  if(!me.isAdmin) return;
-  if(!confirm('Zbanować tego użytkownika?')) return;
-  const b = getBans(); if(!b.includes(uid)) b.push(uid); setBans(b);
-  setMsgs(getMsgs().filter(m=>m.userId!==uid));
-  renderMsgs();
-}
-function pinMsg(id){
-  if(!me.isAdmin) return;
-  const msgs = getMsgs();
-  const pinnedCount = msgs.filter(m=>m.pinned).length;
-  const target = msgs.find(m=>m.id===id);
-  if(!target) return;
-  if(target.pinned){ target.pinned=false; }
-  else {
-    if(pinnedCount>=2){ alert('Maksymalnie 2 przypięte wiadomości!'); return; }
-    target.pinned=true;
-  }
-  setMsgs(msgs);
-  renderMsgs();
-}
+// Reszta funkcji czatu (delMsg, banUser, pinMsg, renderMsgs, buildMsgEl) pozostaje taka sama jak w poprzedniej wersji
+function delMsg(id){ if(!me.isAdmin) return; setMsgs(getMsgs().filter(m=>m.id!==id)); renderMsgs(); }
+function banUser(uid){ if(!me.isAdmin) return; if(!confirm('Zbanować tego użytkownika?')) return; const b=getBans(); if(!b.includes(uid))b.push(uid); setBans(b); setMsgs(getMsgs().filter(m=>m.userId!==uid)); renderMsgs(); }
+function pinMsg(id){ if(!me.isAdmin) return; const msgs=getMsgs(); const pinnedCount=msgs.filter(m=>m.pinned).length; const target=msgs.find(m=>m.id===id); if(!target)return; if(target.pinned){target.pinned=false;}else{if(pinnedCount>=2){alert('Maksymalnie 2 przypięte wiadomości!');return;}target.pinned=true;} setMsgs(msgs); renderMsgs(); }
 
 function renderMsgs(){
   const msgs = getMsgs();
   const cont = document.getElementById('messages');
   cont.innerHTML = '';
-  msgs.forEach(m=>{
-    cont.appendChild(buildMsgEl(m));
-  });
+  msgs.forEach(m => cont.appendChild(buildMsgEl(m)));
   cont.scrollTop = cont.scrollHeight;
 
-  // pinned
   const pinned = msgs.filter(m=>m.pinned);
   const pl = document.getElementById('pinnedList');
-  if(pinned.length===0){ pl.innerHTML='<em style="color:#888; font-size:0.85rem;">Brak przypiętych</em>'; }
-  else {
-    pl.innerHTML='';
-    pinned.forEach(m=>{
-      const el = buildMsgEl(m, true);
-      pl.appendChild(el);
-    });
-  }
+  if(pinned.length===0){ pl.innerHTML='<em style="color:#888;">Brak przypiętych</em>'; }
+  else { pl.innerHTML=''; pinned.forEach(m=>pl.appendChild(buildMsgEl(m,true))); }
 }
 
 function buildMsgEl(m, isPinView=false){
   const el = document.createElement('div');
   el.className = 'msg' + (m.isAdmin?' admin':'') + (m.pinned&&!isPinView?' pinned':'');
   el.innerHTML = `
-    <div class="msg-head">
-      <span class="msg-nick" style="color:${m.color}">${escapeHtml(m.nick)}</span>
-      ${m.isAdmin?'<span class="msg-rank">ADMIN</span>':''}
+    <div style="display:flex;gap:8px;align-items:center;font-size:0.85rem;margin-bottom:4px;flex-wrap:wrap;">
+      <span style="font-weight:bold;color:${m.color}">${escapeHtml(m.nick)}</span>
+      ${m.isAdmin?'<span style="background:#ff5cb3;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">ADMIN</span>':''}
       ${m.pinned?'<span style="color:#ffc800;">📌</span>':''}
-      <span class="msg-time">${fmtTime(m.ts)}</span>
+      <span style="color:#888;font-size:0.75rem;">${fmtTime(m.ts)}</span>
     </div>
-    <div class="msg-text">${escapeHtml(m.text)}</div>
+    <div style="font-size:1rem;">${escapeHtml(m.text)}</div>
   `;
   if(me && me.isAdmin && !isPinView){
     const act = document.createElement('div');
-    act.className='msg-actions';
+    act.style.cssText = 'position:absolute;top:5px;right:5px;display:none;gap:5px;';
     act.innerHTML = `
-      <button onclick="pinMsg('${m.id}')">${m.pinned?'Odepnij':'📌 Przypnij'}</button>
-      <button class="del" onclick="delMsg('${m.id}')">🗑 Usuń</button>
-      <button class="ban" onclick="banUser('${m.userId}')">⛔ Ban</button>
+      <button onclick="pinMsg('${m.id}')" style="background:#330;color:#fff;border:1px solid #ffc800;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.75rem;">${m.pinned?'Odepnij':'📌'}</button>
+      <button onclick="delMsg('${m.id}')" style="background:#330;color:#fff;border:1px solid #ff4444;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.75rem;">🗑</button>
+      <button onclick="banUser('${m.userId}')" style="background:#330;color:#fff;border:1px solid #ff8800;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.75rem;">⛔</button>
     `;
+    el.onmouseenter = () => act.style.display='flex';
+    el.onmouseleave = () => act.style.display='none';
     el.appendChild(act);
   }
   return el;
 }
 
-// auto refresh chat (cross-tab)
-window.addEventListener('storage', e=>{
-  if(e.key==='we_msgs' || e.key==='we_bans') renderMsgs();
-});
+window.addEventListener('storage', e => { if(e.key==='we_msgs'||e.key==='we_bans') renderMsgs(); });
 setInterval(()=>{ if(document.getElementById('chatWrap').classList.contains('show')) renderMsgs(); }, 3000);
 </script>
 </body>
