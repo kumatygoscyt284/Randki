@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WIELKI EVENT</title>
+  <title>WIELKI EVENT - Dashboard</title>
   <style>
     :root {
       --bg1: #050805;
@@ -21,9 +21,7 @@
       --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -111,10 +109,6 @@
 
     .xorb::after {
       transform: translate(-50%, -50%) rotate(-45deg);
-    }
-
-    .brand-text {
-      min-width: 0;
     }
 
     .brand-title {
@@ -388,9 +382,7 @@
       font-weight: 700;
     }
 
-    .muted {
-      color: var(--muted);
-    }
+    .muted { color: var(--muted); }
 
     .actions {
       display: flex;
@@ -408,7 +400,7 @@
       border: 1px solid rgba(124,255,79,0.10);
       background: linear-gradient(180deg, rgba(10,16,10,0.96), rgba(13,20,13,0.96));
       border-radius: 18px;
-      height: 380px;
+      height: 420px;
       overflow: auto;
       padding: 12px;
     }
@@ -511,9 +503,7 @@
       backdrop-filter: blur(8px);
     }
 
-    .modal.open {
-      display: flex;
-    }
+    .modal.open { display: flex; }
 
     .modal-card {
       width: min(560px, 100%);
@@ -548,31 +538,16 @@
     }
 
     @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .countdown {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .chat-controls {
-        grid-template-columns: 1fr;
-      }
-      .topbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .profile-mini {
-        justify-content: flex-start;
-      }
+      .grid { grid-template-columns: 1fr; }
+      .countdown { grid-template-columns: repeat(2, 1fr); }
+      .chat-controls { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: stretch; }
+      .profile-mini { justify-content: flex-start; }
     }
 
     @media (max-width: 520px) {
-      .countdown {
-        grid-template-columns: 1fr 1fr;
-      }
-      .fire-title {
-        letter-spacing: 0.04em;
-      }
+      .countdown { grid-template-columns: 1fr 1fr; }
+      .fire-title { letter-spacing: 0.04em; }
     }
   </style>
 </head>
@@ -581,9 +556,9 @@
     <div class="topbar">
       <div class="brand">
         <div class="xorb"></div>
-        <div class="brand-text">
+        <div>
           <div class="brand-title">EVENT DASHBOARD</div>
-          <div class="brand-sub">styl inspirowany Xbox classic / NXE</div>
+          <div class="brand-sub">styl inspirowany Xbox / NXE</div>
         </div>
       </div>
 
@@ -600,7 +575,7 @@
         <div class="hero-sub">3 sierpnia 2026 • 10:00 • czas środkowoeuropejski</div>
       </div>
 
-      <div class="countdown" id="countdown">
+      <div class="countdown">
         <div class="count-box">
           <div class="count-value" id="days">0</div>
           <div class="count-label">Dni</div>
@@ -655,11 +630,8 @@
       <section class="panel">
         <h2>Czat grupowy</h2>
         <div class="chat-preview">
-          <div class="pill">Wersja w tym pliku zapisuje dane lokalnie w przeglądarce</div>
-          <div class="muted">
-            Jeśli chcesz prawdziwy wspólny czat dla wszystkich użytkowników na Vercel,
-            trzeba dodać bazę/API.
-          </div>
+          <div class="pill">Dane są wspólne dla wszystkich i zapisują się na Vercel KV</div>
+          <div class="muted">Czat i uczestnicy są odświeżani automatycznie.</div>
           <button id="openChatBtn" class="btn">Czat grupowy</button>
         </div>
       </section>
@@ -676,13 +648,12 @@
     </section>
   </div>
 
-  <!-- Modal profilu -->
   <div id="profileModal" class="modal">
     <div class="modal-card">
       <h2>Tworzenie profilu</h2>
       <p class="muted">
         Podaj pseudonim oraz wybierz kolor nicku. Kolor musi być unikalny
-        względem innych zapisanych profili w tej przeglądarce.
+        względem innych zapisanych użytkowników.
       </p>
 
       <div class="row">
@@ -706,42 +677,35 @@
       </div>
 
       <div class="footer-note">
-        Identyfikator urządzenia jest tworzony lokalnie w <code>localStorage</code>.
-        To zastępuje IP w czystej aplikacji front-endowej.
+        Profil jest powiązany z identyfikatorem urządzenia zapisanym lokalnie w <code>localStorage</code>.
+        Sam profil i jego kolor są zapisywane globalnie w Vercel KV.
       </div>
     </div>
   </div>
 
   <script>
-    /*
-      ============================================================
-      PROSTA WERSJA FRONT-END ONLY
-      ------------------------------------------------------------
-      Dane są zapisywane w localStorage, dzięki czemu:
-      - działa auto-logowanie,
-      - działa profil,
-      - działa uczestnictwo,
-      - działa czat na tym urządzeniu.
+    // =========================================================
+    // KONFIGURACJA I STAN
+    // =========================================================
+    const API_URL = "/api/state";
 
-      Jeśli chcesz wspólne dane dla wszystkich użytkowników,
-      trzeba podpiąć bazę/API (np. Vercel KV/Supabase/Firebase).
-      ============================================================
-    */
-
-    // -------------------------
-    // Klucze localStorage
-    // -------------------------
     const STORAGE_KEYS = {
       deviceId: "event_device_id",
-      currentProfile: "event_current_profile",
-      profiles: "event_profiles",
-      participants: "event_participants",
-      chatMessages: "event_chat_messages"
+      currentProfile: "event_current_profile"
     };
 
-    // -------------------------
-    // Elementy DOM
-    // -------------------------
+    let appState = {
+      profiles: [],
+      participants: [],
+      messages: []
+    };
+
+    let showAllParticipants = false;
+    let pollingHandle = null;
+
+    // =========================================================
+    // ELEMENTY DOM
+    // =========================================================
     const profileBadge = document.getElementById("profileBadge");
     const openProfileBtn = document.getElementById("openProfileBtn");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -767,21 +731,14 @@
     const sendChatBtn = document.getElementById("sendChatBtn");
     const chatInfo = document.getElementById("chatInfo");
 
-    const countdownEls = {
-      days: document.getElementById("days"),
-      hours: document.getElementById("hours"),
-      minutes: document.getElementById("minutes"),
-      seconds: document.getElementById("seconds")
-    };
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
 
-    // -------------------------
-    // Stan aplikacji
-    // -------------------------
-    let showAllParticipants = false;
-
-    // -------------------------
-    // Narzędzia pomocnicze
-    // -------------------------
+    // =========================================================
+    // POMOCNICZE
+    // =========================================================
     function getJSON(key, fallback) {
       try {
         const raw = localStorage.getItem(key);
@@ -795,10 +752,12 @@
       localStorage.setItem(key, JSON.stringify(value));
     }
 
+    function normalizeHex(hex) {
+      return String(hex || "").trim().toLowerCase();
+    }
+
     function generateDeviceId() {
-      const randomPart = Math.random().toString(36).slice(2);
-      const timePart = Date.now().toString(36);
-      return "dev_" + timePart + "_" + randomPart;
+      return "dev_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2);
     }
 
     function getDeviceId() {
@@ -808,34 +767,6 @@
         localStorage.setItem(STORAGE_KEYS.deviceId, id);
       }
       return id;
-    }
-
-    function normalizeHex(hex) {
-      return (hex || "").trim().toLowerCase();
-    }
-
-    function getProfiles() {
-      return getJSON(STORAGE_KEYS.profiles, []);
-    }
-
-    function saveProfiles(profiles) {
-      setJSON(STORAGE_KEYS.profiles, profiles);
-    }
-
-    function getParticipants() {
-      return getJSON(STORAGE_KEYS.participants, []);
-    }
-
-    function saveParticipants(participants) {
-      setJSON(STORAGE_KEYS.participants, participants);
-    }
-
-    function getChatMessages() {
-      return getJSON(STORAGE_KEYS.chatMessages, []);
-    }
-
-    function saveChatMessages(messages) {
-      setJSON(STORAGE_KEYS.chatMessages, messages);
     }
 
     function getCurrentProfile() {
@@ -850,6 +781,15 @@
       localStorage.removeItem(STORAGE_KEYS.currentProfile);
     }
 
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     function formatDateTime(ts) {
       const d = new Date(ts);
       return d.toLocaleString("pl-PL", {
@@ -862,39 +802,9 @@
       });
     }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    // -------------------------------------
-    // Kolory: sprawdzanie unikalności
-    // -------------------------------------
-    function isColorTaken(color, ignoreDeviceId = null) {
-      const normalized = normalizeHex(color);
-      const profiles = getProfiles();
-      return profiles.some(p =>
-        normalizeHex(p.color) === normalized &&
-        p.deviceId !== ignoreDeviceId
-      );
-    }
-
-    /*
-      Proponowanie "bardzo podobnego" koloru:
-      - bierzemy kolor bazowy
-      - lekko przesuwamy wartości RGB
-      - szukamy pierwszego wolnego wariantu
-    */
     function hexToRgb(hex) {
       const clean = hex.replace("#", "");
-      const full = clean.length === 3
-        ? clean.split("").map(c => c + c).join("")
-        : clean;
-
+      const full = clean.length === 3 ? clean.split("").map(c => c + c).join("") : clean;
       const num = parseInt(full, 16);
       return {
         r: (num >> 16) & 255,
@@ -910,14 +820,20 @@
         .join("");
     }
 
+    function isColorTaken(color, ignoreDeviceId = null) {
+      const normalized = normalizeHex(color);
+      return appState.profiles.some(p =>
+        normalizeHex(p.color) === normalized &&
+        p.deviceId !== ignoreDeviceId
+      );
+    }
+
     function suggestSimilarAvailableColor(baseColor, ignoreDeviceId = null) {
       if (!isColorTaken(baseColor, ignoreDeviceId)) {
         return normalizeHex(baseColor);
       }
 
       const { r, g, b } = hexToRgb(baseColor);
-
-      // Generujemy lekkie odchylenia od koloru bazowego.
       const shifts = [
         [4, 0, 0], [-4, 0, 0],
         [0, 4, 0], [0, -4, 0],
@@ -942,7 +858,6 @@
         }
       }
 
-      // Awaryjnie: przeszukiwanie siatki kolorów
       for (let step = 0; step <= 255; step += 17) {
         const candidate = rgbToHex((r + step) % 256, (g + 2 * step) % 256, (b + 3 * step) % 256);
         if (!isColorTaken(candidate, ignoreDeviceId)) {
@@ -950,129 +865,33 @@
         }
       }
 
-      // Ostateczny fallback
       return rgbToHex((r + 37) % 256, (g + 73) % 256, (b + 109) % 256);
     }
 
-    function updateColorStatus() {
-      const profile = getCurrentProfile();
-      const ignoreDeviceId = profile?.deviceId || null;
-      const selected = normalizeHex(colorInput.value);
-
-      if (!selected) {
-        colorStatus.textContent = "Wybierz kolor.";
-        colorStatus.className = "hint";
-        return;
-      }
-
-      if (isColorTaken(selected, ignoreDeviceId)) {
-        const suggestion = suggestSimilarAvailableColor(selected, ignoreDeviceId);
-        colorStatus.innerHTML = `Ten kolor jest zajęty. Propozycja podobnego wolnego koloru: <strong>${suggestion}</strong>`;
-        colorStatus.className = "error";
-      } else {
-        colorStatus.textContent = "Kolor jest dostępny.";
-        colorStatus.className = "success";
-      }
+    async function apiGetState() {
+      const res = await fetch(API_URL, { cache: "no-store" });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Nie udało się pobrać danych.");
+      return data;
     }
 
-    // -------------------------------------
-    // Profil i logowanie
-    // -------------------------------------
-    function openProfileModal(prefill = true) {
-      profileError.textContent = "";
-      profileSuccess.textContent = "";
-      const current = getCurrentProfile();
+    async function apiPost(payload) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
 
-      if (prefill && current) {
-        nicknameInput.value = current.nickname || "";
-        colorInput.value = current.color || "#7cff4f";
-      }
-
-      updateColorStatus();
-      profileModal.classList.add("open");
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Błąd API.");
+      return data;
     }
 
-    function closeProfileModal() {
-      profileModal.classList.remove("open");
-    }
-
-    function saveProfile() {
-      profileError.textContent = "";
-      profileSuccess.textContent = "";
-
-      const nickname = nicknameInput.value.trim();
-      let color = normalizeHex(colorInput.value);
-      const deviceId = getDeviceId();
-
-      if (!nickname) {
-        profileError.textContent = "Podaj pseudonim.";
-        return;
-      }
-
-      if (nickname.length < 2) {
-        profileError.textContent = "Pseudonim musi mieć co najmniej 2 znaki.";
-        return;
-      }
-
-      if (isColorTaken(color, deviceId)) {
-        const suggestion = suggestSimilarAvailableColor(color, deviceId);
-        colorInput.value = suggestion;
-        color = suggestion;
-        profileError.textContent = "Wybrany kolor był zajęty. Ustawiono podobny wolny kolor.";
-      }
-
-      const profiles = getProfiles();
-      const existingIndex = profiles.findIndex(p => p.deviceId === deviceId);
-
-      const profile = {
-        deviceId,
-        nickname,
-        color,
-        createdAt: existingIndex >= 0 ? profiles[existingIndex].createdAt : Date.now(),
-        updatedAt: Date.now()
-      };
-
-      if (existingIndex >= 0) {
-        profiles[existingIndex] = profile;
-      } else {
-        profiles.push(profile);
-      }
-
-      saveProfiles(profiles);
-      setCurrentProfile(profile);
-
-      profileSuccess.textContent = "Profil zapisany. Auto-logowanie jest aktywne.";
-      renderProfileUI();
-      renderParticipants();
-      renderChatMessages();
-
-      setTimeout(closeProfileModal, 500);
-    }
-
-    function autoLogin() {
-      const deviceId = getDeviceId();
-      const current = getCurrentProfile();
-      const profiles = getProfiles();
-
-      // Jeśli currentProfile istnieje, sprawdzamy czy profil nadal jest w bazie.
-      if (current && current.deviceId === deviceId) {
-        const existing = profiles.find(p => p.deviceId === deviceId);
-        if (existing) {
-          setCurrentProfile(existing);
-          return existing;
-        }
-      }
-
-      // Jeśli currentProfile nie istnieje, ale urządzenie ma już profil, przywracamy go.
-      const byDevice = profiles.find(p => p.deviceId === deviceId);
-      if (byDevice) {
-        setCurrentProfile(byDevice);
-        return byDevice;
-      }
-
-      return null;
-    }
-
+    // =========================================================
+    // RENDER
+    // =========================================================
     function renderProfileUI() {
       const profile = getCurrentProfile();
       if (profile) {
@@ -1082,20 +901,8 @@
       }
     }
 
-    function requireProfile(callback) {
-      const profile = getCurrentProfile();
-      if (profile) {
-        callback(profile);
-      } else {
-        openProfileModal(false);
-      }
-    }
-
-    // -------------------------------------
-    // Uczestnicy
-    // -------------------------------------
     function renderParticipants() {
-      const participants = getParticipants();
+      const participants = [...appState.participants].sort((a, b) => a.joinedAt - b.joinedAt);
       const visible = showAllParticipants ? participants : participants.slice(-3);
 
       participantsList.innerHTML = "";
@@ -1124,34 +931,8 @@
       participantsInfo.textContent = `Liczba zapisanych uczestników: ${participants.length}`;
     }
 
-    function joinEvent() {
-      requireProfile((profile) => {
-        const participants = getParticipants();
-        const alreadyJoined = participants.some(p => p.deviceId === profile.deviceId);
-
-        if (alreadyJoined) {
-          participantsInfo.textContent = "Jesteś już zapisany na liście uczestników.";
-          return;
-        }
-
-        participants.push({
-          deviceId: profile.deviceId,
-          nickname: profile.nickname,
-          color: profile.color,
-          joinedAt: Date.now()
-        });
-
-        saveParticipants(participants);
-        renderParticipants();
-        participantsInfo.textContent = "Dodano Cię do listy uczestników.";
-      });
-    }
-
-    // -------------------------------------
-    // Czat
-    // -------------------------------------
     function renderChatMessages() {
-      const messages = getChatMessages();
+      const messages = [...appState.messages].sort((a, b) => a.createdAt - b.createdAt);
       chatMessages.innerHTML = "";
 
       if (!messages.length) {
@@ -1175,47 +956,189 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function sendMessage() {
-      requireProfile((profile) => {
-        const text = chatInput.value.trim();
+    function updateColorStatus() {
+      const profile = getCurrentProfile();
+      const ignoreDeviceId = profile?.deviceId || null;
+      const selected = normalizeHex(colorInput.value);
 
+      if (!selected) {
+        colorStatus.textContent = "Wybierz kolor.";
+        colorStatus.className = "hint";
+        return;
+      }
+
+      if (isColorTaken(selected, ignoreDeviceId)) {
+        const suggestion = suggestSimilarAvailableColor(selected, ignoreDeviceId);
+        colorStatus.innerHTML = `Ten kolor jest zajęty. Propozycja podobnego wolnego koloru: <strong>${suggestion}</strong>`;
+        colorStatus.className = "error";
+      } else {
+        colorStatus.textContent = "Kolor jest dostępny.";
+        colorStatus.className = "success";
+      }
+    }
+
+    // =========================================================
+    // PROFIL
+    // =========================================================
+    function openProfileModal(prefill = true) {
+      profileError.textContent = "";
+      profileSuccess.textContent = "";
+
+      const current = getCurrentProfile();
+      if (prefill && current) {
+        nicknameInput.value = current.nickname || "";
+        colorInput.value = current.color || "#7cff4f";
+      }
+
+      updateColorStatus();
+      profileModal.classList.add("open");
+    }
+
+    function closeProfileModal() {
+      profileModal.classList.remove("open");
+    }
+
+    async function saveProfile() {
+      profileError.textContent = "";
+      profileSuccess.textContent = "";
+
+      const nickname = nicknameInput.value.trim();
+      const color = normalizeHex(colorInput.value);
+      const deviceId = getDeviceId();
+
+      if (!nickname) {
+        profileError.textContent = "Podaj pseudonim.";
+        return;
+      }
+
+      if (nickname.length < 2) {
+        profileError.textContent = "Pseudonim musi mieć co najmniej 2 znaki.";
+        return;
+      }
+
+      try {
+        const result = await apiPost({
+          action: "saveProfile",
+          nickname,
+          color,
+          deviceId
+        });
+
+        setCurrentProfile(result.profile);
+        await refreshState();
+        renderProfileUI();
+
+        profileSuccess.textContent = result.message || "Profil zapisany.";
+        if (result.profile?.color) {
+          colorInput.value = result.profile.color;
+        }
+        updateColorStatus();
+
+        setTimeout(closeProfileModal, 500);
+      } catch (err) {
+        profileError.textContent = err.message || "Nie udało się zapisać profilu.";
+      }
+    }
+
+    async function autoLogin() {
+      const localProfile = getCurrentProfile();
+      const deviceId = getDeviceId();
+
+      if (!localProfile) return;
+
+      const serverProfile = appState.profiles.find(p => p.deviceId === deviceId);
+      if (serverProfile) {
+        setCurrentProfile(serverProfile);
+      }
+    }
+
+    function requireProfile(callback) {
+      const profile = getCurrentProfile();
+      if (profile) {
+        callback(profile);
+      } else {
+        openProfileModal(false);
+      }
+    }
+
+    // =========================================================
+    // UCZESTNICY
+    // =========================================================
+    async function joinEvent() {
+      requireProfile(async (profile) => {
+        try {
+          const result = await apiPost({
+            action: "joinParticipant",
+            deviceId: profile.deviceId
+          });
+
+          appState.participants = result.participants || appState.participants;
+          renderParticipants();
+          participantsInfo.textContent = result.message || "Dodano do listy uczestników.";
+        } catch (err) {
+          participantsInfo.textContent = err.message || "Nie udało się dodać uczestnika.";
+        }
+      });
+    }
+
+    // =========================================================
+    // CZAT
+    // =========================================================
+    async function sendMessage() {
+      requireProfile(async (profile) => {
+        const text = chatInput.value.trim();
         if (!text) {
           chatInfo.textContent = "Wpisz wiadomość.";
           return;
         }
 
-        const messages = getChatMessages();
-        messages.push({
-          id: "msg_" + Date.now() + "_" + Math.random().toString(36).slice(2),
-          deviceId: profile.deviceId,
-          nickname: profile.nickname,
-          color: profile.color,
-          text,
-          createdAt: Date.now()
-        });
+        try {
+          const result = await apiPost({
+            action: "sendMessage",
+            deviceId: profile.deviceId,
+            text
+          });
 
-        // Prosty limit, żeby localStorage nie puchł bez końca
-        const limited = messages.slice(-200);
-        saveChatMessages(limited);
-
-        chatInput.value = "";
-        chatInfo.textContent = "Wiadomość wysłana.";
-        renderChatMessages();
+          appState.messages = result.messages || appState.messages;
+          chatInput.value = "";
+          renderChatMessages();
+          chatInfo.textContent = result.message || "Wiadomość wysłana.";
+        } catch (err) {
+          chatInfo.textContent = err.message || "Nie udało się wysłać wiadomości.";
+        }
       });
     }
 
-    // -------------------------------------
-    // Odliczanie
-    // -------------------------------------
-    /*
-      Ustawiamy odliczanie do:
-      3 sierpnia 2026, godz. 10:00 czas środkowoeuropejski
+    // =========================================================
+    // POBIERANIE DANYCH Z VERCEL
+    // =========================================================
+    async function refreshState() {
+      try {
+        const data = await apiGetState();
+        appState.profiles = Array.isArray(data.profiles) ? data.profiles : [];
+        appState.participants = Array.isArray(data.participants) ? data.participants : [];
+        appState.messages = Array.isArray(data.messages) ? data.messages : [];
+        await autoLogin();
+        renderProfileUI();
+        renderParticipants();
+        renderChatMessages();
+        updateColorStatus();
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-      Dla prostoty używamy:
-      2026-08-03T10:00:00+02:00
+    function startPolling() {
+      if (pollingHandle) clearInterval(pollingHandle);
 
-      W sierpniu obowiązuje CEST (UTC+2), więc to poprawne.
-    */
+      pollingHandle = setInterval(() => {
+        refreshState();
+      }, 3000);
+    }
+
+    // =========================================================
+    // ODLICZANIE
+    // =========================================================
     const EVENT_DATE = new Date("2026-08-03T10:00:00+02:00").getTime();
 
     function updateCountdown() {
@@ -1223,10 +1146,10 @@
       const diff = EVENT_DATE - now;
 
       if (diff <= 0) {
-        countdownEls.days.textContent = "0";
-        countdownEls.hours.textContent = "0";
-        countdownEls.minutes.textContent = "0";
-        countdownEls.seconds.textContent = "0";
+        daysEl.textContent = "0";
+        hoursEl.textContent = "0";
+        minutesEl.textContent = "0";
+        secondsEl.textContent = "0";
         return;
       }
 
@@ -1236,76 +1159,15 @@
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      countdownEls.days.textContent = String(days);
-      countdownEls.hours.textContent = String(hours).padStart(2, "0");
-      countdownEls.minutes.textContent = String(minutes).padStart(2, "0");
-      countdownEls.seconds.textContent = String(seconds).padStart(2, "0");
+      daysEl.textContent = String(days);
+      hoursEl.textContent = String(hours).padStart(2, "0");
+      minutesEl.textContent = String(minutes).padStart(2, "0");
+      secondsEl.textContent = String(seconds).padStart(2, "0");
     }
 
-    // -------------------------------------
-    // Inicjalizacja danych demo
-    // -------------------------------------
-    function ensureInitialData() {
-      if (!localStorage.getItem(STORAGE_KEYS.profiles)) {
-        saveProfiles([]);
-      }
-
-      if (!localStorage.getItem(STORAGE_KEYS.participants)) {
-        saveParticipants([
-          {
-            deviceId: "demo_1",
-            nickname: "NeoPlayer",
-            color: "#7cff4f",
-            joinedAt: Date.now() - 1000000
-          },
-          {
-            deviceId: "demo_2",
-            nickname: "ArcadeWolf",
-            color: "#5fd4ff",
-            joinedAt: Date.now() - 800000
-          },
-          {
-            deviceId: "demo_3",
-            nickname: "GreenCore",
-            color: "#c6ff63",
-            joinedAt: Date.now() - 500000
-          }
-        ]);
-      }
-
-      if (!localStorage.getItem(STORAGE_KEYS.chatMessages)) {
-        saveChatMessages([
-          {
-            id: "demo_msg_1",
-            deviceId: "demo_1",
-            nickname: "NeoPlayer",
-            color: "#7cff4f",
-            text: "Siema, kto wpada na event?",
-            createdAt: Date.now() - 600000
-          },
-          {
-            id: "demo_msg_2",
-            deviceId: "demo_2",
-            nickname: "ArcadeWolf",
-            color: "#5fd4ff",
-            text: "Ja będę na pewno.",
-            createdAt: Date.now() - 540000
-          },
-          {
-            id: "demo_msg_3",
-            deviceId: "demo_3",
-            nickname: "GreenCore",
-            color: "#c6ff63",
-            text: "Miejsce już odpalone na mapce, wygląda git.",
-            createdAt: Date.now() - 470000
-          }
-        ]);
-      }
-    }
-
-    // -------------------------------------
-    // Eventy
-    // -------------------------------------
+    // =========================================================
+    // EVENTY
+    // =========================================================
     openProfileBtn.addEventListener("click", () => openProfileModal(true));
     closeProfileBtn.addEventListener("click", closeProfileModal);
     saveProfileBtn.addEventListener("click", saveProfile);
@@ -1350,37 +1212,21 @@
       }
     });
 
-    window.addEventListener("storage", (e) => {
-      // Dzięki temu, gdy otworzysz tę stronę w kilku kartach tej samej przeglądarki,
-      // dane będą się synchronizować między kartami.
-      if (
-        e.key === STORAGE_KEYS.chatMessages ||
-        e.key === STORAGE_KEYS.participants ||
-        e.key === STORAGE_KEYS.profiles ||
-        e.key === STORAGE_KEYS.currentProfile
-      ) {
-        renderProfileUI();
-        renderParticipants();
-        renderChatMessages();
-      }
-    });
-
     profileModal.addEventListener("click", (e) => {
       if (e.target === profileModal) {
         closeProfileModal();
       }
     });
 
-    // -------------------------------------
-    // Start aplikacji
-    // -------------------------------------
-    ensureInitialData();
-    autoLogin();
-    renderProfileUI();
-    renderParticipants();
-    renderChatMessages();
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    // =========================================================
+    // START
+    // =========================================================
+    (async function init() {
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+      await refreshState();
+      startPolling();
+    })();
   </script>
 </body>
 </html>
