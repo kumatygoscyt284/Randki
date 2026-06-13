@@ -418,7 +418,7 @@
     </div>
 
     <div id="adminToast" class="admin-toast hidden">🛡️ Jesteś teraz administratorem!</div>
-
+    <audio id="bgAudio" preload="auto" src="foty/nuta1.ogg"></audio>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
     /* ============================================================
@@ -447,6 +447,22 @@
        INIT
     ============================================================ */
     document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+    const a = document.getElementById('bgAudio');
+    if (!a) return;
+
+    a.currentTime = 0;
+    a.play().catch(() => {
+        // Autoodtwarzanie bywa blokowane — odpal po pierwszym kliknięciu użytkownika
+        const once = () => {
+            a.play().catch(()=>{});
+            window.removeEventListener('click', once);
+            window.removeEventListener('touchstart', once);
+        };
+        window.addEventListener('click', once, { once: true });
+        window.addEventListener('touchstart', once, { once: true });
+    });
+}, 3000);
         updateCountdown();
         setInterval(updateCountdown, 1000);
         initSupabase();
