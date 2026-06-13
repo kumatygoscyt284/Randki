@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WIELKI EVENT</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             color: #fff;
@@ -21,589 +16,329 @@
         }
 
         .fire-title {
-            text-align: center;
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 40px 0;
-            letter-spacing: 8px;
-            position: relative;
+            text-align: center; font-size: 4rem; font-weight: bold;
+            margin: 40px 0; letter-spacing: 8px;
             animation: fireFlicker 0.15s infinite;
             background: linear-gradient(45deg, #ff0000, #ffaa00, #ff6600, #ff0000);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         @keyframes fireFlicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+            0%,19%,21%,23%,25%,54%,56%,100% {
                 filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 20px #ff6600) drop-shadow(0 0 30px #ffaa00);
             }
-            20%, 24%, 55% {
-                filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff6600);
-            }
+            20%,24%,55% { filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff6600); }
         }
 
         .countdown-container {
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #00aa00;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 30px auto;
-            max-width: 600px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0, 170, 0, 0.3);
+            background: rgba(0,0,0,0.5); border: 2px solid #00aa00;
+            border-radius: 10px; padding: 30px; margin: 30px auto;
+            max-width: 600px; text-align: center; box-shadow: 0 0 20px rgba(0,170,0,0.3);
         }
-
-        .countdown-container h2 {
-            margin-bottom: 20px;
-            color: #00ff00;
-        }
-
-        .countdown {
-            display: flex;
-            justify-content: space-around;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
+        .countdown-container h2 { margin-bottom: 20px; color: #00ff00; }
+        .countdown { display: flex; justify-content: space-around; gap: 15px; flex-wrap: wrap; }
         .countdown-item {
-            background: rgba(0, 170, 0, 0.1);
-            border: 1px solid #00aa00;
-            padding: 15px 20px;
-            border-radius: 5px;
-            min-width: 80px;
+            background: rgba(0,170,0,0.1); border: 1px solid #00aa00;
+            padding: 15px 20px; border-radius: 5px; min-width: 80px;
         }
-
-        .countdown-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-        }
-
-        .countdown-label {
-            font-size: 0.8rem;
-            color: #00aa00;
-            margin-top: 5px;
-        }
+        .countdown-number { font-size: 2rem; font-weight: bold; color: #00ff00; font-family: 'Courier New', monospace; }
+        .countdown-label { font-size: 0.8rem; color: #00aa00; margin-top: 5px; }
 
         .event-info {
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #ffaa00;
-            border-radius: 10px;
-            padding: 25px;
-            margin: 30px auto;
-            max-width: 600px;
-            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            background: rgba(0,0,0,0.5); border: 2px solid #ffaa00;
+            border-radius: 10px; padding: 25px; margin: 30px auto;
+            max-width: 600px; box-shadow: 0 0 20px rgba(255,170,0,0.2);
         }
+        .event-info h3 { color: #ffaa00; margin-bottom: 15px; font-size: 1.5rem; }
+        .event-info p { margin: 10px 0; color: #ddd; line-height: 1.6; }
+        .event-info a { color: #00ff00; text-decoration: none; border-bottom: 1px solid #00ff00; transition: all 0.3s; }
+        .event-info a:hover { color: #00aa00; text-shadow: 0 0 10px #00ff00; }
 
-        .event-info h3 {
-            color: #ffaa00;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .event-info p {
-            margin: 10px 0;
-            color: #ddd;
-            line-height: 1.6;
-        }
-
-        .event-info a {
-            color: #00ff00;
-            text-decoration: none;
-            border-bottom: 1px solid #00ff00;
-            transition: all 0.3s;
-        }
-
-        .event-info a:hover {
-            color: #00aa00;
-            text-shadow: 0 0 10px #00ff00;
-        }
-
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 600px;
-            margin: 30px auto;
-        }
-
+        .button-container { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 30px auto; }
         .btn {
-            padding: 15px 30px;
-            font-size: 1rem;
-            border: 2px solid #00ff00;
-            background: rgba(0, 170, 0, 0.1);
-            color: #00ff00;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            padding: 15px 30px; font-size: 1rem; border: 2px solid #00ff00;
+            background: rgba(0,170,0,0.1); color: #00ff00; border-radius: 5px;
+            cursor: pointer; transition: all 0.3s; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px;
         }
-
-        .btn:hover {
-            background: rgba(0, 170, 0, 0.3);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-            transform: scale(1.02);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
+        .btn:hover { background: rgba(0,170,0,0.3); box-shadow: 0 0 15px rgba(0,255,0,0.5); transform: scale(1.02); }
+        .btn:active { transform: scale(0.98); }
 
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            animation: fadeIn 0.3s;
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .modal-content {
-            background-color: #1a1a1a;
-            margin: auto;
-            padding: 0;
-            border: 2px solid #00ff00;
-            position: relative;
-            max-width: 90%;
-            max-height: 90vh;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            background-color: #1a1a1a; margin: auto; padding: 0;
+            border: 2px solid #00ff00; position: relative;
+            max-width: 90%; max-height: 90vh; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; align-items: center;
+            border-radius: 10px; box-shadow: 0 0 30px rgba(0,255,0,0.5);
         }
-
         .close {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            color: #00ff00;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
-            transition: all 0.3s;
+            position: absolute; right: 15px; top: 15px; color: #00ff00;
+            font-size: 2rem; font-weight: bold; cursor: pointer; z-index: 1001; transition: all 0.3s;
         }
-
-        .close:hover {
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        .modal img {
-            max-width: 100%;
-            max-height: 70vh;
-            border-radius: 5px;
-            object-fit: contain;
-            padding: 20px;
-        }
-
+        .close:hover { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+        .modal img { max-width: 100%; max-height: 70vh; border-radius: 5px; object-fit: contain; padding: 20px; }
         .btn-download {
-            margin-top: 10px;
-            margin-bottom: 20px;
-            border-color: #ffaa00;
-            color: #ffaa00;
-            background: rgba(255, 170, 0, 0.1);
-            padding: 12px 25px;
-            font-size: 0.9rem;
-            border: 2px solid #ffaa00;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            margin-top: 10px; margin-bottom: 20px; border: 2px solid #ffaa00;
+            color: #ffaa00; background: rgba(255,170,0,0.1); padding: 12px 25px;
+            font-size: 0.9rem; border-radius: 5px; cursor: pointer;
+            transition: all 0.3s; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
         }
-
-        .btn-download:hover {
-            background: rgba(255, 170, 0, 0.3);
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
-            transform: scale(1.02);
-        }
+        .btn-download:hover { background: rgba(255,170,0,0.3); box-shadow: 0 0 15px rgba(255,170,0,0.5); }
 
         .chat-modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.9);
         }
-
         .chat-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            position: relative; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             border: 2px solid #00ff00;
         }
-
         .chat-close {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            color: #00ff00;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 2001;
-            transition: all 0.3s;
+            position: absolute; right: 15px; top: 15px; color: #00ff00;
+            font-size: 2rem; font-weight: bold; cursor: pointer;
+            z-index: 2001; transition: all 0.3s;
         }
-
-        .chat-close:hover {
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-        }
+        .chat-close:hover { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
 
         .login-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 50px 20px 20px 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-bottom: 2px solid #00aa00;
-            max-height: 100vh;
-            overflow-y: auto;
+            display: flex; flex-direction: column; gap: 15px;
+            padding: 50px 20px 20px 20px; background: rgba(0,0,0,0.5);
+            border-bottom: 2px solid #00aa00; max-height: 100vh; overflow-y: auto;
         }
-
-        .login-section h2 {
-            color: #00ff00;
-            margin-bottom: 10px;
+        .login-section h2 { color: #00ff00; margin-bottom: 10px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { color: #00aa00; font-weight: bold; }
+        .form-group input[type="text"] {
+            padding: 10px; background: rgba(0,170,0,0.1);
+            border: 1px solid #00aa00; color: #00ff00;
+            border-radius: 5px; font-family: inherit; font-size: 1rem;
         }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .form-group input::placeholder { color: #008800; }
+        .gender-options, .custom-gender-options { display: flex; gap: 10px; flex-wrap: wrap; }
+        .gender-btn, .custom-gender-btn {
+            padding: 10px 15px; border: 1px solid #00aa00;
+            background: rgba(0,170,0,0.1); color: #00ff00;
+            border-radius: 5px; cursor: pointer; transition: all 0.3s;
+            font-weight: bold; font-size: 0.9rem;
         }
-
-        .form-group label {
-            color: #00aa00;
-            font-weight: bold;
+        .gender-btn:hover, .custom-gender-btn:hover {
+            background: rgba(0,170,0,0.3); box-shadow: 0 0 10px rgba(0,255,0,0.3);
         }
-
-        .form-group input {
-            padding: 10px;
-            background: rgba(0, 170, 0, 0.1);
-            border: 1px solid #00aa00;
-            color: #00ff00;
-            border-radius: 5px;
-            font-family: inherit;
-            font-size: 1rem;
+        .gender-btn.active, .custom-gender-btn.active {
+            background: rgba(0,170,0,0.5); box-shadow: 0 0 15px rgba(0,255,0,0.7); border-color: #00ff00;
         }
-
-        .form-group input::placeholder {
-            color: #008800;
-        }
-
-        .gender-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .custom-gender-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .gender-btn,
-        .custom-gender-btn {
-            padding: 10px 15px;
-            border: 1px solid #00aa00;
-            background: rgba(0, 170, 0, 0.1);
-            color: #00ff00;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .gender-btn:hover,
-        .custom-gender-btn:hover {
-            background: rgba(0, 170, 0, 0.3);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-        }
-
-        .gender-btn.active,
-        .custom-gender-btn.active {
-            background: rgba(0, 170, 0, 0.5);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-            border-color: #00ff00;
-        }
-
         .custom-gender-section {
-            margin-top: 5px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            border: 1px solid #333;
+            margin-top: 5px; padding: 10px; background: rgba(0,0,0,0.3);
+            border-radius: 5px; border: 1px solid #333;
         }
-
-        .custom-gender-section h4 {
-            color: #ffaa00;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
+        .custom-gender-section h4 { color: #ffaa00; margin-bottom: 10px; font-size: 0.9rem; }
         .btn-login {
-            padding: 12px;
-            background: rgba(0, 170, 0, 0.2);
-            border: 1px solid #00aa00;
-            color: #00ff00;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            padding: 12px; background: rgba(0,170,0,0.2); border: 1px solid #00aa00;
+            color: #00ff00; border-radius: 5px; cursor: pointer; font-weight: bold;
+            font-size: 1rem; transition: all 0.3s; text-transform: uppercase; letter-spacing: 2px;
         }
-
-        .btn-login:hover {
-            background: rgba(0, 170, 0, 0.4);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
+        .btn-login:hover { background: rgba(0,170,0,0.4); box-shadow: 0 0 10px rgba(0,255,0,0.5); }
         .btn-random-color {
-            padding: 10px 15px;
-            background: rgba(255, 170, 0, 0.2);
-            border: 1px solid #ffaa00;
-            color: #ffaa00;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+            padding: 10px 15px; background: rgba(255,170,0,0.2);
+            border: 1px solid #ffaa00; color: #ffaa00; border-radius: 5px;
+            cursor: pointer; font-weight: bold; transition: all 0.3s; font-size: 0.9rem;
         }
-
-        .btn-random-color:hover {
-            background: rgba(255, 170, 0, 0.4);
-            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
-        }
-
-        .color-preview {
-            width: 35px;
-            height: 35px;
-            border-radius: 5px;
-            border: 2px solid #00aa00;
-            flex-shrink: 0;
-        }
+        .btn-random-color:hover { background: rgba(255,170,0,0.4); box-shadow: 0 0 10px rgba(255,170,0,0.5); }
+        .color-preview { width: 35px; height: 35px; border-radius: 5px; border: 2px solid #00aa00; flex-shrink: 0; }
 
         .user-info {
-            background: rgba(0, 170, 0, 0.1);
-            padding: 10px 15px;
-            border-bottom: 1px solid #00aa00;
-            color: #00ff00;
-            font-size: 0.9rem;
-            padding-right: 60px;
+            background: rgba(0,170,0,0.1); padding: 10px 15px;
+            border-bottom: 1px solid #00aa00; color: #00ff00;
+            font-size: 0.9rem; padding-right: 60px;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
         }
+        .admin-badge {
+            background: #ff69b4; color: #fff; padding: 2px 10px;
+            border-radius: 4px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px;
+        }
+        .connection-status {
+            margin-left: auto; font-size: 0.75rem; display: flex; align-items: center; gap: 5px;
+        }
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #ff4444;
+        }
+        .status-dot.connected { background: #00ff00; box-shadow: 0 0 6px #00ff00; }
+
+        #chatSection { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+        #chatSection.visible { display: flex; }
 
         .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 10px;
         }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #00aa00;
-            border-radius: 3px;
-        }
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: #1a1a1a; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #00aa00; border-radius: 3px; }
 
         .message {
-            padding: 12px 15px;
-            background: rgba(0, 170, 0, 0.05);
-            border-left: 3px solid;
-            border-radius: 5px;
-            animation: slideIn 0.3s;
+            padding: 12px 15px; background: rgba(0,170,0,0.05);
+            border-left: 3px solid; border-radius: 5px;
+            animation: slideIn 0.3s; position: relative; padding-right: 45px;
         }
-
+        .message.system-msg {
+            background: rgba(255,170,0,0.1);
+            border-left-color: #ffaa00;
+            font-style: italic;
+            color: #ffaa00;
+            text-align: center;
+            padding-right: 15px;
+        }
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        .message-nick { font-weight: bold; margin-bottom: 5px; }
+        .message-content { color: #ddd; word-wrap: break-word; line-height: 1.4; }
 
-        .message-nick {
-            font-weight: bold;
-            margin-bottom: 5px;
+        .message-admin-menu { position: absolute; top: 8px; right: 8px; }
+        .dots-btn {
+            background: none; border: none; color: #888; font-size: 1.4rem;
+            cursor: pointer; padding: 0 5px; transition: all 0.2s; line-height: 1;
         }
-
-        .message-content {
-            color: #ddd;
-            word-wrap: break-word;
-            line-height: 1.4;
+        .dots-btn:hover { color: #fff; }
+        .admin-dropdown {
+            display: none; position: absolute; top: 100%; right: 0;
+            background: #2a2a2a; border: 1px solid #555; border-radius: 6px;
+            min-width: 160px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; overflow: hidden;
         }
+        .admin-dropdown button {
+            display: block; width: 100%; padding: 10px 15px; background: none;
+            border: none; color: #ddd; text-align: left; cursor: pointer;
+            font-size: 0.9rem; transition: background 0.2s;
+        }
+        .admin-dropdown button:hover { background: rgba(0,170,0,0.2); }
+        .admin-dropdown button.warn-btn:hover { background: rgba(255,170,0,0.3); color: #ffaa00; }
+        .admin-dropdown button.ban-btn:hover { background: rgba(255,0,0,0.3); color: #ff4444; }
+        .admin-dropdown button.del-btn:hover { background: rgba(255,80,80,0.3); color: #ff5555; }
 
         .chat-input-container {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border-top: 2px solid #00aa00;
+            display: flex; gap: 10px; padding: 15px;
+            background: rgba(0,0,0,0.5); border-top: 2px solid #00aa00;
         }
-
         .chat-input-container input {
-            flex: 1;
-            padding: 10px 15px;
-            background: rgba(0, 170, 0, 0.1);
-            border: 1px solid #00aa00;
-            color: #00ff00;
-            border-radius: 5px;
-            font-family: inherit;
-            font-size: 1rem;
+            flex: 1; padding: 10px 15px; background: rgba(0,170,0,0.1);
+            border: 1px solid #00aa00; color: #00ff00;
+            border-radius: 5px; font-family: inherit; font-size: 1rem;
+        }
+        .chat-input-container input::placeholder { color: #008800; }
+        .chat-input-container input:focus { outline: none; border-color: #00ff00; box-shadow: 0 0 8px rgba(0,255,0,0.3); }
+        .send-btn {
+            padding: 10px 25px; background: rgba(0,170,0,0.2);
+            border: 1px solid #00aa00; color: #00ff00; border-radius: 5px;
+            cursor: pointer; font-weight: bold; font-size: 1rem;
+            transition: all 0.3s; white-space: nowrap;
+        }
+        .send-btn:hover { background: rgba(0,170,0,0.4); box-shadow: 0 0 10px rgba(0,255,0,0.5); }
+        .send-btn:disabled {
+            background: rgba(80,80,80,0.3); border-color: #555;
+            color: #777; cursor: not-allowed; box-shadow: none;
         }
 
-        .chat-input-container input::placeholder {
-            color: #008800;
+        .warning-modal {
+            display: none; position: fixed; z-index: 5000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            justify-content: center; align-items: center;
+        }
+        .warning-modal.visible { display: flex; }
+        .warning-content {
+            background: #1a1a1a; border: 2px solid #ffaa00;
+            border-radius: 10px; padding: 30px 40px; text-align: center;
+            max-width: 400px; box-shadow: 0 0 30px rgba(255,170,0,0.4);
+            animation: fadeInScale 0.3s;
+        }
+        .warning-icon { font-size: 3rem; margin-bottom: 15px; }
+        .warning-content h3 { color: #ffaa00; margin-bottom: 15px; }
+        .warning-content p { color: #ddd; line-height: 1.6; margin-bottom: 20px; }
+        .warning-content button {
+            padding: 10px 40px; background: rgba(255,170,0,0.2);
+            border: 1px solid #ffaa00; color: #ffaa00; border-radius: 5px;
+            cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.3s;
+        }
+        .warning-content button:hover { background: rgba(255,170,0,0.4); }
+
+        .ban-modal {
+            display: none; position: fixed; z-index: 6000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.92);
+            justify-content: center; align-items: center;
+        }
+        .ban-modal.visible { display: flex; }
+        .ban-content {
+            background: #1a1a1a; border: 2px solid #ff0000;
+            border-radius: 10px; padding: 30px 40px; text-align: center;
+            max-width: 400px; box-shadow: 0 0 30px rgba(255,0,0,0.4);
+            animation: fadeInScale 0.3s;
+        }
+        .ban-icon { font-size: 3rem; margin-bottom: 15px; }
+        .ban-content h3 { color: #ff4444; margin-bottom: 15px; }
+        .ban-content p { color: #ddd; line-height: 1.6; margin-bottom: 20px; }
+        .ban-content button {
+            padding: 10px 40px; background: rgba(255,0,0,0.2);
+            border: 1px solid #ff4444; color: #ff4444; border-radius: 5px;
+            cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.3s;
+        }
+        .ban-content button:hover { background: rgba(255,0,0,0.4); }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        .chat-input-container input:focus {
-            outline: none;
-            border-color: #00ff00;
-            box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+        .admin-toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(255,105,180,0.95); color: #fff; padding: 15px 30px;
+            border-radius: 8px; font-weight: bold; z-index: 9999;
+            transition: opacity 0.5s; border: 2px solid #ff69b4;
+            box-shadow: 0 0 25px rgba(255,105,180,0.6); pointer-events: none;
         }
-
-        .chat-input-container button {
-            padding: 10px 25px;
-            background: rgba(0, 170, 0, 0.2);
-            border: 1px solid #00aa00;
-            color: #00ff00;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .chat-input-container button:hover {
-            background: rgba(0, 170, 0, 0.4);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        #chatSection {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        .hidden { display: none !important; }
 
         @media (max-width: 768px) {
-            .fire-title {
-                font-size: 2.2rem;
-                letter-spacing: 4px;
-            }
-
-            .button-container {
-                padding: 0 10px;
-            }
-
-            .modal-content {
-                max-width: 95%;
-            }
-
-            .countdown-number {
-                font-size: 1.5rem;
-            }
-
-            .gender-btn,
-            .custom-gender-btn {
-                font-size: 0.8rem;
-                padding: 8px 10px;
-            }
+            .fire-title { font-size: 2.2rem; letter-spacing: 4px; }
+            .countdown-number { font-size: 1.5rem; }
+            .gender-btn, .custom-gender-btn { font-size: 0.8rem; padding: 8px 10px; }
+            .message { padding-right: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Główna zawartość -->
     <h1 class="fire-title">WIELKI EVENT</h1>
 
-    <!-- Licznik czasu -->
     <div class="countdown-container">
         <h2>Czas do eventu</h2>
         <div class="countdown">
-            <div class="countdown-item">
-                <div class="countdown-number" id="days">00</div>
-                <div class="countdown-label">Dni</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="hours">00</div>
-                <div class="countdown-label">Godziny</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="minutes">00</div>
-                <div class="countdown-label">Minuty</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="seconds">00</div>
-                <div class="countdown-label">Sekundy</div>
-            </div>
+            <div class="countdown-item"><div class="countdown-number" id="days">00</div><div class="countdown-label">Dni</div></div>
+            <div class="countdown-item"><div class="countdown-number" id="hours">00</div><div class="countdown-label">Godziny</div></div>
+            <div class="countdown-item"><div class="countdown-number" id="minutes">00</div><div class="countdown-label">Minuty</div></div>
+            <div class="countdown-item"><div class="countdown-number" id="seconds">00</div><div class="countdown-label">Sekundy</div></div>
         </div>
     </div>
 
-    <!-- Informacje o evencie -->
     <div class="event-info">
         <h3>Informacje o evencie</h3>
         <p><strong>Data:</strong> 3 sierpnia 2026</p>
         <p><strong>Godzina:</strong> 10:00</p>
         <p><strong>Miejsce:</strong> Nowy Sącz, Osiedle Barskie</p>
-        <p><strong>Lokalizacja:</strong>
-            <a href="https://maps.app.goo.gl/4KyoKhGWkUrDLYUH8" target="_blank">
-                Otwórz na Google Maps
-            </a>
-        </p>
+        <p><strong>Lokalizacja:</strong> <a href="https://maps.app.goo.gl/4KyoKhGWkUrDLYUH8" target="_blank">Otwórz na Google Maps</a></p>
     </div>
 
-    <!-- Przyciski główne -->
     <div class="button-container">
         <button class="btn" onclick="openBannerModal()">Pokaż baner eventu</button>
         <button class="btn" onclick="openChatModal()">Przejdź do czatu grupowego</button>
     </div>
 
-    <!-- Modal banera -->
-    <div id="bannerModal" class="modal">
+    <div id="bannerModal" class="modal" onclick="if(event.target===event.currentTarget)closeBannerModal()">
         <div class="modal-content">
             <span class="close" onclick="closeBannerModal()">&times;</span>
             <img src="foty/baner_event.jpg" alt="Baner eventu">
@@ -611,379 +346,558 @@
         </div>
     </div>
 
-    <!-- Chat Modal -->
     <div id="chatModal" class="chat-modal">
         <div class="chat-container">
             <span class="chat-close" onclick="closeChatModal()">&times;</span>
-
-            <!-- Formularz logowania -->
             <div id="loginSection" class="login-section">
                 <h2>Dołącz do czatu</h2>
-
                 <div class="form-group">
                     <label for="nickInput">Pseudonim:</label>
                     <input type="text" id="nickInput" placeholder="Wpisz swój nick...">
                 </div>
-
                 <div class="form-group">
                     <label>Płeć:</label>
                     <div class="gender-options">
-                        <button class="gender-btn" onclick="selectGender('Mężczyzna', this)">Mężczyzna</button>
-                        <button class="gender-btn" onclick="selectGender('Kobieta', this)">Kobieta</button>
-                        <button class="gender-btn" onclick="selectGender('Inne', this)">Inne</button>
+                        <button class="gender-btn" onclick="selectGender('Mężczyzna',this)">Mężczyzna</button>
+                        <button class="gender-btn" onclick="selectGender('Kobieta',this)">Kobieta</button>
+                        <button class="gender-btn" onclick="selectGender('Inne',this)">Inne</button>
                     </div>
                 </div>
-
                 <div id="customGenderSection" class="custom-gender-section hidden">
                     <h4>Wybierz coś bardziej pasującego:</h4>
                     <div class="custom-gender-options">
-                        <button class="custom-gender-btn" onclick="selectCustomGender('🚁 Helikopter bojowy', this)">🚁 Helikopter bojowy</button>
-                        <button class="custom-gender-btn" onclick="selectCustomGender('🚗 Cadillac Eldorado', this)">🚗 Cadillac Eldorado</button>
-                        <button class="custom-gender-btn" onclick="selectCustomGender('👤 Nico Belic', this)">👤 Nico Belic</button>
-                        <button class="custom-gender-btn" onclick="selectCustomGender('🎮 Konsola PlayStation 6', this)">🎮 Konsola PlayStation 6</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('🚁 Helikopter bojowy',this)">🚁 Helikopter bojowy</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('🚗 Cadillac Eldorado',this)">🚗 Cadillac Eldorado</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('👤 Nico Belic',this)">👤 Nico Belic</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('🎮 Konsola PlayStation 6',this)">🎮 Konsola PlayStation 6</button>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label>Kolor nicku:</label>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <div id="colorPreview" class="color-preview" style="background-color: #00ff00;"></div>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <div id="colorPreview" class="color-preview" style="background-color:#00ff00;"></div>
                         <button class="btn-random-color" onclick="randomizeNickColor()">🎲 Losuj kolor nicku</button>
                     </div>
                 </div>
-
                 <button class="btn-login" onclick="joinChat()">Dołącz do czatu</button>
             </div>
 
-            <!-- Sekcja czatu (ukryta do czasu zalogowania) -->
-            <div id="chatSection" class="hidden">
-                <div class="user-info">
+            <div id="chatSection">
+                <div class="user-info" id="userInfoBar">
                     Zalogowany jako: <span id="userNickDisplay"></span>
+                    <span class="connection-status" id="connStatus">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">Łączenie...</span>
+                    </span>
                 </div>
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input-container">
-                    <input
-                        type="text"
-                        id="messageInput"
-                        placeholder="Wpisz wiadomość..."
-                        onkeypress="handleKeyPress(event)"
-                    >
-                    <button onclick="sendMessage()">Wyślij</button>
+                    <input type="text" id="messageInput" placeholder="Wpisz wiadomość..." onkeypress="if(event.key==='Enter')sendMessage()">
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Wyślij</button>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Supabase CDN -->
+    <div id="warningModal" class="warning-modal">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <h3>Ostrzeżenie od administratora</h3>
+            <p id="warningText"></p>
+            <button onclick="dismissWarning()">OK</button>
+        </div>
+    </div>
+
+    <div id="banModal" class="ban-modal">
+        <div class="ban-content">
+            <div class="ban-icon">🚫</div>
+            <h3>Zostałeś zablokowany</h3>
+            <p>Nie możesz już pisać na tym czacie.</p>
+            <button onclick="closeBanAndChat()">Zamknij</button>
+        </div>
+    </div>
+
+    <div id="adminToast" class="admin-toast hidden">🛡️ Jesteś teraz administratorem!</div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script>
-        // ===== ZMIENNE GLOBALNE =====
-        let usedColors = [];
-        let currentUserNick = '';
-        let currentUserColor = '#00ff00';
-        let currentGender = '';
-        let isLoggedIn = false;
-        let supabaseClient = null;
-        let messageSubscription = null;
+    /* ============================================================
+       ZMIENNE
+    ============================================================ */
+    let supabaseClient = null;
+    let realtimeChannel = null;
+    let pollInterval = null;
+    let usedColors = [];
+    let currentUserNick = '';
+    let currentUserColor = '#00ff00';
+    let currentGender = '';
+    let isLoggedIn = false;
+    let adminMode = false;
+    let currentWarningId = null;
+    let sendCooldown = false;
+    let lastMessageId = 0;          // ← śledzimy najwyższe ID
+    let knownMessageIds = new Set(); // ← unikamy duplikatów
+    let realtimeConnected = false;
 
-        // ===== SUPABASE CONFIG =====
-        const SUPABASE_URL = 'https://uwqhzaxpysinyosgwigg.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_s_Ef_oN52hh28ngOwK3gVw_HhJMk8pG';
+    const SUPABASE_URL = 'https://uwqhzaxpysinyosgwigg.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_s_Ef_oN52hh28ngOwK3gVw_HhJMk8pG';
+    const COOLDOWN_MS = 3000;
 
-        // ===== INICJALIZACJA =====
-        document.addEventListener('DOMContentLoaded', function () {
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-            initSupabase();
+    /* ============================================================
+       INIT
+    ============================================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        initSupabase();
+    });
+
+    function initSupabase() {
+        try {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('✅ Supabase połączony!');
+        } catch (e) { console.error('❌ Błąd Supabase:', e); }
+    }
+
+    /* ============================================================
+       LICZNIK
+    ============================================================ */
+    function updateCountdown() {
+        const d = new Date('2026-08-03T10:00:00').getTime() - Date.now();
+        if (d < 0) return;
+        document.getElementById('days').textContent    = String(Math.floor(d/86400000)).padStart(2,'0');
+        document.getElementById('hours').textContent   = String(Math.floor((d%86400000)/3600000)).padStart(2,'0');
+        document.getElementById('minutes').textContent = String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+        document.getElementById('seconds').textContent = String(Math.floor((d%60000)/1000)).padStart(2,'0');
+    }
+
+    /* ============================================================
+       BANER
+    ============================================================ */
+    function openBannerModal()  { document.getElementById('bannerModal').style.display='block'; }
+    function closeBannerModal() { document.getElementById('bannerModal').style.display='none'; }
+    function downloadBanner() {
+        const a=document.createElement('a'); a.href='foty/baner_event.jpg';
+        a.download='baner_event.jpg'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+
+    /* ============================================================
+       CHAT MODAL
+    ============================================================ */
+    function openChatModal() {
+        document.getElementById('chatModal').style.display='block';
+        if (isLoggedIn) { loadAllMessages(); startPolling(); }
+    }
+    function closeChatModal() { document.getElementById('chatModal').style.display='none'; }
+
+    /* ============================================================
+       PŁEĆ
+    ============================================================ */
+    function selectGender(g,btn) {
+        currentGender=g;
+        document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const cs=document.getElementById('customGenderSection');
+        g==='Inne'?cs.classList.remove('hidden'):cs.classList.add('hidden');
+    }
+    function selectCustomGender(cg,btn) {
+        currentGender=cg;
+        document.querySelectorAll('.custom-gender-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    /* ============================================================
+       KOLOR
+    ============================================================ */
+    function generateRandomColor() {
+        const h=Math.floor(Math.random()*360), s=70+Math.floor(Math.random()*30), l=50+Math.floor(Math.random()*20);
+        return `hsl(${h},${s}%,${l}%)`;
+    }
+    function randomizeNickColor() {
+        let c=generateRandomColor(), t=0;
+        while(usedColors.includes(c)&&t<500){c=generateRandomColor();t++;}
+        currentUserColor=c;
+        document.getElementById('colorPreview').style.backgroundColor=c;
+    }
+
+    /* ============================================================
+       DOŁĄCZANIE
+    ============================================================ */
+    async function joinChat() {
+        const nick=document.getElementById('nickInput').value.trim();
+        if(!nick) return alert('Wpisz nick!');
+        if(!currentGender) return alert('Wybierz płeć!');
+        if(!supabaseClient) return alert('Brak połączenia!');
+
+        try {
+            const {data:bans}=await supabaseClient.from('banned_users').select('id').eq('nick',nick);
+            if(bans&&bans.length>0){
+                document.getElementById('chatModal').style.display='block';
+                document.getElementById('banModal').classList.add('visible');
+                return;
+            }
+        } catch(e){console.error(e);}
+
+        currentUserNick=nick; isLoggedIn=true; usedColors.push(currentUserColor);
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('chatSection').classList.add('visible');
+        const nd=document.getElementById('userNickDisplay');
+        nd.textContent=nick; nd.style.color=currentUserColor;
+
+        await loadAllMessages();
+        subscribeRealtime();
+        startPolling();
+        checkExistingWarnings();
+    }
+
+    /* ============================================================
+       ŁADOWANIE — PEŁNA LISTA
+    ============================================================ */
+    async function loadAllMessages() {
+        if(!supabaseClient) return;
+        try {
+            const {data,error}=await supabaseClient
+                .from('messages').select('*').order('created_at',{ascending:true});
+            if(error){console.error('SELECT error:',error);return;}
+
+            const box=document.getElementById('chatMessages');
+            box.innerHTML='';
+            knownMessageIds.clear();
+            lastMessageId=0;
+
+            data.forEach(m=>{
+                knownMessageIds.add(m.id);
+                if(m.id>lastMessageId) lastMessageId=m.id;
+                addMessageToChat(m.nick,m.color,m.content,m.id);
+            });
+            box.scrollTop=box.scrollHeight;
+            setStatus(true);
+        } catch(e){console.error(e);setStatus(false);}
+    }
+
+    /* ============================================================
+       REALTIME — SUBSKRYPCJA
+    ============================================================ */
+    function subscribeRealtime() {
+        if(!supabaseClient) return;
+        if(realtimeChannel) supabaseClient.removeChannel(realtimeChannel);
+
+        const chName='chat-'+currentUserNick+'-'+Date.now();
+
+        realtimeChannel=supabaseClient.channel(chName);
+
+        // INSERT nowych wiadomości
+        realtimeChannel.on('postgres_changes',
+            {event:'INSERT', schema:'public', table:'messages'},
+            payload=>{
+                console.log('⚡ Realtime INSERT:',payload.new);
+                const m=payload.new;
+                if(!knownMessageIds.has(m.id)){
+                    knownMessageIds.add(m.id);
+                    if(m.id>lastMessageId) lastMessageId=m.id;
+                    addMessageToChat(m.nick,m.color,m.content,m.id);
+                    const box=document.getElementById('chatMessages');
+                    box.scrollTop=box.scrollHeight;
+                }
+            }
+        );
+
+        // DELETE wiadomości
+        realtimeChannel.on('postgres_changes',
+            {event:'DELETE', schema:'public', table:'messages'},
+            payload=>{
+                console.log('⚡ Realtime DELETE:',payload.old);
+                const el=document.getElementById('msg-'+payload.old.id);
+                if(el){el.remove();knownMessageIds.delete(payload.old.id);}
+            }
+        );
+
+        // NOWE OSTRZEŻENIE
+        realtimeChannel.on('postgres_changes',
+            {event:'INSERT', schema:'public', table:'warnings'},
+            payload=>{
+                const w=payload.new;
+                if(w.target_nick===currentUserNick&&!w.dismissed){
+                    currentWarningId=w.id;
+                    document.getElementById('warningText').textContent=w.reason;
+                    document.getElementById('warningModal').classList.add('visible');
+                }
+            }
+        );
+
+        // NOWY BAN
+        realtimeChannel.on('postgres_changes',
+            {event:'INSERT', schema:'public', table:'banned_users'},
+            payload=>{
+                if(payload.new.nick===currentUserNick){
+                    document.getElementById('banModal').classList.add('visible');
+                }
+            }
+        );
+
+        realtimeChannel.subscribe((status)=>{
+            console.log('📡 Realtime status:',status);
+            if(status==='SUBSCRIBED'){setStatus(true);}
+            else if(status==='CHANNEL_ERROR'){setStatus(false);}
         });
+    }
 
-        function initSupabase() {
+    /* ============================================================
+       POLLING — CO 2 SEKUNDY (ZAPAS)
+    ============================================================ */
+    function startPolling() {
+        if(pollInterval) clearInterval(pollInterval);
+        pollInterval=setInterval(async()=>{
+            if(!isLoggedIn||!supabaseClient) return;
             try {
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                console.log('✅ Supabase połączony!');
-            } catch (error) {
-                console.error('❌ Błąd Supabase:', error);
-            }
-        }
+                const {data,error}=await supabaseClient
+                    .from('messages').select('*')
+                    .gt('id',lastMessageId)
+                    .order('created_at',{ascending:true});
+                if(error||!data) return;
 
-        // ===== LICZNIK CZASU =====
-        function updateCountdown() {
-            const eventDate = new Date('2026-08-03T10:00:00').getTime();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-
-            if (distance < 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-        }
-
-        // ===== MODAL BANERA =====
-        function openBannerModal() {
-            document.getElementById('bannerModal').style.display = 'block';
-        }
-
-        function closeBannerModal() {
-            document.getElementById('bannerModal').style.display = 'none';
-        }
-
-        function downloadBanner() {
-            const link = document.createElement('a');
-            link.href = 'foty/baner_event.jpg';
-            link.download = 'baner_event.jpg';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        window.onclick = function (event) {
-            const modal = document.getElementById('bannerModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // ===== CHAT MODAL =====
-        function openChatModal() {
-            document.getElementById('chatModal').style.display = 'block';
-            if (isLoggedIn) {
-                loadMessages();
-            }
-        }
-
-        function closeChatModal() {
-            document.getElementById('chatModal').style.display = 'none';
-        }
-
-        // ===== WYBÓR PŁCI =====
-        function selectGender(gender, btnElement) {
-            currentGender = gender;
-
-            document.querySelectorAll('.gender-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            btnElement.classList.add('active');
-
-            const customSection = document.getElementById('customGenderSection');
-            if (gender === 'Inne') {
-                customSection.classList.remove('hidden');
-            } else {
-                customSection.classList.add('hidden');
-            }
-        }
-
-        function selectCustomGender(customGender, btnElement) {
-            currentGender = customGender;
-
-            document.querySelectorAll('.custom-gender-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            btnElement.classList.add('active');
-        }
-
-        // ===== KOLOR NICKU =====
-        function generateRandomColor() {
-            const r = Math.floor(Math.random() * 156) + 100;
-            const g = Math.floor(Math.random() * 156) + 100;
-            const b = Math.floor(Math.random() * 156) + 100;
-            const toHex = (val) => val.toString(16).padStart(2, '0');
-            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-        }
-
-        function randomizeNickColor() {
-            let newColor = generateRandomColor();
-            let attempts = 0;
-
-            while (usedColors.includes(newColor) && attempts < 1000) {
-                newColor = generateRandomColor();
-                attempts++;
-            }
-
-            currentUserColor = newColor;
-            document.getElementById('colorPreview').style.backgroundColor = newColor;
-        }
-
-        // ===== DOŁĄCZ DO CZATU =====
-        async function joinChat() {
-            const nick = document.getElementById('nickInput').value.trim();
-
-            if (!nick) {
-                alert('Wpisz nick!');
-                return;
-            }
-
-            if (!currentGender) {
-                alert('Wybierz płeć!');
-                return;
-            }
-
-            if (!supabaseClient) {
-                alert('Brak połączenia z serwerem! Sprawdź konsolę (F12).');
-                return;
-            }
-
-            currentUserNick = nick;
-            isLoggedIn = true;
-            usedColors.push(currentUserColor);
-
-            // Pokaż czat, ukryj formularz
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('chatSection').classList.remove('hidden');
-
-            const nickDisplay = document.getElementById('userNickDisplay');
-            nickDisplay.textContent = nick;
-            nickDisplay.style.color = currentUserColor;
-
-            await loadMessages();
-            subscribeToMessages();
-        }
-
-        // ===== ŁADOWANIE WIADOMOŚCI =====
-        async function loadMessages() {
-            if (!supabaseClient) {
-                console.error('Brak klienta Supabase!');
-                return;
-            }
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('messages')
-                    .select('*')
-                    .order('created_at', { ascending: true });
-
-                if (error) {
-                    console.error('❌ Błąd SELECT:', error);
-                    return;
-                }
-
-                console.log('✅ Załadowano wiadomości:', data.length);
-
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.innerHTML = '';
-
-                data.forEach(message => {
-                    addMessageToChat(message.nick, message.color, message.content);
-                });
-
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            } catch (err) {
-                console.error('❌ Nieoczekiwany błąd loadMessages:', err);
-            }
-        }
-
-        // ===== SUBSKRYPCJA REALTIME =====
-        function subscribeToMessages() {
-            if (!supabaseClient) return;
-
-            if (messageSubscription) {
-                supabaseClient.removeChannel(messageSubscription);
-            }
-
-            messageSubscription = supabaseClient
-                .channel('public:messages')
-                .on(
-                    'postgres_changes',
-                    { event: 'INSERT', schema: 'public', table: 'messages' },
-                    (payload) => {
-                        console.log('📨 Nowa wiadomość:', payload.new);
-                        addMessageToChat(payload.new.nick, payload.new.color, payload.new.content);
-                        const chatMessages = document.getElementById('chatMessages');
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                let added=false;
+                data.forEach(m=>{
+                    if(!knownMessageIds.has(m.id)){
+                        knownMessageIds.add(m.id);
+                        if(m.id>lastMessageId) lastMessageId=m.id;
+                        addMessageToChat(m.nick,m.color,m.content,m.id);
+                        added=true;
                     }
-                )
-                .subscribe((status) => {
-                    console.log('📡 Status subskrypcji:', status);
                 });
-        }
-
-        // ===== WYSYŁANIE WIADOMOŚCI =====
-        async function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const content = messageInput.value.trim();
-
-            if (!content) return;
-
-            if (!supabaseClient) {
-                console.error('Brak klienta Supabase!');
-                alert('Brak połączenia z serwerem!');
-                return;
-            }
-
-            console.log('📤 Wysyłam wiadomość...', {
-                nick: currentUserNick,
-                color: currentUserColor,
-                content: content
-            });
-
-            try {
-                const { data, error } = await supabaseClient
-                    .from('messages')
-                    .insert([{
-                        nick: currentUserNick,
-                        color: currentUserColor,
-                        content: content
-                    }])
-                    .select();
-
-                if (error) {
-                    console.error('❌ Błąd INSERT:', error);
-                    alert('Błąd wysyłania: ' + error.message);
-                    return;
+                if(added){
+                    const box=document.getElementById('chatMessages');
+                    box.scrollTop=box.scrollHeight;
                 }
 
-                console.log('✅ Wysłano!', data);
-                messageInput.value = '';
+                // Sprawdź usunięcia (polling)
+                const {data:allMsgs}=await supabaseClient
+                    .from('messages').select('id');
+                if(allMsgs){
+                    const serverIds=new Set(allMsgs.map(m=>m.id));
+                    knownMessageIds.forEach(id=>{
+                        if(!serverIds.has(id)){
+                            const el=document.getElementById('msg-'+id);
+                            if(el) el.remove();
+                            knownMessageIds.delete(id);
+                        }
+                    });
+                }
+            } catch(e){/* cicho */}
+        },2000);
+    }
 
-            } catch (err) {
-                console.error('❌ Nieoczekiwany błąd sendMessage:', err);
-                alert('Nieoczekiwany błąd: ' + err.message);
+    function stopPolling() {
+        if(pollInterval){clearInterval(pollInterval);pollInterval=null;}
+    }
+
+    /* ============================================================
+       STATUS POŁĄCZENIA
+    ============================================================ */
+    function setStatus(connected) {
+        realtimeConnected=connected;
+        const dot=document.getElementById('statusDot');
+        const txt=document.getElementById('statusText');
+        if(dot&&txt){
+            dot.className='status-dot'+(connected?' connected':'');
+            txt.textContent=connected?'Online':'Offline (polling)';
+        }
+    }
+
+    /* ============================================================
+       OSTRZEŻENIA / BANY — sprawdzenie przy wejściu
+    ============================================================ */
+    async function checkExistingWarnings() {
+        if(!supabaseClient) return;
+        try {
+            const {data}=await supabaseClient.from('warnings')
+                .select('*').eq('target_nick',currentUserNick).eq('dismissed',false);
+            if(data&&data.length>0){
+                currentWarningId=data[0].id;
+                document.getElementById('warningText').textContent=data[0].reason;
+                document.getElementById('warningModal').classList.add('visible');
             }
+        } catch(e){console.error(e);}
+    }
+    async function dismissWarning() {
+        document.getElementById('warningModal').classList.remove('visible');
+        if(currentWarningId&&supabaseClient){
+            await supabaseClient.from('warnings').update({dismissed:true}).eq('id',currentWarningId);
         }
+        currentWarningId=null;
+    }
+    function closeBanAndChat() {
+        document.getElementById('banModal').classList.remove('visible');
+        document.getElementById('chatModal').style.display='none';
+        isLoggedIn=false; stopPolling();
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('chatSection').classList.remove('visible');
+    }
 
-        // ===== DODAJ WIADOMOŚĆ DO WIDOKU =====
-        function addMessageToChat(nick, color, content) {
-            const chatMessages = document.getElementById('chatMessages');
+    /* ============================================================
+       WYSYŁANIE WIADOMOŚCI + COOLDOWN + ADMIN
+    ============================================================ */
+    async function sendMessage() {
+        const input=document.getElementById('messageInput');
+        const text=input.value.trim();
+        if(!text) return;
 
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message';
-            messageDiv.style.borderLeftColor = color;
-
-            const nickDiv = document.createElement('div');
-            nickDiv.className = 'message-nick';
-            nickDiv.style.color = color;
-            nickDiv.textContent = nick;
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-            contentDiv.textContent = content;
-
-            messageDiv.appendChild(nickDiv);
-            messageDiv.appendChild(contentDiv);
-            chatMessages.appendChild(messageDiv);
-        }
-
-        // ===== ENTER W CZACIE =====
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
+        // ADMIN COMMAND
+        if(text==='/jajo121xd'&&!adminMode){
+            adminMode=true; currentUserColor='#FF69B4';
+            input.value='';
+            document.getElementById('userNickDisplay').style.color='#FF69B4';
+            const bar=document.getElementById('userInfoBar');
+            if(!bar.querySelector('.admin-badge')){
+                const b=document.createElement('span');
+                b.className='admin-badge';b.textContent='ADMIN';
+                bar.insertBefore(b,bar.firstChild);
             }
+            const toast=document.getElementById('adminToast');
+            toast.classList.remove('hidden');
+            toast.style.opacity='1';
+            setTimeout(()=>{toast.style.opacity='0';},2500);
+            setTimeout(()=>toast.classList.add('hidden'),3000);
+            return;
         }
+
+        if(sendCooldown) return;
+        if(!supabaseClient){alert('Brak połączenia!');return;}
+
+        const sendBtn=document.getElementById('sendBtn');
+        sendCooldown=true; sendBtn.disabled=true;
+
+        try {
+            const {error}=await supabaseClient.from('messages').insert([{
+                nick:currentUserNick, color:currentUserColor, content:text
+            }]).select();
+            if(error){
+                console.error('INSERT error:',error);
+                alert('Błąd: '+error.message);
+                sendCooldown=false; sendBtn.disabled=false; sendBtn.textContent='Wyślij';
+                return;
+            }
+            input.value='';
+        } catch(e){
+            console.error(e); alert('Błąd: '+e.message);
+            sendCooldown=false; sendBtn.disabled=false; sendBtn.textContent='Wyślij';
+            return;
+        }
+
+        let rem=3;
+        sendBtn.textContent=`Poczekaj (${rem}s)`;
+        const iv=setInterval(()=>{
+            rem--;
+            if(rem<=0){clearInterval(iv);sendBtn.disabled=false;sendBtn.textContent='Wyślij';sendCooldown=false;}
+            else{sendBtn.textContent=`Poczekaj (${rem}s)`;}
+        },1000);
+    }
+
+    /* ============================================================
+       DODAJ WIADOMOŚĆ DO DOM
+    ============================================================ */
+    function addMessageToChat(nick,color,content,id) {
+        const box=document.getElementById('chatMessages');
+        if(document.getElementById('msg-'+id)) return;
+
+        const div=document.createElement('div');
+        div.className='message'; div.id='msg-'+id;
+        div.style.borderLeftColor=color;
+
+        const nickDiv=document.createElement('div');
+        nickDiv.className='message-nick'; nickDiv.style.color=color;
+        nickDiv.textContent=nick;
+
+        const contDiv=document.createElement('div');
+        contDiv.className='message-content'; contDiv.textContent=content;
+
+        div.appendChild(nickDiv);
+        div.appendChild(contDiv);
+
+        if(adminMode) div.appendChild(createAdminMenu(id,nick));
+
+        box.appendChild(div);
+    }
+
+    /* ============================================================
+       ADMIN — MENU 3 KROPEK
+    ============================================================ */
+    function createAdminMenu(msgId,msgNick) {
+        const w=document.createElement('div');
+        w.className='message-admin-menu';
+
+        const dots=document.createElement('button');
+        dots.className='dots-btn'; dots.textContent='⋮';
+        dots.onclick=function(e){
+            e.stopPropagation();
+            const dd=this.nextElementSibling;
+            document.querySelectorAll('.admin-dropdown').forEach(d=>{if(d!==dd)d.style.display='none';});
+            dd.style.display=dd.style.display==='block'?'none':'block';
+        };
+
+        const dd=document.createElement('div');
+        dd.className='admin-dropdown';
+
+        const warnB=document.createElement('button');
+        warnB.className='warn-btn'; warnB.textContent='⚠️ Ostrzeż';
+        warnB.onclick=(e)=>{e.stopPropagation();dd.style.display='none';warnUser(msgNick);};
+
+        const banB=document.createElement('button');
+        banB.className='ban-btn'; banB.textContent='🚫 Banuj';
+        banB.onclick=(e)=>{e.stopPropagation();dd.style.display='none';banUser(msgNick);};
+
+        const delB=document.createElement('button');
+        delB.className='del-btn'; delB.textContent='🗑️ Usuń wiadomość';
+        delB.onclick=(e)=>{e.stopPropagation();dd.style.display='none';deleteMessage(msgId);};
+
+        dd.appendChild(warnB); dd.appendChild(banB); dd.appendChild(delB);
+        w.appendChild(dots); w.appendChild(dd);
+        return w;
+    }
+
+    document.addEventListener('click',()=>{
+        document.querySelectorAll('.admin-dropdown').forEach(d=>d.style.display='none');
+    });
+
+    /* ============================================================
+       ADMIN — OSTRZEŻENIE
+    ============================================================ */
+    async function warnUser(nick) {
+        const reason=prompt(`Ostrzeżenie dla "${nick}". Wpisz powód:`);
+        if(!reason||!reason.trim()) return;
+        try {
+            const {error}=await supabaseClient.from('warnings').insert([{
+                target_nick:nick, reason:reason.trim(), dismissed:false
+            }]);
+            if(error){console.error(error);alert('Błąd: '+error.message);return;}
+            alert('✅ Ostrzeżenie wysłane do '+nick);
+        } catch(e){console.error(e);alert('Błąd: '+e.message);}
+    }
+
+    /* ============================================================
+       ADMIN — BAN
+    ============================================================ */
+    async function banUser(nick) {
+        if(!confirm(`Zbanować "${nick}"?\nJego wiadomości zostaną usunięte.`)) return;
+        try {
+            const {error:de}=await supabaseClient.from('messages').delete().eq('nick',nick);
+            if(de) console.error(de);
+            const {error:be}=await supabaseClient.from('banned_users').insert([{nick:nick}]);
+            if(be){console.error(be);alert('Błąd: '+be.message);return;}
+            alert('✅ '+nick+' zablokowany.');
+        } catch(e){console.error(e);alert('Błąd: '+e.message);}
+    }
+
+    /* ============================================================
+       ADMIN — USUŃ WIADOMOŚĆ
+    ============================================================ */
+    async function deleteMessage(msgId) {
+        if(!confirm('Usunąć tę wiadomość?')) return;
+        try {
+            const {error}=await supabaseClient.from('messages').delete().eq('id',msgId);
+            if(error){console.error(error);alert('Błąd: '+error.message);}
+        } catch(e){console.error(e);}
+    }
     </script>
 </body>
 </html>
