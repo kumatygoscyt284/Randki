@@ -417,63 +417,70 @@
         </div>
     </div>
 
-    <div id="adminToast" class="admin-toast hidden">🛡️ Jesteś teraz administratorem!</div>
-    <audio id="bgAudio" preload="auto" src="foty/nuta1.ogg"></audio>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-    /* ============================================================
-       ZMIENNE
-    ============================================================ */
-    let supabaseClient = null;
-    let realtimeChannel = null;
-    let pollInterval = null;
-    let usedColors = [];
-    let currentUserNick = '';
-    let currentUserColor = '#00ff00';
-    let currentGender = '';
-    let isLoggedIn = false;
-    let adminMode = false;
-    let currentWarningId = null;
-    let sendCooldown = false;
-    let lastMessageId = 0;          // ← śledzimy najwyższe ID
-    let knownMessageIds = new Set(); // ← unikamy duplikatów
-    let realtimeConnected = false;
+  <div id="adminToast" class="admin-toast hidden">🛡️ Jesteś teraz administratorem!</div>
 
-    const SUPABASE_URL = 'https://uwqhzaxpysinyosgwigg.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_s_Ef_oN52hh28ngOwK3gVw_HhJMk8pG';
-    const COOLDOWN_MS = 3000;
+<audio id="bgAudio" preload="auto" src="foty/nuta1.ogg"></audio>
 
-    /* ============================================================
-       INIT
-    ============================================================ */
-    document.addEventListener('DOMContentLoaded', () => {
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ============================================================
+   ZMIENNE
+============================================================ */
+let supabaseClient = null;
+let realtimeChannel = null;
+let pollInterval = null;
+let usedColors = [];
+let currentUserNick = '';
+let currentUserColor = '#00ff00';
+let currentGender = '';
+let isLoggedIn = false;
+let adminMode = false;
+let currentWarningId = null;
+let sendCooldown = false;
+let lastMessageId = 0;
+let knownMessageIds = new Set();
+let realtimeConnected = false;
+
+const SUPABASE_URL = 'https://uwqhzaxpysinyosgwigg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_s_Ef_oN52hh28ngOwK3gVw_HhJMk8pG';
+const COOLDOWN_MS = 3000;
+
+/* ============================================================
+   INIT
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+
+    // === AUTOSTART MUZYKI PO 3 SEKUNDACH ===
+    const audio = document.getElementById('bgAudio');
+    if (audio) {
+        audio.volume = 1.0; // pełna głośność
+        audio.muted = true; // obejście blokady autoplay
+
+        // Start cicho (muted), żeby autoplay zadziałał
+        audio.play().catch(()=>{});
+
+        // Po 3 sekundach odmutuj i zacznij normalnie grać
         setTimeout(() => {
-    const a = document.getElementById('bgAudio');
-    if (!a) return;
-
-    a.currentTime = 0;
-    a.play().catch(() => {
-        // Autoodtwarzanie bywa blokowane — odpal po pierwszym kliknięciu użytkownika
-        const once = () => {
-            a.play().catch(()=>{});
-            window.removeEventListener('click', once);
-            window.removeEventListener('touchstart', once);
-        };
-        window.addEventListener('click', once, { once: true });
-        window.addEventListener('touchstart', once, { once: true });
-    });
-}, 3000);
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-        initSupabase();
-    });
-
-    function initSupabase() {
-        try {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            console.log('✅ Supabase połączony!');
-        } catch (e) { console.error('❌ Błąd Supabase:', e); }
+            audio.muted = false;
+            audio.currentTime = 0;
+            audio.play().catch(()=>{});
+        }, 3000);
     }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    initSupabase();
+});
+
+function initSupabase() {
+    try {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase połączony!');
+    } catch (e) { 
+        console.error('❌ Błąd Supabase:', e); 
+    }
+}
+</script>
 
     /* ============================================================
        LICZNIK
