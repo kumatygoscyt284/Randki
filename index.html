@@ -20,7 +20,6 @@
             padding: 20px;
         }
 
-        /* Animowany napis ognia */
         .fire-title {
             text-align: center;
             font-size: 4rem;
@@ -28,11 +27,6 @@
             margin: 40px 0;
             letter-spacing: 8px;
             position: relative;
-            text-shadow: 
-                0 0 10px #ff0000,
-                0 0 20px #ff6600,
-                0 0 30px #ffaa00,
-                0 0 40px #ff0000;
             animation: fireFlicker 0.15s infinite;
             background: linear-gradient(45deg, #ff0000, #ffaa00, #ff6600, #ff0000);
             -webkit-background-clip: text;
@@ -42,22 +36,13 @@
 
         @keyframes fireFlicker {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-                text-shadow: 
-                    0 0 10px #ff0000,
-                    0 0 20px #ff6600,
-                    0 0 30px #ffaa00,
-                    0 0 40px #ff0000,
-                    0 0 50px #ff0000;
+                filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 20px #ff6600) drop-shadow(0 0 30px #ffaa00);
             }
             20%, 24%, 55% {
-                text-shadow: 
-                    0 0 5px #ff0000,
-                    0 0 10px #ff6600,
-                    0 0 15px #ffaa00;
+                filter: drop-shadow(0 0 5px #ff0000) drop-shadow(0 0 10px #ff6600);
             }
         }
 
-        /* Licznik czasu */
         .countdown-container {
             background: rgba(0, 0, 0, 0.5);
             border: 2px solid #00aa00;
@@ -102,7 +87,6 @@
             margin-top: 5px;
         }
 
-        /* Info o evencie */
         .event-info {
             background: rgba(0, 0, 0, 0.5);
             border: 2px solid #ffaa00;
@@ -137,7 +121,6 @@
             text-shadow: 0 0 10px #00ff00;
         }
 
-        /* Przyciska */
         .button-container {
             display: flex;
             flex-direction: column;
@@ -170,7 +153,6 @@
             transform: scale(0.98);
         }
 
-        /* Modal banera */
         .modal {
             display: none;
             position: fixed;
@@ -231,19 +213,28 @@
         }
 
         .btn-download {
-            margin-top: 20px;
+            margin-top: 10px;
             margin-bottom: 20px;
             border-color: #ffaa00;
             color: #ffaa00;
             background: rgba(255, 170, 0, 0.1);
+            padding: 12px 25px;
+            font-size: 0.9rem;
+            border: 2px solid #ffaa00;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .btn-download:hover {
             background: rgba(255, 170, 0, 0.3);
             box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
+            transform: scale(1.02);
         }
 
-        /* Chat Modal */
         .chat-modal {
             display: none;
             position: fixed;
@@ -282,15 +273,14 @@
             text-shadow: 0 0 10px #ff0000;
         }
 
-        /* Login form */
         .login-section {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            padding: 20px;
+            padding: 50px 20px 20px 20px;
             background: rgba(0, 0, 0, 0.5);
             border-bottom: 2px solid #00aa00;
-            max-height: 100%;
+            max-height: 100vh;
             overflow-y: auto;
         }
 
@@ -310,21 +300,26 @@
             font-weight: bold;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             padding: 10px;
             background: rgba(0, 170, 0, 0.1);
             border: 1px solid #00aa00;
             color: #00ff00;
             border-radius: 5px;
             font-family: inherit;
+            font-size: 1rem;
         }
 
         .form-group input::placeholder {
             color: #008800;
         }
 
-        .gender-options,
+        .gender-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .custom-gender-options {
             display: flex;
             gap: 10px;
@@ -341,6 +336,7 @@
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
+            font-size: 0.9rem;
         }
 
         .gender-btn:hover,
@@ -356,6 +352,20 @@
             border-color: #00ff00;
         }
 
+        .custom-gender-section {
+            margin-top: 5px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        .custom-gender-section h4 {
+            color: #ffaa00;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
         .btn-login {
             padding: 12px;
             background: rgba(0, 170, 0, 0.2);
@@ -364,7 +374,10 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1rem;
             transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .btn-login:hover {
@@ -373,7 +386,7 @@
         }
 
         .btn-random-color {
-            padding: 10px;
+            padding: 10px 15px;
             background: rgba(255, 170, 0, 0.2);
             border: 1px solid #ffaa00;
             color: #ffaa00;
@@ -381,6 +394,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            font-size: 0.9rem;
         }
 
         .btn-random-color:hover {
@@ -389,14 +403,22 @@
         }
 
         .color-preview {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 5px;
-            border: 1px solid #00aa00;
-            margin-top: 5px;
+            border: 2px solid #00aa00;
+            flex-shrink: 0;
         }
 
-        /* Chat messages */
+        .user-info {
+            background: rgba(0, 170, 0, 0.1);
+            padding: 10px 15px;
+            border-bottom: 1px solid #00aa00;
+            color: #00ff00;
+            font-size: 0.9rem;
+            padding-right: 60px;
+        }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -404,6 +426,19 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #00aa00;
+            border-radius: 3px;
         }
 
         .message {
@@ -428,17 +463,14 @@
         .message-nick {
             font-weight: bold;
             margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .message-content {
             color: #ddd;
             word-wrap: break-word;
+            line-height: 1.4;
         }
 
-        /* Chat input */
         .chat-input-container {
             display: flex;
             gap: 10px;
@@ -449,27 +481,36 @@
 
         .chat-input-container input {
             flex: 1;
-            padding: 10px;
+            padding: 10px 15px;
             background: rgba(0, 170, 0, 0.1);
             border: 1px solid #00aa00;
             color: #00ff00;
             border-radius: 5px;
             font-family: inherit;
+            font-size: 1rem;
         }
 
         .chat-input-container input::placeholder {
             color: #008800;
         }
 
+        .chat-input-container input:focus {
+            outline: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+        }
+
         .chat-input-container button {
-            padding: 10px 20px;
+            padding: 10px 25px;
             background: rgba(0, 170, 0, 0.2);
             border: 1px solid #00aa00;
             color: #00ff00;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1rem;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .chat-input-container button:hover {
@@ -478,32 +519,19 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
-        .user-info {
-            background: rgba(0, 170, 0, 0.1);
-            padding: 15px;
-            border-bottom: 1px solid #00aa00;
-            color: #00ff00;
-        }
-
-        .custom-gender-section {
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-        }
-
-        .custom-gender-section h4 {
-            color: #ffaa00;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+        #chatSection {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         @media (max-width: 768px) {
             .fire-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
                 letter-spacing: 4px;
             }
 
@@ -515,54 +543,63 @@
                 max-width: 95%;
             }
 
-            .chat-modal {
-                padding-top: 20px;
+            .countdown-number {
+                font-size: 1.5rem;
+            }
+
+            .gender-btn,
+            .custom-gender-btn {
+                font-size: 0.8rem;
+                padding: 8px 10px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Główna zawartość -->
-    <div id="mainContent">
-        <h1 class="fire-title">WIELKI EVENT</h1>
 
-        <!-- Licznik czasu -->
-        <div class="countdown-container">
-            <h2>Czas do eventu</h2>
-            <div class="countdown">
-                <div class="countdown-item">
-                    <div class="countdown-number" id="days">0</div>
-                    <div class="countdown-label">Dni</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-number" id="hours">0</div>
-                    <div class="countdown-label">Godziny</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-number" id="minutes">0</div>
-                    <div class="countdown-label">Minuty</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-number" id="seconds">0</div>
-                    <div class="countdown-label">Sekundy</div>
-                </div>
+    <!-- Główna zawartość -->
+    <h1 class="fire-title">WIELKI EVENT</h1>
+
+    <!-- Licznik czasu -->
+    <div class="countdown-container">
+        <h2>Czas do eventu</h2>
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">00</div>
+                <div class="countdown-label">Dni</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">00</div>
+                <div class="countdown-label">Godziny</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">00</div>
+                <div class="countdown-label">Minuty</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">00</div>
+                <div class="countdown-label">Sekundy</div>
             </div>
         </div>
+    </div>
 
-        <!-- Informacje o evencie -->
-        <div class="event-info">
-            <h3>Informacje o evencie</h3>
-            <p><strong>Godzina:</strong> 10:00</p>
-            <p><strong>Data:</strong> 3 sierpnia 2026</p>
-            <p><strong>Miejsce:</strong> Nowy Sącz, Osiedle Barskie</p>
-            <p><strong>Lokalizacja:</strong> <a href="https://maps.app.goo.gl/4KyoKhGWkUrDLYUH8" target="_blank">Otwórz na Google Maps</a></p>
-        </div>
+    <!-- Informacje o evencie -->
+    <div class="event-info">
+        <h3>Informacje o evencie</h3>
+        <p><strong>Data:</strong> 3 sierpnia 2026</p>
+        <p><strong>Godzina:</strong> 10:00</p>
+        <p><strong>Miejsce:</strong> Nowy Sącz, Osiedle Barskie</p>
+        <p><strong>Lokalizacja:</strong>
+            <a href="https://maps.app.goo.gl/4KyoKhGWkUrDLYUH8" target="_blank">
+                Otwórz na Google Maps
+            </a>
+        </p>
+    </div>
 
-        <!-- Przyciski -->
-        <div class="button-container">
-            <button class="btn" onclick="openBannerModal()">Pokaż baner eventu</button>
-            <button class="btn" onclick="openChatModal()">Przejdź do czatu grupowego</button>
-        </div>
+    <!-- Przyciski główne -->
+    <div class="button-container">
+        <button class="btn" onclick="openBannerModal()">Pokaż baner eventu</button>
+        <button class="btn" onclick="openChatModal()">Przejdź do czatu grupowego</button>
     </div>
 
     <!-- Modal banera -->
@@ -570,7 +607,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeBannerModal()">&times;</span>
             <img src="foty/baner_event.jpg" alt="Baner eventu">
-            <button class="btn btn-download" onclick="downloadBanner()">Pobierz baner do galerii</button>
+            <button class="btn-download" onclick="downloadBanner()">Pobierz baner do galerii</button>
         </div>
     </div>
 
@@ -578,11 +615,11 @@
     <div id="chatModal" class="chat-modal">
         <div class="chat-container">
             <span class="chat-close" onclick="closeChatModal()">&times;</span>
-            
-            <!-- Login section -->
+
+            <!-- Formularz logowania -->
             <div id="loginSection" class="login-section">
                 <h2>Dołącz do czatu</h2>
-                
+
                 <div class="form-group">
                     <label for="nickInput">Pseudonim:</label>
                     <input type="text" id="nickInput" placeholder="Wpisz swój nick...">
@@ -591,46 +628,55 @@
                 <div class="form-group">
                     <label>Płeć:</label>
                     <div class="gender-options">
-                        <button class="gender-btn" onclick="selectGender('Mężczyzna')">Mężczyzna</button>
-                        <button class="gender-btn" onclick="selectGender('Kobieta')">Kobieta</button>
-                        <button class="gender-btn" onclick="selectGender('Inne')">Inne</button>
+                        <button class="gender-btn" onclick="selectGender('Mężczyzna', this)">Mężczyzna</button>
+                        <button class="gender-btn" onclick="selectGender('Kobieta', this)">Kobieta</button>
+                        <button class="gender-btn" onclick="selectGender('Inne', this)">Inne</button>
                     </div>
                 </div>
 
                 <div id="customGenderSection" class="custom-gender-section hidden">
                     <h4>Wybierz coś bardziej pasującego:</h4>
                     <div class="custom-gender-options">
-                        <button class="custom-gender-btn" onclick="selectCustomGender('🚁 Helikopter bojowy')">🚁 Helikopter bojowy</button>
-                        <button class="custom-gender-btn" onclick="selectCustomGender('🚗 Cadillac Eldorado')">🚗 Cadillac Eldorado</button>
-                        <button class="custom-gender-btn" onclick="selectCustomGender('👤 Nico Belic')">👤 Nico Belic</button>
-                        <button class="custom-gender-btn" onclick="selectCustomGender('🎮 Konsola PlayStation 6')">🎮 Konsola PlayStation 6</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('🚁 Helikopter bojowy', this)">🚁 Helikopter bojowy</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('🚗 Cadillac Eldorado', this)">🚗 Cadillac Eldorado</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('👤 Nico Belic', this)">👤 Nico Belic</button>
+                        <button class="custom-gender-btn" onclick="selectCustomGender('🎮 Konsola PlayStation 6', this)">🎮 Konsola PlayStation 6</button>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="colorPicker">Kolor nicku:</label>
+                    <label>Kolor nicku:</label>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div id="colorPreview" class="color-preview" style="background-color: #00ff00;"></div>
-                        <button class="btn-random-color" onclick="randomizeNickColor()">Losuj kolor nicku</button>
+                        <button class="btn-random-color" onclick="randomizeNickColor()">🎲 Losuj kolor nicku</button>
                     </div>
                 </div>
 
                 <button class="btn-login" onclick="joinChat()">Dołącz do czatu</button>
             </div>
 
-            <!-- Chat section (hidden until logged in) -->
-            <div id="chatSection" class="hidden" style="flex: 1; display: flex; flex-direction: column;">
+            <!-- Sekcja czatu (ukryta do czasu zalogowania) -->
+            <div id="chatSection" class="hidden">
                 <div class="user-info">
-                    Zalogowany jako: <span id="userNickDisplay" style="color: #00ff00;"></span>
+                    Zalogowany jako: <span id="userNickDisplay"></span>
                 </div>
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input-container">
-                    <input type="text" id="messageInput" placeholder="Wpisz wiadomość..." onkeypress="handleKeyPress(event)">
+                    <input
+                        type="text"
+                        id="messageInput"
+                        placeholder="Wpisz wiadomość..."
+                        onkeypress="handleKeyPress(event)"
+                    >
                     <button onclick="sendMessage()">Wyślij</button>
                 </div>
             </div>
+
         </div>
     </div>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
         // ===== ZMIENNE GLOBALNE =====
@@ -639,13 +685,28 @@
         let currentUserColor = '#00ff00';
         let currentGender = '';
         let isLoggedIn = false;
+        let supabaseClient = null;
+        let messageSubscription = null;
+
+        // ===== SUPABASE CONFIG =====
+        const SUPABASE_URL = 'https://uwqhzaxpysinyosgwigg.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_s_Ef_oN52hh28ngOwK3gVw_HhJMk8pG';
 
         // ===== INICJALIZACJA =====
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             updateCountdown();
             setInterval(updateCountdown, 1000);
             initSupabase();
         });
+
+        function initSupabase() {
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('✅ Supabase połączony!');
+            } catch (error) {
+                console.error('❌ Błąd Supabase:', error);
+            }
+        }
 
         // ===== LICZNIK CZASU =====
         function updateCountdown() {
@@ -654,10 +715,10 @@
             const distance = eventDate - now;
 
             if (distance < 0) {
-                document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
-                document.getElementById('seconds').textContent = '0';
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
                 return;
             }
 
@@ -690,9 +751,9 @@
             document.body.removeChild(link);
         }
 
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('bannerModal');
-            if (event.target == modal) {
+            if (event.target === modal) {
                 modal.style.display = 'none';
             }
         }
@@ -709,12 +770,14 @@
             document.getElementById('chatModal').style.display = 'none';
         }
 
-        function selectGender(gender) {
+        // ===== WYBÓR PŁCI =====
+        function selectGender(gender, btnElement) {
             currentGender = gender;
+
             document.querySelectorAll('.gender-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            btnElement.classList.add('active');
 
             const customSection = document.getElementById('customGenderSection');
             if (gender === 'Inne') {
@@ -724,36 +787,39 @@
             }
         }
 
-        function selectCustomGender(customGender) {
+        function selectCustomGender(customGender, btnElement) {
             currentGender = customGender;
+
             document.querySelectorAll('.custom-gender-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // ===== KOLOR NICKU =====
+        function generateRandomColor() {
+            const r = Math.floor(Math.random() * 156) + 100;
+            const g = Math.floor(Math.random() * 156) + 100;
+            const b = Math.floor(Math.random() * 156) + 100;
+            const toHex = (val) => val.toString(16).padStart(2, '0');
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
         }
 
         function randomizeNickColor() {
             let newColor = generateRandomColor();
-            
-            // Upewnij się, że kolor nie został już użyty
-            while (usedColors.includes(newColor)) {
+            let attempts = 0;
+
+            while (usedColors.includes(newColor) && attempts < 1000) {
                 newColor = generateRandomColor();
+                attempts++;
             }
 
             currentUserColor = newColor;
             document.getElementById('colorPreview').style.backgroundColor = newColor;
         }
 
-        function generateRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        function joinChat() {
+        // ===== DOŁĄCZ DO CZATU =====
+        async function joinChat() {
             const nick = document.getElementById('nickInput').value.trim();
 
             if (!nick) {
@@ -766,40 +832,33 @@
                 return;
             }
 
+            if (!supabaseClient) {
+                alert('Brak połączenia z serwerem! Sprawdź konsolę (F12).');
+                return;
+            }
+
             currentUserNick = nick;
             isLoggedIn = true;
-
-            // Ukryj login section, pokaż chat
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('chatSection').classList.remove('hidden');
-            document.getElementById('userNickDisplay').textContent = nick;
-            document.getElementById('userNickDisplay').style.color = currentUserColor;
-
-            // Zaznacz kolor jako użyty
             usedColors.push(currentUserColor);
 
-            // Załaduj wiadomości
-            loadMessages();
+            // Pokaż czat, ukryj formularz
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('chatSection').classList.remove('hidden');
 
-            // Nasłuchuj zmian w czacie
+            const nickDisplay = document.getElementById('userNickDisplay');
+            nickDisplay.textContent = nick;
+            nickDisplay.style.color = currentUserColor;
+
+            await loadMessages();
             subscribeToMessages();
         }
 
-        // ===== SUPABASE =====
-        const SUPABASE_URL = 'https://uwqhzaxpysinyosgwigg.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_s_Ef_oN52hh28ngOwK3gVw_HhJMk8pG';
-
-        let supabaseClient;
-
-
-        async function initSupabase() {
-            // Importuj bibliotekę Supabase
-            const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-            supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
-        }
-
+        // ===== ŁADOWANIE WIADOMOŚCI =====
         async function loadMessages() {
-            if (!supabaseClient) return;
+            if (!supabaseClient) {
+                console.error('Brak klienta Supabase!');
+                return;
+            }
 
             try {
                 const { data, error } = await supabaseClient
@@ -807,7 +866,12 @@
                     .select('*')
                     .order('created_at', { ascending: true });
 
-                if (error) throw error;
+                if (error) {
+                    console.error('❌ Błąd SELECT:', error);
+                    return;
+                }
+
+                console.log('✅ Załadowano wiadomości:', data.length);
 
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.innerHTML = '';
@@ -816,79 +880,105 @@
                     addMessageToChat(message.nick, message.color, message.content);
                 });
 
-                // Scroll na koniec
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            } catch (error) {
-                console.error('Błąd przy ładowaniu wiadomości:', error);
+
+            } catch (err) {
+                console.error('❌ Nieoczekiwany błąd loadMessages:', err);
             }
         }
 
+        // ===== SUBSKRYPCJA REALTIME =====
         function subscribeToMessages() {
             if (!supabaseClient) return;
 
-            supabaseClient
-                .channel('messages')
+            if (messageSubscription) {
+                supabaseClient.removeChannel(messageSubscription);
+            }
+
+            messageSubscription = supabaseClient
+                .channel('public:messages')
                 .on(
                     'postgres_changes',
                     { event: 'INSERT', schema: 'public', table: 'messages' },
                     (payload) => {
-                        const message = payload.new;
-                        addMessageToChat(message.nick, message.color, message.content);
-                        document.getElementById('chatMessages').scrollTop = 
-                            document.getElementById('chatMessages').scrollHeight;
+                        console.log('📨 Nowa wiadomość:', payload.new);
+                        addMessageToChat(payload.new.nick, payload.new.color, payload.new.content);
+                        const chatMessages = document.getElementById('chatMessages');
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
                     }
                 )
-                .subscribe();
+                .subscribe((status) => {
+                    console.log('📡 Status subskrypcji:', status);
+                });
         }
 
+        // ===== WYSYŁANIE WIADOMOŚCI =====
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
             const content = messageInput.value.trim();
 
             if (!content) return;
 
-            if (!supabaseClient) return;
+            if (!supabaseClient) {
+                console.error('Brak klienta Supabase!');
+                alert('Brak połączenia z serwerem!');
+                return;
+            }
+
+            console.log('📤 Wysyłam wiadomość...', {
+                nick: currentUserNick,
+                color: currentUserColor,
+                content: content
+            });
 
             try {
-                const { error } = await supabaseClient
+                const { data, error } = await supabaseClient
                     .from('messages')
-                    .insert([
-                        {
-                            nick: currentUserNick,
-                            color: currentUserColor,
-                            content: content
-                        }
-                    ]);
+                    .insert([{
+                        nick: currentUserNick,
+                        color: currentUserColor,
+                        content: content
+                    }])
+                    .select();
 
-                if (error) throw error;
+                if (error) {
+                    console.error('❌ Błąd INSERT:', error);
+                    alert('Błąd wysyłania: ' + error.message);
+                    return;
+                }
 
+                console.log('✅ Wysłano!', data);
                 messageInput.value = '';
-            } catch (error) {
-                console.error('Błąd przy wysyłaniu wiadomości:', error);
-                alert('Błąd przy wysyłaniu wiadomości!');
+
+            } catch (err) {
+                console.error('❌ Nieoczekiwany błąd sendMessage:', err);
+                alert('Nieoczekiwany błąd: ' + err.message);
             }
         }
 
+        // ===== DODAJ WIADOMOŚĆ DO WIDOKU =====
         function addMessageToChat(nick, color, content) {
             const chatMessages = document.getElementById('chatMessages');
+
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message';
             messageDiv.style.borderLeftColor = color;
 
-            const nickSpan = document.createElement('div');
-            nickSpan.className = 'message-nick';
-            nickSpan.style.color = color;
-            nickSpan.textContent = nick;
+            const nickDiv = document.createElement('div');
+            nickDiv.className = 'message-nick';
+            nickDiv.style.color = color;
+            nickDiv.textContent = nick;
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
             contentDiv.textContent = content;
 
-            messageDiv.appendChild(nickSpan);
+            messageDiv.appendChild(nickDiv);
             messageDiv.appendChild(contentDiv);
             chatMessages.appendChild(messageDiv);
         }
 
+        // ===== ENTER W CZACIE =====
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
                 sendMessage();
