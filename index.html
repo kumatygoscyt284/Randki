@@ -453,17 +453,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // === AUTOSTART MUZYKI PO 3 SEKUNDACH ===
     const audio = document.getElementById('bgAudio');
     if (audio) {
-        audio.volume = 1.0; // pełna głośność
-        audio.muted = true; // obejście blokady autoplay
-
-        // Start cicho (muted), żeby autoplay zadziałał
-        audio.play().catch(()=>{});
-
-        // Po 3 sekundach odmutuj i zacznij normalnie grać
+        // Próba odtworzenia po 3 sekundach
         setTimeout(() => {
             audio.muted = false;
             audio.currentTime = 0;
-            audio.play().catch(()=>{});
+            audio.play().catch(() => {
+                // Jeśli przeglądarka zablokuje, odtwórz po pierwszym kliknięciu w stronę
+                const playOnce = () => {
+                    audio.play();
+                    window.removeEventListener('click', playOnce);
+                };
+                window.addEventListener('click', playOnce);
+            });
         }, 3000);
     }
 
@@ -480,11 +481,11 @@ function initSupabase() {
         console.error('❌ Błąd Supabase:', e); 
     }
 }
-</script>
 
-    /* ============================================================
-       LICZNIK
-    ============================================================ */
+/* ============================================================
+   LICZNIK
+============================================================ */
+    
     function updateCountdown() {
         const d = new Date('2026-08-03T10:00:00').getTime() - Date.now();
         if (d < 0) return;
