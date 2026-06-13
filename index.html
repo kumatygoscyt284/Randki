@@ -4,310 +4,789 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WIELKI EVENT - Nowy Sącz</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-  html, body { background:#000; color:#fff; overflow-x:hidden; min-height:100vh; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
 
-  body {
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(0,180,40,0.35), transparent 60%),
-      radial-gradient(ellipse at 70% 80%, rgba(0,100,30,0.4), transparent 60%),
-      linear-gradient(180deg, #001a05, #000);
-    background-attachment: fixed;
-  }
-  body::before {
-    content:"";
-    position:fixed; inset:0;
-    background: repeating-linear-gradient(0deg, rgba(0,255,80,0.03) 0 2px, transparent 2px 4px);
-    pointer-events:none; z-index:1;
+html, body {
+  min-height: 100%;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,255,70,0.18), transparent 35%),
+    radial-gradient(circle at 80% 80%, rgba(0,150,40,0.22), transparent 40%),
+    linear-gradient(180deg, #001405, #000);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,255,80,0.035) 0 2px,
+    transparent 2px 5px
+  );
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 24px 16px 50px;
+}
+
+/* TYTUŁ */
+
+.title-wrap {
+  text-align: center;
+  position: relative;
+  padding: 35px 5px 35px;
+  margin-bottom: 8px;
+  overflow: visible;
+}
+
+.fire {
+  font-size: clamp(2.4rem, 10vw, 7rem);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: clamp(1px, 1vw, 5px);
+  text-transform: uppercase;
+  display: inline-block;
+  background: linear-gradient(
+    0deg,
+    #ffff00,
+    #ff8c00,
+    #ff0000,
+    #ff8c00,
+    #ffff00
+  );
+  background-size: 100% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 0 8px #ff5500)
+    drop-shadow(0 0 22px #ff2200);
+  animation: fireMove 1.1s linear infinite, titleMove 3s ease-in-out infinite;
+}
+
+@keyframes fireMove {
+  0% { background-position: 0 0%; }
+  100% { background-position: 0 400%; }
+}
+
+@keyframes titleMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-0.8deg); }
+  50% { transform: translateY(2px) rotate(0.8deg); }
+  75% { transform: translateY(-1px) rotate(-0.4deg); }
+}
+
+.flames {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: min(720px, 90%);
+  height: 45px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.flame {
+  position: absolute;
+  bottom: 0;
+  width: 30px;
+  height: 45px;
+  border-radius: 50% 50% 25% 25%;
+  background: radial-gradient(circle at 50% 100%, #fff176, #ff5722 45%, transparent 72%);
+  filter: blur(3px);
+  animation: flicker 0.6s infinite alternate;
+}
+
+@keyframes flicker {
+  from { transform: scaleY(0.85) scaleX(1); opacity: 0.65; }
+  to { transform: scaleY(1.3) scaleX(0.75); opacity: 1; }
+}
+
+/* PANELE */
+
+.panel {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(0,45,12,0.88), rgba(0,16,5,0.92));
+  border: 1px solid rgba(0,255,80,0.38);
+  border-radius: 10px;
+  padding: clamp(16px, 4vw, 26px);
+  margin: 18px 0;
+  box-shadow:
+    0 0 20px rgba(0,255,80,0.18),
+    inset 0 0 28px rgba(0,255,80,0.05);
+}
+
+.panel h2 {
+  color: #9eff5a;
+  text-shadow: 0 0 10px #00ff44;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0,255,80,0.3);
+}
+
+/* LICZNIK */
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 14px;
+}
+
+.cd-box {
+  min-width: 0;
+  text-align: center;
+  padding: 18px 10px;
+  border: 2px solid #00ff44;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0b3211, #031305);
+  box-shadow: 0 0 15px rgba(0,255,80,0.35);
+}
+
+.cd-num {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 10px #00ff44;
+}
+
+.cd-lbl {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #9eff5a;
+}
+
+/* BUTTONY */
+
+.center {
+  text-align: center;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.xbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 14px 32px;
+  border-radius: 999px;
+  border: 2px solid #00ff44;
+  background: linear-gradient(180deg, #00b830, #006a1c);
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(0.95rem, 3vw, 1.12rem);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 0 20px rgba(0,255,80,0.45),
+    inset 0 0 16px rgba(255,255,255,0.09);
+  transition: 0.18s;
+  max-width: 100%;
+  text-align: center;
+}
+
+.xbtn:hover {
+  transform: scale(1.035);
+  box-shadow: 0 0 30px rgba(0,255,80,0.72);
+}
+
+.blue-btn {
+  background: linear-gradient(180deg, #0874d8, #003d7a);
+  border-color: #00aaff;
+  box-shadow: 0 0 20px rgba(0,170,255,0.45);
+}
+
+.location-text {
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.location-text .xbtn {
+  margin-top: 14px;
+}
+
+/* MODALE */
+
+.modal-bg,
+.banner-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 100;
+  background: rgba(0,0,0,0.92);
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.modal-bg.show,
+.banner-modal.show {
+  display: flex;
+}
+
+.modal {
+  width: min(500px, 100%);
+  padding: 26px;
+  border-radius: 14px;
+  border: 2px solid #00ff44;
+  background: linear-gradient(135deg, #002a08, #000f04);
+  box-shadow: 0 0 36px rgba(0,255,80,0.45);
+}
+
+.modal h3 {
+  color: #9eff5a;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 16px;
+  border-radius: 7px;
+  border: 1px solid #00ff44;
+  background: #000;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.color-opt {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.color-opt.sel {
+  border-color: #fff;
+  box-shadow: 0 0 10px #fff;
+}
+
+/* BANER */
+
+.banner-modal {
+  z-index: 200;
+  flex-direction: column;
+  background: rgba(0,0,0,0.96);
+}
+
+.banner-close {
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  color: #fff;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.banner-modal img {
+  max-width: min(96vw, 1100px);
+  max-height: 74vh;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 3px solid #00ff44;
+  box-shadow: 0 0 30px rgba(0,255,80,0.45);
+}
+
+.download-btn {
+  width: min(520px, 94vw);
+  margin-top: 22px;
+  padding: 17px 20px;
+  border-radius: 8px;
+  border: 3px solid #00ff44;
+  background: linear-gradient(180deg, #00b830, #006a1c);
+  color: #fff;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* CZAT */
+
+.chat-wrap {
+  display: none;
+}
+
+.chat-wrap.show {
+  display: block;
+}
+
+.pinned-area {
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px dashed #ffc800;
+  background: rgba(255,200,0,0.09);
+  margin-bottom: 14px;
+}
+
+.pinned-area h4 {
+  color: #ffc800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.messages {
+  height: min(430px, 58vh);
+  overflow-y: auto;
+  padding: 13px;
+  border-radius: 9px;
+  border: 1px solid rgba(0,255,80,0.3);
+  background: rgba(0,0,0,0.48);
+  margin-bottom: 14px;
+}
+
+.msg {
+  position: relative;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #00ff44;
+  background: rgba(0,30,10,0.66);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.msg.admin {
+  background: linear-gradient(90deg, rgba(255,100,200,0.45), rgba(255,50,150,0.30));
+  border-left-color: #ff5cb3;
+  box-shadow: 0 0 10px rgba(255,100,200,0.25);
+}
+
+.msg.pinned {
+  border-left-color: #ffc800;
+  background: rgba(70,45,0,0.48);
+}
+
+.msg-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+  font-size: 0.86rem;
+}
+
+.msg-nick {
+  font-weight: 900;
+}
+
+.msg-time {
+  color: #999;
+  font-size: 0.76rem;
+}
+
+.msg-rank {
+  background: #ff5cb3;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.msg-text {
+  line-height: 1.38;
+  font-size: 1rem;
+}
+
+.msg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.msg-actions button {
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #171700;
+  color: #fff;
+  border: 1px solid #ffc800;
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
+.msg-actions button.del {
+  border-color: #ff4444;
+}
+
+.msg-actions button.ban {
+  border-color: #ff8800;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.input-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px;
+  border-radius: 7px;
+  border: 1px solid #00ff44;
+  background: #000;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.input-row button {
+  padding: 13px 24px;
+  border-radius: 7px;
+  border: 2px solid #00ff44;
+  background: linear-gradient(180deg, #00b830, #006a1c);
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.status-text {
+  min-height: 22px;
+  margin-top: 9px;
+  color: #9eff5a;
+  font-size: 0.9rem;
+}
+
+.error-text {
+  color: #ff6666;
+}
+
+/* TELEFONY */
+
+@media (max-width: 700px) {
+  .container {
+    padding: 18px 12px 40px;
   }
 
-  .container { position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:30px 20px; }
-
-  .title-wrap { text-align:center; padding:40px 10px 20px; position:relative; }
-  h1.fire {
-    font-size: clamp(2.5rem, 9vw, 7rem);
-    font-weight: 900;
-    letter-spacing: 4px;
-    color: #fff;
-    text-transform: uppercase;
-    display:inline-block;
-    animation: shake 2.5s ease-in-out infinite;
-    background: linear-gradient(0deg, #ff0 0%, #ff6a00 25%, #ff0000 50%, #ff6a00 75%, #ffff00 100%);
-    background-size: 100% 400%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shake 3s infinite ease-in-out, fireMove 1.2s infinite linear;
-    filter: drop-shadow(0 0 10px #ff5500) drop-shadow(0 0 25px #ff2200);
-  }
-  @keyframes fireMove {
-    0% { background-position: 0 0%; }
-    100% { background-position: 0 400%; }
-  }
-  @keyframes shake {
-    0%,100% { transform: translate(0,0) rotate(0); }
-    25% { transform: translate(-2px,1px) rotate(-1deg); }
-    50% { transform: translate(2px,-1px) rotate(1deg); }
-    75% { transform: translate(-1px,2px) rotate(-0.5deg); }
+  .title-wrap {
+    padding-top: 25px;
+    padding-bottom: 38px;
   }
 
-  .flames { position:absolute; left:50%; bottom:-10px; transform:translateX(-50%); width:80%; height:50px; pointer-events:none; }
-  .flame {
-    position:absolute; bottom:0; width:30px; height:50px;
-    background: radial-gradient(circle at 50% 100%, #ffeb3b, #ff5722 40%, transparent 70%);
-    border-radius: 50% 50% 20% 20%;
-    animation: flicker 0.6s infinite alternate;
-    filter: blur(3px);
-  }
-  @keyframes flicker {
-    from { transform: scaleY(1) scaleX(1); opacity: 0.9; }
-    to { transform: scaleY(1.3) scaleX(0.8); opacity: 1; }
+  .countdown {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
-  .panel {
-    background: linear-gradient(135deg, rgba(0,40,10,0.85), rgba(0,20,5,0.85));
-    border: 1px solid rgba(0,255,80,0.4);
-    border-radius: 8px;
-    padding: 25px;
-    margin: 20px 0;
-    box-shadow: 0 0 20px rgba(0,255,80,0.2), inset 0 0 30px rgba(0,255,80,0.05);
-  }
-  .panel h2 {
-    color:#9eff5a; text-shadow: 0 0 10px #00ff44;
-    font-size: 1.5rem; margin-bottom:15px;
-    text-transform: uppercase; letter-spacing: 2px;
-    border-bottom: 1px solid rgba(0,255,80,0.3);
-    padding-bottom: 10px;
-  }
-
-  .countdown { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }
   .cd-box {
-    background: linear-gradient(180deg, #0a3010, #051805);
-    border: 2px solid #00ff44;
-    border-radius: 10px;
-    padding: 20px;
-    min-width: 100px;
-    text-align:center;
-    box-shadow: 0 0 15px rgba(0,255,80,0.4);
+    padding: 15px 8px;
   }
-  .cd-num { font-size: 2.5rem; font-weight:900; color:#fff; text-shadow:0 0 10px #00ff44; }
-  .cd-lbl { font-size: 0.8rem; color:#9eff5a; text-transform:uppercase; letter-spacing:2px; margin-top:5px; }
 
   .xbtn {
-    display:inline-block;
-    background: linear-gradient(180deg, #00b830, #006a1c);
-    color:#fff; font-weight:bold; font-size:1.2rem;
-    padding: 18px 40px;
-    border: 2px solid #00ff44;
-    border-radius: 50px;
-    cursor:pointer;
-    text-transform:uppercase; letter-spacing:2px;
-    box-shadow: 0 0 20px rgba(0,255,80,0.5);
-    transition: all 0.2s;
-    text-decoration:none;
-  }
-  .xbtn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,255,80,0.8); }
-  .center { text-align:center; padding:20px; }
-
-  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
-  .modal-bg.show { display:flex; }
-  .modal {
-    background: linear-gradient(135deg, #002a08, #001505);
-    border:2px solid #00ff44; border-radius:12px;
-    padding:30px; max-width:500px; width:100%;
-    box-shadow:0 0 40px rgba(0,255,80,0.5);
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  /* Baner Modal */
-  .banner-modal {
-    position:fixed; inset:0; background:rgba(0,0,0,0.95);
-    z-index:200; display:none; flex-direction:column; align-items:center; justify-content:center;
+  .color-grid {
+    grid-template-columns: repeat(6, 1fr);
   }
-  .banner-modal.show { display:flex; }
-  .banner-modal img {
-    max-width:95%; max-height:75vh; border:3px solid #00ff44; border-radius:8px;
+
+  .input-row {
+    flex-direction: column;
   }
+
+  .input-row button {
+    width: 100%;
+  }
+
+  .messages {
+    height: 380px;
+  }
+
   .banner-close {
-    position:absolute; top:20px; right:25px;
-    font-size:2.5rem; color:#fff; cursor:pointer; z-index:10;
+    top: 8px;
+    right: 16px;
   }
-  .download-btn {
-    margin-top:25px;
-    padding:18px 60px;
-    font-size:1.4rem;
-    background: linear-gradient(180deg, #00b830, #006a1c);
-    color:#fff;
-    border:3px solid #00ff44;
-    border-radius:8px;
-    cursor:pointer;
-    text-transform:uppercase;
-    font-weight:bold;
-  }
-
-  .msg { padding:8px 12px; margin:6px 0; border-radius:6px; background: rgba(0,30,10,0.6); border-left:3px solid #00ff44; word-wrap:break-word; position:relative; }
-  .msg.admin { background: linear-gradient(90deg, rgba(255,100,200,0.4), rgba(255,50,150,0.3)); border-left-color:#ff5cb3; }
-  .msg.pinned { border-left-color:#ffc800; background: rgba(60,40,0,0.5); }
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
 
-  <!-- Tytuł -->
   <div class="title-wrap">
     <h1 class="fire">WIELKI EVENT</h1>
     <div class="flames" id="flames"></div>
   </div>
 
-  <!-- Odliczanie -->
   <div class="panel">
     <h2>⏱ Odliczanie do startu</h2>
-    <div class="countdown" id="countdown">
-      <div class="cd-box"><div class="cd-num" id="days">0</div><div class="cd-lbl">Dni</div></div>
-      <div class="cd-box"><div class="cd-num" id="hours">0</div><div class="cd-lbl">Godzin</div></div>
-      <div class="cd-box"><div class="cd-num" id="mins">0</div><div class="cd-lbl">Minut</div></div>
-      <div class="cd-box"><div class="cd-num" id="secs">0</div><div class="cd-lbl">Sekund</div></div>
+
+    <div class="countdown">
+      <div class="cd-box">
+        <div class="cd-num" id="days">0</div>
+        <div class="cd-lbl">Dni</div>
+      </div>
+
+      <div class="cd-box">
+        <div class="cd-num" id="hours">00</div>
+        <div class="cd-lbl">Godzin</div>
+      </div>
+
+      <div class="cd-box">
+        <div class="cd-num" id="mins">00</div>
+        <div class="cd-lbl">Minut</div>
+      </div>
+
+      <div class="cd-box">
+        <div class="cd-num" id="secs">00</div>
+        <div class="cd-lbl">Sekund</div>
+      </div>
     </div>
   </div>
 
-  <!-- Miejsce -->
   <div class="panel">
     <h2>📍 Miejsce eventu</h2>
-    <p><strong>Data:</strong> 3 sierpnia 2026</p>
-    <p><strong>Miasto:</strong> Nowy Sącz</p>
-    <br>
-    <a href="https://maps.app.goo.gl/pnoA7nLf4PQJwPPSA" target="_blank" class="xbtn" style="padding:14px 30px; font-size:1rem;">
-      📍 Otwórz lokalizację w Google Maps
-    </a>
+
+    <div class="location-text">
+      <p><strong>Data:</strong> 3 sierpnia 2026</p>
+      <p><strong>Miasto:</strong> Nowy Sącz</p>
+
+      <a href="https://maps.app.goo.gl/pnoA7nLf4PQJwPPSA" target="_blank" class="xbtn">
+        📍 Otwórz pinezkę w Google Maps
+      </a>
+    </div>
   </div>
 
-  <!-- Przyciski -->
   <div class="center">
-    <button class="xbtn" onclick="showBannerModal()" style="margin-bottom:15px; background: linear-gradient(180deg, #0066cc, #003366); border-color:#00aaff;">
+    <button class="xbtn blue-btn" onclick="showBannerModal()">
       🖼️ Baner eventu
-    </button><br>
-    <button class="xbtn" onclick="openChatModal()">💬 Przejdź do czatu grupowego</button>
+    </button>
+
+    <button class="xbtn" onclick="openChatModal()">
+      💬 Przejdź do czatu grupowego
+    </button>
   </div>
 
-  <!-- Czat -->
   <div class="panel chat-wrap" id="chatWrap">
-    <h2>💬 Czat grupowy <span id="userInfo" style="font-size:0.9rem;"></span></h2>
-    <div class="pinned-area" style="background:rgba(255,200,0,0.1); border:1px dashed #ffc800; padding:10px; border-radius:8px; margin:15px 0;">
-      <h4 style="color:#ffc800; margin-bottom:8px;">📌 Przypięte wiadomości</h4>
-      <div id="pinnedList"><em style="color:#888;">Brak przypiętych</em></div>
+    <h2>
+      💬 Czat grupowy
+      <span id="userInfo" style="font-size:0.9rem;"></span>
+    </h2>
+
+    <div class="pinned-area">
+      <h4>📌 Przypięte wiadomości</h4>
+      <div id="pinnedList">
+        <em style="color:#888;">Brak przypiętych</em>
+      </div>
     </div>
-    <div class="messages" id="messages" style="height:400px; overflow-y:auto; background:rgba(0,0,0,0.5); border:1px solid rgba(0,255,80,0.3); border-radius:8px; padding:15px; margin-bottom:15px;"></div>
-    <div class="input-row" style="display:flex; gap:10px;">
-      <input id="msgInput" placeholder="Napisz wiadomość..." maxlength="500" onkeydown="if(event.key==='Enter')sendMsg()" style="flex:1; padding:12px; background:#000; border:1px solid #00ff44; color:#fff; border-radius:5px;">
-      <button onclick="sendMsg()" style="padding:12px 25px; background:linear-gradient(180deg,#00b830,#006a1c); color:#fff; border:2px solid #00ff44; border-radius:5px; cursor:pointer; font-weight:bold;">Wyślij</button>
+
+    <div class="messages" id="messages">
+      <p style="color:#888;">Ładowanie wiadomości...</p>
     </div>
+
+    <div class="input-row">
+      <input id="msgInput" placeholder="Napisz wiadomość..." maxlength="500" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button id="sendBtn" onclick="sendMsg()">Wyślij</button>
+    </div>
+
+    <div class="status-text" id="chatStatus"></div>
   </div>
+
 </div>
 
-<!-- Modal nicku -->
+<!-- MODAL NICKU -->
+
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <h3 style="color:#9eff5a; margin-bottom:20px;">🎮 Wybierz ksywę i kolor</h3>
-    <input id="nickInput" placeholder="Twoja ksywa..." maxlength="20" style="width:100%; padding:12px; background:#000; border:1px solid #00ff44; color:#fff; border-radius:5px; margin-bottom:15px;">
-    <div id="colorGrid" style="display:grid; grid-template-columns: repeat(8, 1fr); gap:8px; margin-bottom:20px;"></div>
-    <button class="xbtn" style="width:100%; padding:12px;" onclick="joinChat()">DOŁĄCZ</button>
+    <h3>🎮 Wybierz ksywę i kolor</h3>
+
+    <input id="nickInput" placeholder="Twoja ksywa..." maxlength="20">
+
+    <div class="color-grid" id="colorGrid"></div>
+
+    <button class="xbtn" style="width:100%; padding:12px;" onclick="joinChat()">
+      Dołącz
+    </button>
   </div>
 </div>
 
-<!-- Modal Banera -->
+<!-- MODAL BANERA -->
+
 <div class="banner-modal" id="bannerModal">
   <span class="banner-close" onclick="closeBannerModal()">&times;</span>
+
   <img src="foty/baner_event.jpg" alt="Baner eventu">
-  <button class="download-btn" onclick="downloadBanner()">Pobierz baner do galerii</button>
+
+  <button class="download-btn" onclick="downloadBanner()">
+    Pobierz baner do galerii
+  </button>
 </div>
 
 <script>
-// === Ogień ===
+/* =========================================================
+   SUPABASE - TUTAJ WKLEJ SWOJE DANE
+   ========================================================= */
+
+const SUPABASE_URL = 'TU_WKLEJ_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'TU_WKLEJ_SUPABASE_ANON_KEY';
+
+let sb = null;
+
+function getSupabase() {
+  if (
+    SUPABASE_URL === 'TU_WKLEJ_SUPABASE_URL' ||
+    SUPABASE_ANON_KEY === 'TU_WKLEJ_SUPABASE_ANON_KEY'
+  ) {
+    setStatus('Brak danych Supabase. Wklej SUPABASE_URL oraz SUPABASE_ANON_KEY.', true);
+    return null;
+  }
+
+  if (!window.supabase) {
+    setStatus('Nie załadowano biblioteki Supabase. Sprawdź internet/CDN.', true);
+    return null;
+  }
+
+  if (!sb) {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+
+  return sb;
+}
+
+/* =========================================================
+   LICZNIK - DZIAŁA NIEZALEŻNIE OD SUPABASE
+   ========================================================= */
+
+const eventDate = new Date(2026, 7, 3, 0, 0, 0).getTime();
+// miesiące w JS są od 0, więc 7 = sierpień
+
+function updateCountdown() {
+  const now = Date.now();
+  let diff = eventDate - now;
+
+  if (diff <= 0) {
+    document.getElementById('days').textContent = '0';
+    document.getElementById('hours').textContent = '00';
+    document.getElementById('mins').textContent = '00';
+    document.getElementById('secs').textContent = '00';
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  diff %= 1000 * 60 * 60 * 24;
+
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  diff %= 1000 * 60 * 60;
+
+  const mins = Math.floor(diff / (1000 * 60));
+  diff %= 1000 * 60;
+
+  const secs = Math.floor(diff / 1000);
+
+  document.getElementById('days').textContent = days;
+  document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('mins').textContent = String(mins).padStart(2, '0');
+  document.getElementById('secs').textContent = String(secs).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* =========================================================
+   OGNIE POD NAPISEM
+   ========================================================= */
+
 const flamesEl = document.getElementById('flames');
-for(let i=0;i<15;i++){
+
+for (let i = 0; i < 16; i++) {
   const f = document.createElement('div');
-  f.className='flame';
-  f.style.left = (i*7)+'%';
-  f.style.animationDelay = (Math.random()*0.6)+'s';
-  f.style.width = (20+Math.random()*20)+'px';
+  f.className = 'flame';
+  f.style.left = `${i * 6.5}%`;
+  f.style.width = `${18 + Math.random() * 18}px`;
+  f.style.height = `${35 + Math.random() * 20}px`;
+  f.style.animationDelay = `${Math.random() * 0.7}s`;
   flamesEl.appendChild(f);
 }
 
-// === Odliczanie ===
-const target = new Date('2026-08-03T00:00:00').getTime();
-function updateCD(){
-  const now = Date.now();
-  let diff = Math.max(0, target - now);
-  const d = Math.floor(diff/86400000); diff%=86400000;
-  const h = Math.floor(diff/3600000); diff%=3600000;
-  const m = Math.floor(diff/60000); diff%=60000;
-  const s = Math.floor(diff/1000);
-  document.getElementById('days').textContent = d;
-  document.getElementById('hours').textContent = String(h).padStart(2,'0');
-  document.getElementById('mins').textContent = String(m).padStart(2,'0');
-  document.getElementById('secs').textContent = String(s).padStart(2,'0');
-}
-updateCD(); setInterval(updateCD,1000);
+/* =========================================================
+   KOLORY KSYWY
+   ========================================================= */
 
-// === Kolory ===
-const COLORS = ['#FF0000','#FF7F00','#FFFF00','#7FFF00','#00FF00','#00FF7F','#00FFFF','#007FFF','#0000FF','#7F00FF','#FF00FF','#FF007F','#FFFFFF','#C0C0C0','#808080','#400000','#804000','#808000','#008000','#008080','#000080','#400080','#800040','#FFC0CB'];
-const grid = document.getElementById('colorGrid');
+const COLORS = [
+  '#FF0000','#FF7F00','#FFFF00','#7FFF00','#00FF00','#00FF7F',
+  '#00FFFF','#007FFF','#0000FF','#7F00FF','#FF00FF','#FF007F',
+  '#FFFFFF','#C0C0C0','#808080','#400000','#804000','#808000',
+  '#008000','#008080','#000080','#400080','#800040','#FFC0CB'
+];
+
+const colorGrid = document.getElementById('colorGrid');
 let selectedColor = COLORS[4];
-COLORS.forEach((c,i)=>{
-  const d = document.createElement('div');
-  d.style.cssText = `width:100%; aspect-ratio:1; border-radius:50%; cursor:pointer; background:${c}; border:2px solid transparent`;
-  if(i===4) d.style.border = '2px solid #fff';
-  d.onclick = () => {
-    document.querySelectorAll('#colorGrid > div').forEach(e=>e.style.border='2px solid transparent');
-    d.style.border = '2px solid #fff';
-    selectedColor = c;
+
+COLORS.forEach((color, index) => {
+  const div = document.createElement('div');
+  div.className = 'color-opt' + (index === 4 ? ' sel' : '');
+  div.style.background = color;
+
+  div.onclick = () => {
+    document.querySelectorAll('.color-opt').forEach(el => el.classList.remove('sel'));
+    div.classList.add('sel');
+    selectedColor = color;
   };
-  grid.appendChild(d);
+
+  colorGrid.appendChild(div);
 });
 
-// === Użytkownik ===
-function genId(){ 
-  let id = localStorage.getItem('we_userid'); 
-  if(!id){ id = 'u_'+Math.random().toString(36).slice(2,12); localStorage.setItem('we_userid',id); } 
-  return id; 
-}
-const MY_ID = genId();
-let me = null;
-let lastMessageTime = 0;
+/* =========================================================
+   BANER EVENTU
+   ========================================================= */
 
-function openChatModal(){
-  const saved = JSON.parse(sessionStorage.getItem('we_me')||'null');
-  if(saved){ me = saved; showChat(); return; }
-  document.getElementById('modal').classList.add('show');
-}
-
-function joinChat(){
-  const nick = document.getElementById('nickInput').value.trim();
-  if(!nick){ alert('Podaj ksywę!'); return; }
-  me = { nick, color:selectedColor, isAdmin:false };
-  sessionStorage.setItem('we_me', JSON.stringify(me));
-  document.getElementById('modal').classList.remove('show');
-  showChat();
-}
-
-function showChat(){
-  if(getBans().includes(MY_ID)){
-    document.getElementById('chatWrap').innerHTML = '<div style="text-align:center;padding:50px;color:#ff4444;font-size:1.5rem;">⛔ Zostałeś zbanowany z czatu.</div>';
-    document.getElementById('chatWrap').classList.add('show');
-    return;
-  }
-  document.getElementById('chatWrap').classList.add('show');
-  document.getElementById('userInfo').innerHTML = `— zalogowany jako <span style="color:${me.color}">${me.nick}</span>${me.isAdmin?' <span style="background:#ff5cb3;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">ADMIN</span>':''}`;
-}
-
-// === Baner ===
-function showBannerModal(){
+function showBannerModal() {
   document.getElementById('bannerModal').classList.add('show');
 }
-function closeBannerModal(){
+
+function closeBannerModal() {
   document.getElementById('bannerModal').classList.remove('show');
 }
-function downloadBanner(){
+
+function downloadBanner() {
   const link = document.createElement('a');
   link.href = 'foty/baner_event.jpg';
   link.download = 'baner_event.jpg';
@@ -316,104 +795,470 @@ function downloadBanner(){
   document.body.removeChild(link);
 }
 
-// === Czat ===
-function getMsgs(){ return JSON.parse(localStorage.getItem('we_msgs')||'[]'); }
-function setMsgs(m){ localStorage.setItem('we_msgs', JSON.stringify(m)); }
-function getBans(){ return JSON.parse(localStorage.getItem('we_bans')||'[]'); }
-function setBans(b){ localStorage.setItem('we_bans', JSON.stringify(b)); }
+/* =========================================================
+   POMOCNICZE
+   ========================================================= */
 
-function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function fmtTime(ts){
-  const d = new Date(ts);
-  return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
 }
 
-function sendMsg(){
+function fmtTime(dateValue) {
+  const d = new Date(dateValue);
+  const pad = n => String(n).padStart(2, '0');
+
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function setStatus(text, error = false) {
+  const el = document.getElementById('chatStatus');
+  if (!el) return;
+
+  el.textContent = text || '';
+  el.className = error ? 'status-text error-text' : 'status-text';
+}
+
+function genUserKey() {
+  let id = localStorage.getItem('we_userid');
+
+  if (!id) {
+    id = 'u_' + Math.random().toString(36).slice(2, 12) + '_' + Date.now().toString(36);
+    localStorage.setItem('we_userid', id);
+  }
+
+  return id;
+}
+
+const MY_ID = genUserKey();
+
+let me = null;
+let messagesCache = [];
+let realtimeChannel = null;
+let lastMessageTime = 0;
+
+/* =========================================================
+   CZAT - LOGOWANIE
+   ========================================================= */
+
+function openChatModal() {
+  document.getElementById('chatWrap').classList.add('show');
+
+  const client = getSupabase();
+  if (!client) {
+    document.getElementById('messages').innerHTML = `
+      <p style="color:#ff6666;">
+        Czat nie jest połączony, bo nie wpisano danych Supabase w kodzie.
+      </p>
+    `;
+    document.getElementById('chatWrap').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
+  const saved = JSON.parse(sessionStorage.getItem('we_me') || 'null');
+
+  if (saved) {
+    me = saved;
+    showChat();
+  } else {
+    document.getElementById('modal').classList.add('show');
+  }
+}
+
+function joinChat() {
+  const nick = document.getElementById('nickInput').value.trim();
+
+  if (!nick) {
+    alert('Podaj ksywę!');
+    return;
+  }
+
+  me = {
+    nick,
+    color: selectedColor,
+    isAdmin: false
+  };
+
+  sessionStorage.setItem('we_me', JSON.stringify(me));
+  document.getElementById('modal').classList.remove('show');
+
+  showChat();
+}
+
+async function showChat() {
+  document.getElementById('chatWrap').classList.add('show');
+
+  updateUserInfo();
+
+  const banned = await isMeBanned();
+
+  if (banned) {
+    document.getElementById('chatWrap').innerHTML = `
+      <div style="text-align:center;padding:50px;color:#ff4444;font-size:1.45rem;">
+        ⛔ Zostałeś zbanowany z czatu.
+      </div>
+    `;
+    return;
+  }
+
+  await loadMessages();
+  startRealtime();
+
+  document.getElementById('chatWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateUserInfo() {
+  document.getElementById('userInfo').innerHTML = `
+    — zalogowany jako
+    <span style="color:${escapeHtml(me.color)}">${escapeHtml(me.nick)}</span>
+    ${me.isAdmin ? '<span class="msg-rank">ADMIN</span>' : ''}
+  `;
+}
+
+/* =========================================================
+   SUPABASE - BAN
+   ========================================================= */
+
+async function isMeBanned() {
+  const client = getSupabase();
+  if (!client) return false;
+
+  const { data, error } = await client
+    .from('bans')
+    .select('user_key')
+    .eq('user_key', MY_ID)
+    .limit(1);
+
+  if (error) {
+    console.error(error);
+    setStatus('Błąd sprawdzania bana. Sprawdź tabelę bans i RLS.', true);
+    return false;
+  }
+
+  return Array.isArray(data) && data.length > 0;
+}
+
+/* =========================================================
+   SUPABASE - WIADOMOŚCI
+   ========================================================= */
+
+async function loadMessages() {
+  const client = getSupabase();
+  if (!client) return;
+
+  const { data, error } = await client
+    .from('messages')
+    .select('id,nick,color,content,created_at,user_key,is_admin,pinned')
+    .order('created_at', { ascending: true })
+    .limit(300);
+
+  if (error) {
+    console.error(error);
+    document.getElementById('messages').innerHTML = `
+      <p style="color:#ff6666;">
+        Błąd ładowania wiadomości z Supabase.
+        Sprawdź, czy tabela messages ma kolumny:
+        id, nick, color, content, created_at, user_key, is_admin, pinned.
+      </p>
+    `;
+    setStatus('Błąd Supabase. Sprawdź tabelę i RLS.', true);
+    return;
+  }
+
+  messagesCache = data || [];
+  renderMsgs();
+  setStatus('Czat połączony z Supabase.');
+}
+
+function startRealtime() {
+  const client = getSupabase();
+  if (!client || realtimeChannel) return;
+
+  realtimeChannel = client
+    .channel('event-chat-live')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'messages'
+      },
+      async () => {
+        await loadMessages();
+      }
+    )
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'bans'
+      },
+      async () => {
+        const banned = await isMeBanned();
+
+        if (banned) {
+          document.getElementById('chatWrap').innerHTML = `
+            <div style="text-align:center;padding:50px;color:#ff4444;font-size:1.45rem;">
+              ⛔ Zostałeś zbanowany z czatu.
+            </div>
+          `;
+        }
+      }
+    )
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') {
+        setStatus('Czat działa na żywo.');
+      }
+    });
+}
+
+/* =========================================================
+   WYSYŁANIE WIADOMOŚCI
+   ========================================================= */
+
+async function sendMsg() {
+  if (!me) {
+    alert('Najpierw dołącz do czatu.');
+    return;
+  }
+
+  const client = getSupabase();
+  if (!client) return;
+
   const inp = document.getElementById('msgInput');
   const txt = inp.value.trim();
-  if(!txt) return;
 
-  // Limit 3 sekundy (admin pomija)
-  const now = Date.now();
-  if(!me.isAdmin && now - lastMessageTime < 3000){
-    alert('Poczekaj 3 sekundy przed wysłaniem kolejnej wiadomości.');
-    return;
-  }
-  lastMessageTime = now;
+  if (!txt) return;
 
-  if(txt === '/jajo121xd'){
+  if (txt === '/jajo121xd') {
     me.isAdmin = true;
     sessionStorage.setItem('we_me', JSON.stringify(me));
-    document.getElementById('userInfo').innerHTML = `— zalogowany jako <span style="color:${me.color}">${me.nick}</span> <span style="background:#ff5cb3;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">ADMIN</span>`;
-    alert('🎉 Otrzymałeś rangę ADMIN!');
+    updateUserInfo();
     inp.value = '';
+    alert('🎉 Otrzymałeś rangę ADMIN!');
     return;
   }
 
-  const msgs = getMsgs();
-  msgs.push({
-    id: 'm_'+Date.now(),
-    userId: MY_ID,
-    nick: me.nick,
-    color: me.color,
-    isAdmin: me.isAdmin,
-    text: txt,
-    ts: Date.now(),
-    pinned: false
-  });
-  setMsgs(msgs);
+  const now = Date.now();
+
+  if (!me.isAdmin && now - lastMessageTime < 3000) {
+    const left = Math.ceil((3000 - (now - lastMessageTime)) / 1000);
+    alert(`Poczekaj jeszcze ${left} sek. przed wysłaniem kolejnej wiadomości.`);
+    return;
+  }
+
+  lastMessageTime = now;
+
+  const sendBtn = document.getElementById('sendBtn');
+  sendBtn.disabled = true;
+  sendBtn.textContent = '...';
+
+  const { error } = await client
+    .from('messages')
+    .insert({
+      nick: me.nick,
+      color: me.color,
+      content: txt,
+      user_key: MY_ID,
+      is_admin: me.isAdmin,
+      pinned: false
+    });
+
+  sendBtn.disabled = false;
+  sendBtn.textContent = 'Wyślij';
+
+  if (error) {
+    console.error(error);
+    setStatus('Nie udało się wysłać wiadomości.', true);
+    alert('Błąd wysyłania wiadomości. Sprawdź konfigurację Supabase.');
+    return;
+  }
+
   inp.value = '';
-  renderMsgs();
+  await loadMessages();
 }
 
-// Reszta funkcji czatu (delMsg, banUser, pinMsg, renderMsgs, buildMsgEl) pozostaje taka sama jak w poprzedniej wersji
-function delMsg(id){ if(!me.isAdmin) return; setMsgs(getMsgs().filter(m=>m.id!==id)); renderMsgs(); }
-function banUser(uid){ if(!me.isAdmin) return; if(!confirm('Zbanować tego użytkownika?')) return; const b=getBans(); if(!b.includes(uid))b.push(uid); setBans(b); setMsgs(getMsgs().filter(m=>m.userId!==uid)); renderMsgs(); }
-function pinMsg(id){ if(!me.isAdmin) return; const msgs=getMsgs(); const pinnedCount=msgs.filter(m=>m.pinned).length; const target=msgs.find(m=>m.id===id); if(!target)return; if(target.pinned){target.pinned=false;}else{if(pinnedCount>=2){alert('Maksymalnie 2 przypięte wiadomości!');return;}target.pinned=true;} setMsgs(msgs); renderMsgs(); }
+/* =========================================================
+   ADMIN
+   ========================================================= */
 
-function renderMsgs(){
-  const msgs = getMsgs();
+async function delMsg(id) {
+  if (!me || !me.isAdmin) return;
+
+  const client = getSupabase();
+  if (!client) return;
+
+  const { error } = await client
+    .from('messages')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error(error);
+    alert('Nie udało się usunąć wiadomości.');
+  }
+
+  await loadMessages();
+}
+
+async function banUser(userKey) {
+  if (!me || !me.isAdmin) return;
+
+  if (userKey === MY_ID) {
+    alert('Nie możesz zbanować samego siebie.');
+    return;
+  }
+
+  if (!confirm('Zbanować tego użytkownika?')) return;
+
+  const client = getSupabase();
+  if (!client) return;
+
+  const { error } = await client
+    .from('bans')
+    .upsert(
+      { user_key: userKey },
+      { onConflict: 'user_key' }
+    );
+
+  if (error) {
+    console.error(error);
+    alert('Nie udało się zbanować użytkownika.');
+    return;
+  }
+
+  await client
+    .from('messages')
+    .delete()
+    .eq('user_key', userKey);
+
+  await loadMessages();
+}
+
+async function pinMsg(id) {
+  if (!me || !me.isAdmin) return;
+
+  const msg = messagesCache.find(m => String(m.id) === String(id));
+  if (!msg) return;
+
+  if (!msg.pinned) {
+    const pinnedCount = messagesCache.filter(m => m.pinned).length;
+
+    if (pinnedCount >= 2) {
+      alert('Maksymalnie 2 przypięte wiadomości!');
+      return;
+    }
+  }
+
+  const client = getSupabase();
+  if (!client) return;
+
+  const { error } = await client
+    .from('messages')
+    .update({ pinned: !msg.pinned })
+    .eq('id', id);
+
+  if (error) {
+    console.error(error);
+    alert('Nie udało się przypiąć/odpiąć wiadomości.');
+  }
+
+  await loadMessages();
+}
+
+/* =========================================================
+   WYŚWIETLANIE CZATU
+   ========================================================= */
+
+function renderMsgs() {
   const cont = document.getElementById('messages');
+  const pinnedList = document.getElementById('pinnedList');
+
   cont.innerHTML = '';
-  msgs.forEach(m => cont.appendChild(buildMsgEl(m)));
+
+  if (!messagesCache.length) {
+    cont.innerHTML = '<p style="color:#888;">Brak wiadomości. Napisz pierwszą!</p>';
+  } else {
+    messagesCache.forEach(msg => {
+      cont.appendChild(buildMsgEl(msg));
+    });
+  }
+
   cont.scrollTop = cont.scrollHeight;
 
-  const pinned = msgs.filter(m=>m.pinned);
-  const pl = document.getElementById('pinnedList');
-  if(pinned.length===0){ pl.innerHTML='<em style="color:#888;">Brak przypiętych</em>'; }
-  else { pl.innerHTML=''; pinned.forEach(m=>pl.appendChild(buildMsgEl(m,true))); }
+  const pinned = messagesCache.filter(msg => msg.pinned);
+
+  if (!pinned.length) {
+    pinnedList.innerHTML = '<em style="color:#888;">Brak przypiętych</em>';
+  } else {
+    pinnedList.innerHTML = '';
+    pinned.forEach(msg => {
+      pinnedList.appendChild(buildMsgEl(msg, true));
+    });
+  }
 }
 
-function buildMsgEl(m, isPinView=false){
+function buildMsgEl(msg, pinnedView = false) {
   const el = document.createElement('div');
-  el.className = 'msg' + (m.isAdmin?' admin':'') + (m.pinned&&!isPinView?' pinned':'');
+
+  el.className =
+    'msg' +
+    (msg.is_admin ? ' admin' : '') +
+    (msg.pinned && !pinnedView ? ' pinned' : '');
+
   el.innerHTML = `
-    <div style="display:flex;gap:8px;align-items:center;font-size:0.85rem;margin-bottom:4px;flex-wrap:wrap;">
-      <span style="font-weight:bold;color:${m.color}">${escapeHtml(m.nick)}</span>
-      ${m.isAdmin?'<span style="background:#ff5cb3;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.7rem;">ADMIN</span>':''}
-      ${m.pinned?'<span style="color:#ffc800;">📌</span>':''}
-      <span style="color:#888;font-size:0.75rem;">${fmtTime(m.ts)}</span>
+    <div class="msg-head">
+      <span class="msg-nick" style="color:${escapeHtml(msg.color)}">
+        ${escapeHtml(msg.nick)}
+      </span>
+
+      ${msg.is_admin ? '<span class="msg-rank">ADMIN</span>' : ''}
+      ${msg.pinned ? '<span style="color:#ffc800;">📌</span>' : ''}
+
+      <span class="msg-time">
+        ${fmtTime(msg.created_at)}
+      </span>
     </div>
-    <div style="font-size:1rem;">${escapeHtml(m.text)}</div>
+
+    <div class="msg-text">
+      ${escapeHtml(msg.content)}
+    </div>
   `;
-  if(me && me.isAdmin && !isPinView){
-    const act = document.createElement('div');
-    act.style.cssText = 'position:absolute;top:5px;right:5px;display:none;gap:5px;';
-    act.innerHTML = `
-      <button onclick="pinMsg('${m.id}')" style="background:#330;color:#fff;border:1px solid #ffc800;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.75rem;">${m.pinned?'Odepnij':'📌'}</button>
-      <button onclick="delMsg('${m.id}')" style="background:#330;color:#fff;border:1px solid #ff4444;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.75rem;">🗑</button>
-      <button onclick="banUser('${m.userId}')" style="background:#330;color:#fff;border:1px solid #ff8800;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:0.75rem;">⛔</button>
-    `;
-    el.onmouseenter = () => act.style.display='flex';
-    el.onmouseleave = () => act.style.display='none';
-    el.appendChild(act);
+
+  if (me && me.isAdmin && !pinnedView) {
+    const actions = document.createElement('div');
+    actions.className = 'msg-actions';
+
+    const pinBtn = document.createElement('button');
+    pinBtn.textContent = msg.pinned ? 'Odepnij' : '📌 Przypnij';
+    pinBtn.onclick = () => pinMsg(msg.id);
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '🗑 Usuń';
+    delBtn.className = 'del';
+    delBtn.onclick = () => delMsg(msg.id);
+
+    const banBtn = document.createElement('button');
+    banBtn.textContent = '⛔ Ban';
+    banBtn.className = 'ban';
+    banBtn.onclick = () => banUser(msg.user_key);
+
+    actions.appendChild(pinBtn);
+    actions.appendChild(delBtn);
+    actions.appendChild(banBtn);
+
+    el.appendChild(actions);
   }
+
   return el;
 }
-
-window.addEventListener('storage', e => { if(e.key==='we_msgs'||e.key==='we_bans') renderMsgs(); });
-setInterval(()=>{ if(document.getElementById('chatWrap').classList.contains('show')) renderMsgs(); }, 3000);
 </script>
+
 </body>
 </html>
